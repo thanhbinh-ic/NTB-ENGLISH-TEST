@@ -31,6 +31,7 @@
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center} .flex{flex:1}
   .passage{background:#f9fafb;border-left:4px solid var(--blue);padding:12px 14px;line-height:1.6;margin:0 0 14px}
   #qFrame{min-height:380px}
+  .revline{margin:10px 0;line-height:1.6}
   .hidden{display:none!important}
   /* Chống copy khi chưa đăng nhập: vẫn cho gõ và sửa trong ô nhập của chính mình */
   body:not(.admin) .card, body:not(.admin) header{-webkit-user-select:none;user-select:none}
@@ -69,7 +70,7 @@
 
   <!-- REVIEW -->
   <section id="reviewScreen" class="card hidden">
-    <div class="row">
+    <div class="row" style="margin-bottom:28px">
       <button id="rev1Btn" class="secondary" type="button">Bài 1 — Thì hiện tại đơn</button>
       <button id="rev2Btn" class="secondary" type="button">Bài 2 — Thì hiện tại tiếp diễn</button>
       <button id="rev3Btn" class="secondary" type="button">Bài 3 — Thì hiện tại hoàn thành</button>
@@ -327,9 +328,36 @@ $("rev3Btn").onclick = function(){ renderReview(3); };
 $("revBackBtn").onclick = function(){ showScreen("homeScreen"); };
 $("revStartBtn").onclick = function(){ startReview(currentReviewLesson); };
 var REV_SUMMARY = {
-  1: "<p><b>Bài 1 — Thì hiện tại đơn:</b> S + V(s/es) cho khẳng định; do/does + not + V cho phủ định; Do/Does + S + V cho câu hỏi. Dùng cho thói quen, sự thật hiển nhiên và lịch trình. Dấu hiệu: always, usually, often, sometimes, never, every day/week, once/twice a week. Nguồn: video Bài 1 của kênh I LOVE IELTS.</p>",
-  2: "<p><b>Bài 2 — Thì hiện tại tiếp diễn:</b> S + am/is/are + V-ing cho khẳng định; am/is/are + not + V-ing cho phủ định; Am/Is/Are + S + V-ing cho câu hỏi. I đi với am, he/she/it và danh từ số ít đi với is, you/we/they và danh từ số nhiều đi với are; am not không có dạng rút gọn. Dùng cho việc đang xảy ra ngay lúc nói, việc đang diễn ra trong giai đoạn này (these days), việc đã lên kế hoạch trong tương lai gần, và việc lặp lại gây khó chịu với always. Dấu hiệu: now, right now, at the moment, at present, Look!, Listen!, Look out!, Watch out!, Be quiet!. Lưu ý: động từ trạng thái như like, dislike, believe, want không dùng ở dạng V-ing. Nguồn: video Bài 2 của kênh I LOVE IELTS.</p>",
-  3: "<p><b>Bài 3 — Thì hiện tại hoàn thành:</b> S + have/has + V3 cho khẳng định; have/has + not + V3 cho phủ định (haven't/hasn't); Have/Has + S + V3 cho câu hỏi. I/you/we/they và danh từ số nhiều đi với have, he/she/it và danh từ số ít đi với has; thì này luôn dùng cột V3 (go – went – gone, see – saw – seen, lose – lost – lost, write – wrote – written, do – did – done, be – was/were – been). Dùng cho việc đã hoàn thành đến hiện tại, việc bắt đầu trong quá khứ còn tiếp diễn đến nay, việc đã từng làm và vẫn đang làm, kinh nghiệm đến hiện tại (thường với ever), và việc quá khứ có kết quả quan trọng ở hiện tại. Dấu hiệu: lately, recently, just, already, before, ever, never, for + khoảng thời gian, since + mốc thời gian, yet (chỉ dùng trong câu phủ định và câu hỏi), so far, until now, up to now. Nguồn: video Bài 3 của kênh I LOVE IELTS.</p>"
+  1: "<div class=\"revline\"><b>Bài 1 — Thì hiện tại đơn</b></div>"
+    + "<div class=\"revline\"><b>Công thức:</b> Khẳng định: S + V(s/es). Phủ định: S + do/does + not + V. Câu hỏi: Do/Does + S + V?</div>"
+    + "<div class=\"revline\"><b>Cách dùng:</b></div>"
+    + "<div class=\"revline\">— Thói quen lặp lại.</div>"
+    + "<div class=\"revline\">— Sự thật hiển nhiên.</div>"
+    + "<div class=\"revline\">— Lịch trình, thời khóa biểu.</div>"
+    + "<div class=\"revline\"><b>Dấu hiệu:</b> always, usually, often, sometimes, never, every day/week, once/twice a week.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 1 của kênh I LOVE IELTS.</div>",
+  2: "<div class=\"revline\"><b>Bài 2 — Thì hiện tại tiếp diễn</b></div>"
+    + "<div class=\"revline\"><b>Công thức:</b> Khẳng định: S + am/is/are + V-ing. Phủ định: S + am/is/are + not + V-ing. Câu hỏi: Am/Is/Are + S + V-ing?</div>"
+    + "<div class=\"revline\"><b>Chủ ngữ đi với to be:</b> I — am; he/she/it và danh từ số ít — is; you/we/they và danh từ số nhiều — are; am not không có dạng rút gọn.</div>"
+    + "<div class=\"revline\"><b>Cách dùng:</b></div>"
+    + "<div class=\"revline\">— Việc đang xảy ra ngay lúc nói.</div>"
+    + "<div class=\"revline\">— Việc đang diễn ra trong giai đoạn này (these days).</div>"
+    + "<div class=\"revline\">— Việc đã lên kế hoạch trong tương lai gần.</div>"
+    + "<div class=\"revline\">— Việc lặp lại gây khó chịu, thường với always.</div>"
+    + "<div class=\"revline\"><b>Dấu hiệu:</b> now, right now, at the moment, at present; Look!, Listen!, Look out!, Watch out!, Be quiet!.</div>"
+    + "<div class=\"revline\"><b>Lưu ý:</b> động từ trạng thái như like, dislike, believe, want không dùng ở dạng V-ing.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 2 của kênh I LOVE IELTS.</div>",
+  3: "<div class=\"revline\"><b>Bài 3 — Thì hiện tại hoàn thành</b></div>"
+    + "<div class=\"revline\"><b>Công thức:</b> Khẳng định: S + have/has + V3. Phủ định: S + have/has + not + V3 (haven't/hasn't). Câu hỏi: Have/Has + S + V3?</div>"
+    + "<div class=\"revline\"><b>Chủ ngữ và cột V3:</b> I/you/we/they và danh từ số nhiều — have; he/she/it và danh từ số ít — has. Thì này luôn dùng cột V3: go – went – gone, see – saw – seen, lose – lost – lost, write – wrote – written, do – did – done, be – was/were – been.</div>"
+    + "<div class=\"revline\"><b>Cách dùng:</b></div>"
+    + "<div class=\"revline\">— Việc đã hoàn thành đến thời điểm hiện tại.</div>"
+    + "<div class=\"revline\">— Việc bắt đầu trong quá khứ còn tiếp diễn đến nay.</div>"
+    + "<div class=\"revline\">— Việc đã từng làm và vẫn đang làm tiếp.</div>"
+    + "<div class=\"revline\">— Kinh nghiệm đến hiện tại, thường với ever.</div>"
+    + "<div class=\"revline\">— Việc quá khứ có kết quả quan trọng ở hiện tại.</div>"
+    + "<div class=\"revline\"><b>Dấu hiệu:</b> lately, recently, just, already, before, ever, never, for + khoảng thời gian, since + mốc thời gian, yet (chỉ dùng trong câu phủ định và câu hỏi), so far, until now, up to now.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 3 của kênh I LOVE IELTS.</div>"
 };
 var currentReviewLesson = 1;
 function renderReview(lesson){
