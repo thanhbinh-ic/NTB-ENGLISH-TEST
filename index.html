@@ -30,6 +30,10 @@
   .modal.open{display:flex} .modal .card{max-width:480px;width:100%}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center} .flex{flex:1}
   .hidden{display:none!important}
+  /* Chống copy khi chưa đăng nhập: vẫn cho gõ và sửa trong ô nhập của chính mình */
+  body:not(.admin) .card, body:not(.admin) header{-webkit-user-select:none;user-select:none}
+  body:not(.admin) input, body:not(.admin) textarea{-webkit-user-select:text;user-select:text}
+  body.admin{-webkit-user-select:text;user-select:text}
 </style>
 </head>
 <body>
@@ -37,12 +41,12 @@
   <div><h1>NTB English Test — Thì hiện tại đơn</h1><p>Bài kiểm tra dựa trên bài giảng thì hiện tại đơn • 60 phút • 25 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
-    <button id="adminBtn" class="secondary" type="button">Đăng nhập Admin</button>
+    <button id="adminBtn" class="secondary" type="button">Đăng nhập</button>
   </div>
 </header>
 
 <div class="wrap">
-  <div id="adminBar" class="adminbar"><b>Chế độ Admin đang bật.</b> Đáp án đúng hiển thị ngay trong lúc làm bài để test hệ thống. Bấm “Đăng nhập Admin” rồi chọn “Đăng xuất” để tắt.</div>
+  <div id="adminBar" class="adminbar"><b>Chế độ Admin đang bật.</b> Đáp án đúng hiển thị ngay trong lúc làm bài.</div>
 
   <!-- START -->
   <section id="startScreen" class="card">
@@ -55,7 +59,7 @@
     <label class="small" for="stuName">Họ tên người làm bài (không bắt buộc)</label>
     <input id="stuName" type="text" placeholder="Ví dụ: Nguyễn Văn A">
     <div class="row" style="margin-top:14px"><button id="startBtn" type="button">Bắt đầu làm bài — 60 phút</button></div>
-    <p class="small mut">Lưu ý: đây là trang tĩnh, kết quả chỉ tính trên trình duyệt đang dùng, tải lại trang giữa chừng sẽ mất bài và đồng hồ chạy lại từ đầu. Không có chống gian lận phía máy chủ.</p>
+
   </section>
 
   <!-- TEST -->
@@ -72,7 +76,7 @@
     </div>
     <h3 style="margin-top:22px">Bảng câu hỏi</h3>
     <div id="palette" class="palette"></div>
-    <p class="small mut">Ô xanh lá là câu đã trả lời. Bấm vào số câu để nhảy tới câu đó.</p>
+
   </section>
 
   <!-- RESULT -->
@@ -87,24 +91,28 @@
     </div>
   </section>
 
-  <p class="small mut">Chế độ Admin chỉ là lớp hiển thị đáp án để test trên trình duyệt, không phải bảo mật thật: đáp án nằm trong mã nguồn trang (trang tĩnh, repo công khai). Đổi mật khẩu admin bằng cách thay mã băm SHA-256 trong file index.html trước khi chia sẻ rộng rãi.</p>
 </div>
 
 <!-- LOGIN MODAL -->
 <div id="loginModal" class="modal"><div class="card">
-  <h2>Đăng nhập Admin</h2>
+  <h2>Đăng nhập</h2>
   <div id="loginBody">
-    <p class="small mut">Đăng nhập để hiển thị đáp án đúng ngay trong lúc làm bài, phục vụ test hệ thống.</p>
     <label class="small" for="admUser">Tài khoản</label><input id="admUser" type="text" autocomplete="username">
     <label class="small" for="admPass" style="display:block;margin-top:10px">Mật khẩu</label><input id="admPass" type="password" autocomplete="current-password">
     <p id="loginErr" class="small bad hidden">Sai tài khoản hoặc mật khẩu.</p>
     <div class="row" style="margin-top:14px"><button id="doLogin" type="button">Đăng nhập</button><button id="closeLogin" class="secondary" type="button">Đóng</button></div>
-    <p class="small mut">Tài khoản mặc định khi mới dựng: <b>admin</b> / <b>admin123</b> — huynh đổi ngay sau lần đăng nhập đầu tiên bằng cách thay mã băm trong mã nguồn.</p>
   </div>
   <div id="logoutBody" class="hidden">
     <p>Huynh đang ở chế độ Admin.</p>
-    <div class="row"><button id="doLogout" class="danger" type="button">Đăng xuất Admin</button><button id="closeLogin2" class="secondary" type="button">Đóng</button></div>
+    <div class="row"><button id="doLogout" class="danger" type="button">Đăng xuất</button><button id="closeLogin2" class="secondary" type="button">Đóng</button></div>
   </div>
+</div></div>
+
+<!-- TAB WARNING MODAL -->
+<div id="tabModal" class="modal"><div class="card">
+  <h2>Cảnh báo đổi tab</h2>
+  <p>Bạn vừa rời khỏi tab làm bài. Đây là lần cảnh báo thứ nhất. Nếu đổi tab thêm một lần nữa, hệ thống sẽ nộp bài ngay.</p>
+  <div class="row"><button id="closeTabModal" type="button">Tiếp tục làm bài</button></div>
 </div></div>
 
 <!-- SUBMIT MODAL -->
@@ -146,7 +154,7 @@ var QUESTIONS = [
   {part:"B — Viết", q:"Viết lại thành câu hỏi: “They play tennis on Sundays.”", accept:["do they play tennis on sundays"], model:"Do they play tennis on Sundays?", why:"Câu hỏi với “they” dùng Do + chủ ngữ + động từ nguyên mẫu. Động từ “play” giữ nguyên, không thêm -s."},
   {part:"B — Viết", q:"Chia động từ đúng dạng: “He (watch) TV every night.” — viết cả câu.", accept:["he watches tv every night"], model:"He watches TV every night.", why:"Chủ ngữ “he” số ít, động từ “watch” tận cùng -ch nên thêm -es thành watches."},
   {part:"B — Viết", q:"Chia động từ đúng dạng: “My mother (go) to work by car every day.” — viết cả câu.", accept:["my mother goes to work by car every day"], model:"My mother goes to work by car every day.", why:"Chủ ngữ “my mother” số ít, động từ “go” tận cùng -o nên thêm -es thành goes."},
-  {part:"B — Viết", q:"Sắp xếp thành câu đúng: “I / always / get up / 6 a.m.”", accept:["i always get up at 6 am","i always get up at 6 a.m"], model:"I always get up at 6 a.m.", why:"Trạng từ tần suất “always” đứng trước động từ thường “get up”, và mốc giờ dùng giới từ “at”."}
+  {part:"B — Viết", q:"Sắp xếp thành câu đúng: “I / always / get up / at / 6 a.m.”", accept:["i always get up at 6 am","i always get up at 6 a.m"], model:"I always get up at 6 a.m.", why:"Trạng từ tần suất “always” đứng trước động từ thường “get up”, và mốc giờ dùng giới từ “at”."}
 ];
 
 function $(id){ return document.getElementById(id); }
@@ -160,6 +168,19 @@ function norm(s){
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
 var answers = [], current = 0, timerId = null, secondsLeft = TOTAL_SECONDS, startStamp = 0, submitted = false;
+var tabViolations = 0, submitReason = "";
+function shuffleArr(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function shuffleAll(){
+  QUESTIONS.forEach(function(q){
+    if(q.opts){
+      var pairs = q.opts.map(function(o,i){ return {o:o, correct:i===q.a}; });
+      shuffleArr(pairs);
+      q.opts = pairs.map(function(p){ return p.o; });
+      pairs.forEach(function(p,i){ if(p.correct) q.a = i; });
+    }
+  });
+  shuffleArr(QUESTIONS);
+}
 
 function fmt(s){ var m = Math.floor(s/60), sec = s%60; return (m<10?"0"+m:m)+":"+(sec<10?"0"+sec:sec); }
 function renderTimer(){
@@ -235,7 +256,7 @@ function finish(auto){
   var pct = Math.round(score/QUESTIONS.length*100);
   var band = pct>=90 ? "Xuất sắc" : pct>=70 ? "Tốt" : pct>=50 ? "Đạt — vẫn nên ôn lại các câu sai" : "Cần ôn lại bài";
   $("scoreLine").innerHTML = "Điểm: <b>"+score+" / "+QUESTIONS.length+"</b> ("+pct+"%) — "+band;
-  $("metaLine").textContent = ($("stuName").value.trim() ? "Người làm bài: "+$("stuName").value.trim()+" • " : "") + "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài.");
+  $("metaLine").textContent = ($("stuName").value.trim() ? "Người làm bài: "+$("stuName").value.trim()+" • " : "") + "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài."));
   $("review").innerHTML = rows.map(function(r){
     return '<div class="review"><div><b>Câu '+(r.i+1)+'</b> — '+esc(r.q)+' <span class="'+(r.correct?"ok":"bad")+'">'+(r.correct?"ĐÚNG":"SAI")+'</span></div>'
       + '<div class="small">Bạn trả lời: '+esc(r.userText)+'</div>'
@@ -245,11 +266,11 @@ function finish(auto){
   showScreen("resultScreen"); window.scrollTo(0,0);
 }
 function resetTest(){
-  answers = []; current = 0; submitted = false; secondsLeft = TOTAL_SECONDS;
+  answers = []; current = 0; submitted = false; tabViolations = 0; submitReason = ""; secondsLeft = TOTAL_SECONDS;
   $("timer").classList.remove("hidden"); renderTimer();
 }
 
-$("startBtn").onclick = function(){ resetTest(); showScreen("testScreen"); renderQuestion(); startTimer(); };
+$("startBtn").onclick = function(){ shuffleAll(); resetTest(); showScreen("testScreen"); renderQuestion(); startTimer(); };
 $("prevBtn").onclick = function(){ if(current>0){ current--; renderQuestion(); } };
 $("nextBtn").onclick = function(){ if(current<QUESTIONS.length-1){ current++; renderQuestion(); } };
 $("submitBtn").onclick = function(){
@@ -259,7 +280,7 @@ $("submitBtn").onclick = function(){
 };
 $("cancelSubmit").onclick = function(){ $("submitModal").classList.remove("open"); };
 $("confirmSubmit").onclick = function(){ $("submitModal").classList.remove("open"); finish(false); };
-$("retakeBtn").onclick = function(){ resetTest(); showScreen("testScreen"); renderQuestion(); startTimer(); };
+$("retakeBtn").onclick = function(){ shuffleAll(); resetTest(); showScreen("testScreen"); renderQuestion(); startTimer(); };
 $("backBtn").onclick = function(){ clearInterval(timerId); $("timer").classList.add("hidden"); showScreen("startScreen"); };
 
 function openLogin(){
@@ -281,6 +302,22 @@ $("doLogin").onclick = function(){
     else { $("loginErr").textContent = "Sai tài khoản hoặc mật khẩu."; $("loginErr").classList.remove("hidden"); }
   });
 };
+/* Chống copy khi chưa đăng nhập: đăng nhập rồi thì cho phép select/copy bình thường */
+function blockCopy(e){ if(!isAdmin()) e.preventDefault(); }
+document.addEventListener("copy", blockCopy);
+document.addEventListener("cut", blockCopy);
+document.addEventListener("contextmenu", function(e){ if(!isAdmin()) e.preventDefault(); });
+
+/* Phát hiện đổi tab: lần 1 cảnh báo, lần 2 nộp bài ngay (đồng hồ vẫn chạy khi hiện cảnh báo) */
+$("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); };
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden && !submitted && !$("testScreen").classList.contains("hidden")){
+    tabViolations++;
+    if(tabViolations === 1){ $("tabModal").classList.add("open"); }
+    else if(tabViolations >= 2){ submitReason = "Đổi tab lần 2, hệ thống tự nộp bài."; finish(false); }
+  }
+});
+
 setAdmin(isAdmin());
 </script>
 </body>
