@@ -113,10 +113,10 @@
   </div>
 </div></div>
 
-<!-- TAB WARNING MODAL -->
+<!-- ANTI-CHEAT WARNING MODAL -->
 <div id="tabModal" class="modal"><div class="card">
-  <h2>Cảnh báo đổi tab</h2>
-  <p>Bạn vừa rời khỏi tab làm bài. Đây là lần cảnh báo thứ nhất. Nếu đổi tab thêm một lần nữa, hệ thống sẽ nộp bài ngay.</p>
+  <h2>Cảnh báo chống gian lận</h2>
+  <p id="tabModalText"></p>
   <div class="row"><button id="closeTabModal" type="button">Tiếp tục làm bài</button></div>
 </div></div>
 
@@ -180,7 +180,7 @@ function norm(s){
 function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
 var answers = [], current = 0, timerId = null, secondsLeft = TOTAL_SECONDS, startStamp = 0, submitted = false;
-var tabViolations = 0, submitReason = "";
+var tabViolations = 0, submitReason = "", lastViolationAt = 0, baseW = 0, resizeTimer = null;
 function shuffleArr(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
 function shuffleAll(){
   QUESTIONS.forEach(function(q){
@@ -265,6 +265,7 @@ function grade(){
 }
 function finish(auto){
   if(submitted) return; submitted = true; clearInterval(timerId);
+  $("tabModal").classList.remove("open"); $("submitModal").classList.remove("open");
   var rows = grade(), score = rows.filter(function(r){ return r.correct; }).length;
   var used = TOTAL_SECONDS - Math.max(0, secondsLeft);
   var pct = Math.round(score/QUESTIONS.length*100);
@@ -284,7 +285,7 @@ function finish(auto){
   showScreen("resultScreen"); window.scrollTo(0,0);
 }
 function resetTest(){
-  answers = []; current = 0; submitted = false; tabViolations = 0; submitReason = ""; secondsLeft = TOTAL_SECONDS;
+  answers = []; current = 0; submitted = false; tabViolations = 0; submitReason = ""; lastViolationAt = 0; baseW = window.innerWidth; secondsLeft = TOTAL_SECONDS;
   $("timer").classList.remove("hidden"); renderTimer();
 }
 
@@ -351,14 +352,46 @@ document.addEventListener("keydown", function(e){
   }
 });
 
-/* Phát hiện đổi tab: lần 1 cảnh báo, lần 2 nộp bài ngay (đồng hồ vẫn chạy khi hiện cảnh báo) */
-$("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); };
-document.addEventListener("visibilitychange", function(){
-  if(document.hidden && !submitted && !isAdmin() && !$("testScreen").classList.contains("hidden")){
-    tabViolations++;
-    if(tabViolations === 1){ $("tabModal").classList.add("open"); }
-    else if(tabViolations >= 2){ submitReason = "Đổi tab lần 2, hệ thống tự nộp bài."; finish(false); }
+/* Chống gian lận — một bộ đếm chung cho mọi loại vi phạm: lần 1 cảnh báo, lần 2 nộp bài ngay.
+   - Đổi tab / thu cửa sổ xuống nền: visibilitychange (document.hidden).
+   - Mất tiêu điểm (chuyển sang cửa sổ/app khác, kể cả khi cửa sổ làm bài vẫn còn nhìn thấy): blur.
+   - Đổi kích thước cửa sổ: resize, chỉ tính khi chiều rộng thay đổi trên 200px sau khi kéo xong 600ms,
+     để tránh tính nhầm việc mở bàn phím ảo trên điện thoại (chỉ đổi chiều cao) hay rung kích thước nhỏ.
+   Giới hạn thật: trang web không có API nào biết cửa sổ đang bị một cửa sổ khác che lên
+   nếu cửa sổ làm bài không mất tiêu điểm và không bị ẩn — trường hợp đó chỉ phát hiện được
+   khi người làm bài bấm sang cửa sổ che đó (lúc đó sẽ mất tiêu điểm).
+   Chống đếm trùng: một lần chuyển tab thường kích hoạt cả blur lẫn visibilitychange gần như
+   cùng lúc, nên các tín hiệu cách nhau dưới 2 giây chỉ tính là một lần vi phạm. */
+function recordViolation(kind){
+  if(submitted || isAdmin() || $("testScreen").classList.contains("hidden")) return;
+  var now = Date.now();
+  if(now - lastViolationAt < 2000) return;
+  lastViolationAt = now;
+  var msgs = {
+    tab: "Bạn vừa rời khỏi tab làm bài.",
+    blur: "Cửa sổ làm bài vừa mất tiêu điểm, có thể do chuyển sang cửa sổ hoặc ứng dụng khác.",
+    resize: "Cửa sổ làm bài vừa bị thay đổi kích thước đáng kể."
+  };
+  var names = { tab: "đổi tab", blur: "mất tiêu điểm", resize: "đổi kích thước cửa sổ" };
+  tabViolations++;
+  if(tabViolations === 1){
+    $("tabModalText").textContent = msgs[kind] + " Đây là lần cảnh báo thứ nhất. Nếu vi phạm thêm một lần nữa, hệ thống sẽ nộp bài ngay.";
+    $("tabModal").classList.add("open");
+  } else {
+    submitReason = "Vi phạm chống gian lận lần 2 (" + names[kind] + "), hệ thống tự nộp bài.";
+    finish(false);
   }
+}
+$("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); };
+document.addEventListener("visibilitychange", function(){ if(document.hidden) recordViolation("tab"); });
+window.addEventListener("blur", function(){ recordViolation("blur"); });
+window.addEventListener("resize", function(){
+  if(submitted || isAdmin() || $("testScreen").classList.contains("hidden")) return;
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function(){
+    if(Math.abs(window.innerWidth - baseW) > 200) recordViolation("resize");
+    baseW = window.innerWidth;
+  }, 600);
 });
 
 setAdmin(isAdmin());
