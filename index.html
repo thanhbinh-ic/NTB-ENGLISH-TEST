@@ -60,7 +60,7 @@
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
       <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 40 câu</button>
     </div>
-    <p class="small mut">Bài kiểm tra: 60 phút, đếm ngược, hết giờ tự nộp. Mỗi lần bấm làm kiểm tra, hệ thống chọn ngẫu nhiên một trong 3 đề khác nhau. Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</p>
+    <p class="small mut">Nguồn học: Bài 1 — Thì hiện tại đơn, video của kênh I LOVE IELTS — <a href="https://youtu.be/BmKkDuO_nkk" target="_blank" rel="noopener">https://youtu.be/BmKkDuO_nkk</a>; Bài 2 — Thì hiện tại tiếp diễn, video của kênh I LOVE IELTS — <a href="https://youtu.be/dIIG9m649-g" target="_blank" rel="noopener">https://youtu.be/dIIG9m649-g</a>. Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</p>
   </section>
 
   <!-- REVIEW -->
@@ -73,7 +73,7 @@
     </div>
     <h2 id="revTitle"></h2>
     <div id="revSummary"></div>
-    <div id="revList"></div>
+    <div class="row" style="margin-top:14px"><button id="revStartBtn" type="button">Bắt đầu ôn tập</button></div>
   </section>
 
   <!-- TEST -->
@@ -287,9 +287,9 @@ function finish(auto){
   var pct = Math.round(score/QUESTIONS.length*100);
   var band = pct>=90 ? "Xuất sắc" : pct>=70 ? "Tốt" : pct>=50 ? "Đạt — vẫn nên ôn lại các câu sai" : "Cần ôn lại bài";
   $("scoreLine").innerHTML = "Điểm: <b>"+score+" / "+QUESTIONS.length+"</b> ("+pct+"%) — "+band;
-  $("metaLine").textContent = ($("stuName").value.trim() ? "Người làm bài: "+$("stuName").value.trim()+" • " : "") + "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài."));
+  $("metaLine").textContent = ($("stuName").value.trim() ? "Người làm bài: "+$("stuName").value.trim()+" • " : "") + (reviewMode ? "Ôn tập — Bài " + currentReviewLesson + " • Đã nộp bài (không tính giờ)." : "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài.")));
   var unansweredIdx = QUESTIONS.map(function(q,i){ return (answers[i]===undefined || answers[i]==="") ? (i+1) : null; }).filter(function(x){ return x!==null; });
-  var showAnswers = isAdmin() || unansweredIdx.length===0;
+  var showAnswers = isAdmin() || reviewMode || unansweredIdx.length===0;
   $("review").innerHTML = showAnswers ? rows.map(function(r){
     return '<div class="review"><div><b>Câu '+(r.i+1)+'</b> — '+esc(r.q)+' <span class="'+(r.correct?"ok":"bad")+'">'+(r.correct?"ĐÚNG":"SAI")+'</span></div>'
       + (r.passage ? '<div class="small passage">'+esc(r.passage)+'</div>' : '')
@@ -305,8 +305,9 @@ function resetTest(){
   $("timer").classList.remove("hidden"); renderTimer();
 }
 
-var currentPaper = 0;
+var currentPaper = 0, reviewMode = false;
 function startTest(){
+  reviewMode = false;
   if(!TEST_PAPERS.length){ alert("Chưa có đề kiểm tra."); return; }
   currentPaper = Math.floor(Math.random()*TEST_PAPERS.length);
   QUESTIONS = TEST_PAPERS[currentPaper].slice();
@@ -318,23 +319,28 @@ $("reviewBtn").onclick = function(){ renderReview(1); showScreen("reviewScreen")
 $("rev1Btn").onclick = function(){ renderReview(1); };
 $("rev2Btn").onclick = function(){ renderReview(2); };
 $("revBackBtn").onclick = function(){ showScreen("homeScreen"); };
+$("revStartBtn").onclick = function(){ startReview(currentReviewLesson); };
 var REV_SUMMARY = {
-  1: "<p><b>Bài 1 — Thì hiện tại đơn:</b> S + V(s/es) cho khẳng định; do/does + not + V cho phủ định; Do/Does + S + V cho câu hỏi. Dùng cho thói quen, sự thật hiển nhiên và lịch trình. Dấu hiệu: always, usually, often, sometimes, never, every day/week, once/twice a week. Nguồn: video Bài 1 của kênh I LOVE IELTS.</p><p class=\"small mut\">Phần ôn tập này hiện đáp án và lý do ngay dưới mỗi câu, không tính giờ, không tính điểm.</p>",
-  2: "<p><b>Bài 2 — Thì hiện tại tiếp diễn:</b> S + am/is/are + V-ing cho khẳng định; am/is/are + not + V-ing cho phủ định; Am/Is/Are + S + V-ing cho câu hỏi. I đi với am, he/she/it và danh từ số ít đi với is, you/we/they và danh từ số nhiều đi với are; am not không có dạng rút gọn. Dùng cho việc đang xảy ra ngay lúc nói, việc đang diễn ra trong giai đoạn này (these days), việc đã lên kế hoạch trong tương lai gần, và việc lặp lại gây khó chịu với always. Dấu hiệu: now, right now, at the moment, at present, Look!, Listen!, Look out!, Watch out!, Be quiet!. Lưu ý: động từ trạng thái như like, dislike, believe, want không dùng ở dạng V-ing. Nguồn: video Bài 2 của kênh I LOVE IELTS.</p><p class=\"small mut\">Phần ôn tập này hiện đáp án và lý do ngay dưới mỗi câu, không tính giờ, không tính điểm.</p>"
+  1: "<p><b>Bài 1 — Thì hiện tại đơn:</b> S + V(s/es) cho khẳng định; do/does + not + V cho phủ định; Do/Does + S + V cho câu hỏi. Dùng cho thói quen, sự thật hiển nhiên và lịch trình. Dấu hiệu: always, usually, often, sometimes, never, every day/week, once/twice a week. Nguồn: video Bài 1 của kênh I LOVE IELTS.</p><p class=\"small mut\">Ôn tập làm bài tương tự bài kiểm tra: chọn đáp án, viết câu, chuyển câu bằng nút hoặc phím mũi tên, nộp bài rồi xem điểm và đáp án. Khác bài kiểm tra ở chỗ: không tính giờ và được chuyển tab. Vẫn chặn copy và xem mã nguồn như bài kiểm tra.</p>",
+  2: "<p><b>Bài 2 — Thì hiện tại tiếp diễn:</b> S + am/is/are + V-ing cho khẳng định; am/is/are + not + V-ing cho phủ định; Am/Is/Are + S + V-ing cho câu hỏi. I đi với am, he/she/it và danh từ số ít đi với is, you/we/they và danh từ số nhiều đi với are; am not không có dạng rút gọn. Dùng cho việc đang xảy ra ngay lúc nói, việc đang diễn ra trong giai đoạn này (these days), việc đã lên kế hoạch trong tương lai gần, và việc lặp lại gây khó chịu với always. Dấu hiệu: now, right now, at the moment, at present, Look!, Listen!, Look out!, Watch out!, Be quiet!. Lưu ý: động từ trạng thái như like, dislike, believe, want không dùng ở dạng V-ing. Nguồn: video Bài 2 của kênh I LOVE IELTS.</p><p class=\"small mut\">Ôn tập làm bài tương tự bài kiểm tra: chọn đáp án, viết câu, chuyển câu bằng nút hoặc phím mũi tên, nộp bài rồi xem điểm và đáp án. Khác bài kiểm tra ở chỗ: không tính giờ và được chuyển tab. Vẫn chặn copy và xem mã nguồn như bài kiểm tra.</p>"
 };
+var currentReviewLesson = 1;
 function renderReview(lesson){
+  currentReviewLesson = lesson;
   var list = REVIEW_SETS[lesson] || [];
   $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : "Ôn tập — Bài 2: Thì hiện tại tiếp diễn";
   $("revSummary").innerHTML = REV_SUMMARY[lesson] || "";
-  $("revList").innerHTML = list.map(function(q,i){
-    var ans = q.opts ? String.fromCharCode(65+q.a)+". "+q.opts[q.a] : q.model;
-    return '<div class="review"><div><b>Câu '+(i+1)+'</b> — '+esc(q.q)+'</div>'
-      + (q.passage ? '<div class="small passage">'+esc(q.passage)+'</div>' : '')
-      + (q.opts ? '<div class="small">'+q.opts.map(function(o,j){ return String.fromCharCode(65+j)+". "+esc(o); }).join(" &nbsp; ") + '</div>' : '')
-      + '<div class="small"><b>Đáp án:</b> '+esc(ans)+'</div>'
-      + '<div class="small"><b>Giải thích:</b> '+esc(q.why)+'</div></div>';
-  }).join("") || '<p class="small mut">Chưa có câu ôn tập cho bài này.</p>';
+  $("revStartBtn").textContent = "Bắt đầu ôn tập — Bài " + lesson + " (" + list.length + " câu)";
   window.scrollTo(0,0);
+}
+function startReview(lesson){
+  var list = REVIEW_SETS[lesson] || [];
+  if(!list.length){ alert("Chưa có câu ôn tập cho bài này."); return; }
+  reviewMode = true;
+  QUESTIONS = list.slice();
+  $("paperLabel").textContent = "Ôn tập — Bài " + lesson;
+  shuffleAll(); resetTest(); $("timer").classList.add("hidden");
+  showScreen("testScreen"); renderQuestion();
 }
 $("prevBtn").onclick = function(){ if(current>0){ current--; renderQuestion(); } };
 $("nextBtn").onclick = function(){ if(current<QUESTIONS.length-1){ current++; renderQuestion(); } };
@@ -355,7 +361,7 @@ $("submitBtn").onclick = function(){
 };
 $("cancelSubmit").onclick = function(){ $("submitModal").classList.remove("open"); };
 $("confirmSubmit").onclick = function(){ $("submitModal").classList.remove("open"); finish(false); };
-$("retakeBtn").onclick = startTest;
+$("retakeBtn").onclick = function(){ if(reviewMode) startReview(currentReviewLesson); else startTest(); };
 $("backBtn").onclick = function(){ clearInterval(timerId); $("timer").classList.add("hidden"); showScreen("homeScreen"); };
 
 function openLogin(){
@@ -409,7 +415,7 @@ document.addEventListener("keydown", function(e){
    Chống đếm trùng: một lần chuyển tab thường kích hoạt cả blur lẫn visibilitychange gần như
    cùng lúc, nên các tín hiệu cách nhau dưới 2 giây chỉ tính là một lần vi phạm. */
 function recordViolation(kind){
-  if(submitted || isAdmin() || $("testScreen").classList.contains("hidden")) return;
+  if(submitted || isAdmin() || reviewMode || $("testScreen").classList.contains("hidden")) return;
   var now = Date.now();
   if(now - lastViolationAt < 2000) return;
   lastViolationAt = now;
