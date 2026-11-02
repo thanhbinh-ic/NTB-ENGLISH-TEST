@@ -54,13 +54,16 @@
   <section id="homeScreen" class="card">
     <h2>NTB English Test — 13 thì tiếng Anh</h2>
     <p>Chọn một trong hai phần dưới đây. Phần kiểm tra tổng hợp tất cả các bài đã có trong phần ôn tập, câu hỏi viết mới hoàn toàn, khác với câu ôn tập.</p>
-    <label class="small" for="stuName">Họ tên người làm bài (không bắt buộc)</label>
-    <input id="stuName" type="text" placeholder="Ví dụ: Nguyễn Văn A">
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
       <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 40 câu</button>
     </div>
-    <p class="small mut">Nguồn học: Bài 1 — Thì hiện tại đơn, video của kênh I LOVE IELTS — <a href="https://youtu.be/BmKkDuO_nkk" target="_blank" rel="noopener">https://youtu.be/BmKkDuO_nkk</a>; Bài 2 — Thì hiện tại tiếp diễn, video của kênh I LOVE IELTS — <a href="https://youtu.be/dIIG9m649-g" target="_blank" rel="noopener">https://youtu.be/dIIG9m649-g</a>. Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</p>
+    <div class="small mut" style="margin-top:14px">
+      <div>Nguồn học:</div>
+      <div>Bài 1 — Thì hiện tại đơn, video của kênh I LOVE IELTS — <a href="https://youtu.be/BmKkDuO_nkk" target="_blank" rel="noopener">https://youtu.be/BmKkDuO_nkk</a></div>
+      <div>Bài 2 — Thì hiện tại tiếp diễn, video của kênh I LOVE IELTS — <a href="https://youtu.be/dIIG9m649-g" target="_blank" rel="noopener">https://youtu.be/dIIG9m649-g</a></div>
+      <div>Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</div>
+    </div>
   </section>
 
   <!-- REVIEW -->
@@ -287,7 +290,7 @@ function finish(auto){
   var pct = Math.round(score/QUESTIONS.length*100);
   var band = pct>=90 ? "Xuất sắc" : pct>=70 ? "Tốt" : pct>=50 ? "Đạt — vẫn nên ôn lại các câu sai" : "Cần ôn lại bài";
   $("scoreLine").innerHTML = "Điểm: <b>"+score+" / "+QUESTIONS.length+"</b> ("+pct+"%) — "+band;
-  $("metaLine").textContent = ($("stuName").value.trim() ? "Người làm bài: "+$("stuName").value.trim()+" • " : "") + (reviewMode ? "Ôn tập — Bài " + currentReviewLesson + " • Đã nộp bài (không tính giờ)." : "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài.")));
+  $("metaLine").textContent = reviewMode ? "Ôn tập — Bài " + currentReviewLesson + " • Đã nộp bài (không tính giờ)." : "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài."));
   var unansweredIdx = QUESTIONS.map(function(q,i){ return (answers[i]===undefined || answers[i]==="") ? (i+1) : null; }).filter(function(x){ return x!==null; });
   var showAnswers = isAdmin() || reviewMode || unansweredIdx.length===0;
   $("review").innerHTML = showAnswers ? rows.map(function(r){
@@ -311,7 +314,7 @@ function startTest(){
   if(!TEST_PAPERS.length){ alert("Chưa có đề kiểm tra."); return; }
   currentPaper = Math.floor(Math.random()*TEST_PAPERS.length);
   QUESTIONS = TEST_PAPERS[currentPaper].slice();
-  $("paperLabel").textContent = "Đề số " + (currentPaper+1) + " / " + TEST_PAPERS.length;
+  $("paperLabel").textContent = "";
   shuffleAll(); resetTest(); showScreen("testScreen"); renderQuestion(); startTimer();
 }
 $("startBtn").onclick = startTest;
@@ -321,8 +324,8 @@ $("rev2Btn").onclick = function(){ renderReview(2); };
 $("revBackBtn").onclick = function(){ showScreen("homeScreen"); };
 $("revStartBtn").onclick = function(){ startReview(currentReviewLesson); };
 var REV_SUMMARY = {
-  1: "<p><b>Bài 1 — Thì hiện tại đơn:</b> S + V(s/es) cho khẳng định; do/does + not + V cho phủ định; Do/Does + S + V cho câu hỏi. Dùng cho thói quen, sự thật hiển nhiên và lịch trình. Dấu hiệu: always, usually, often, sometimes, never, every day/week, once/twice a week. Nguồn: video Bài 1 của kênh I LOVE IELTS.</p><p class=\"small mut\">Ôn tập làm bài tương tự bài kiểm tra: chọn đáp án, viết câu, chuyển câu bằng nút hoặc phím mũi tên, nộp bài rồi xem điểm và đáp án. Khác bài kiểm tra ở chỗ: không tính giờ và được chuyển tab. Vẫn chặn copy và xem mã nguồn như bài kiểm tra.</p>",
-  2: "<p><b>Bài 2 — Thì hiện tại tiếp diễn:</b> S + am/is/are + V-ing cho khẳng định; am/is/are + not + V-ing cho phủ định; Am/Is/Are + S + V-ing cho câu hỏi. I đi với am, he/she/it và danh từ số ít đi với is, you/we/they và danh từ số nhiều đi với are; am not không có dạng rút gọn. Dùng cho việc đang xảy ra ngay lúc nói, việc đang diễn ra trong giai đoạn này (these days), việc đã lên kế hoạch trong tương lai gần, và việc lặp lại gây khó chịu với always. Dấu hiệu: now, right now, at the moment, at present, Look!, Listen!, Look out!, Watch out!, Be quiet!. Lưu ý: động từ trạng thái như like, dislike, believe, want không dùng ở dạng V-ing. Nguồn: video Bài 2 của kênh I LOVE IELTS.</p><p class=\"small mut\">Ôn tập làm bài tương tự bài kiểm tra: chọn đáp án, viết câu, chuyển câu bằng nút hoặc phím mũi tên, nộp bài rồi xem điểm và đáp án. Khác bài kiểm tra ở chỗ: không tính giờ và được chuyển tab. Vẫn chặn copy và xem mã nguồn như bài kiểm tra.</p>"
+  1: "<p><b>Bài 1 — Thì hiện tại đơn:</b> S + V(s/es) cho khẳng định; do/does + not + V cho phủ định; Do/Does + S + V cho câu hỏi. Dùng cho thói quen, sự thật hiển nhiên và lịch trình. Dấu hiệu: always, usually, often, sometimes, never, every day/week, once/twice a week. Nguồn: video Bài 1 của kênh I LOVE IELTS.</p>",
+  2: "<p><b>Bài 2 — Thì hiện tại tiếp diễn:</b> S + am/is/are + V-ing cho khẳng định; am/is/are + not + V-ing cho phủ định; Am/Is/Are + S + V-ing cho câu hỏi. I đi với am, he/she/it và danh từ số ít đi với is, you/we/they và danh từ số nhiều đi với are; am not không có dạng rút gọn. Dùng cho việc đang xảy ra ngay lúc nói, việc đang diễn ra trong giai đoạn này (these days), việc đã lên kế hoạch trong tương lai gần, và việc lặp lại gây khó chịu với always. Dấu hiệu: now, right now, at the moment, at present, Look!, Listen!, Look out!, Watch out!, Be quiet!. Lưu ý: động từ trạng thái như like, dislike, believe, want không dùng ở dạng V-ing. Nguồn: video Bài 2 của kênh I LOVE IELTS.</p>"
 };
 var currentReviewLesson = 1;
 function renderReview(lesson){
