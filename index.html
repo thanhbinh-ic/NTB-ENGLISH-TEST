@@ -50,24 +50,36 @@
 <div class="wrap">
   <div id="adminBar" class="adminbar"><b>Chế độ Admin đang bật.</b> Đáp án đúng hiển thị ngay trong lúc làm bài.</div>
 
-  <!-- START -->
-  <section id="startScreen" class="card">
-    <h2>Bắt đầu làm bài</h2>
-    <p><b>Nội dung:</b> Thì hiện tại đơn — công thức 3 thể, 3 cách dùng chính, dấu hiệu nhận biết và bài tập chia động từ.</p>
-    <p><b>Cấu trúc:</b> Phần A: 20 câu trắc nghiệm. Phần B: 9 câu viết và sắp xếp câu. Phần C: 3 câu đọc hiểu (trắc nghiệm, mỗi câu một đoạn văn riêng).</p>
-    <p><b>Thời gian:</b> 60 phút, đếm ngược. Hết giờ hệ thống tự nộp bài. Bấm “Nộp bài” và xác nhận thì cũng nộp ngay.</p>
-    <p><b>Chấm điểm:</b> Mỗi câu 1 điểm, tổng 32 điểm. Sau khi nộp, hệ thống hiển thị điểm, đáp án đúng và lý do cho câu làm sai để ôn lại.</p>
-    <p class="small mut">Nguồn học: video “13 THÌ TIẾNG ANH - BÀI 1: THÌ HIỆN TẠI ĐƠN” của kênh I LOVE IELTS — <a href="https://youtu.be/BmKkDuO_nkk" target="_blank" rel="noopener">https://youtu.be/BmKkDuO_nkk</a>. Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</p>
+  <!-- HOME -->
+  <section id="homeScreen" class="card">
+    <h2>NTB English Test — 13 thì tiếng Anh</h2>
+    <p>Chọn một trong hai phần dưới đây. Phần kiểm tra tổng hợp tất cả các bài đã có trong phần ôn tập, câu hỏi viết mới hoàn toàn, khác với câu ôn tập.</p>
     <label class="small" for="stuName">Họ tên người làm bài (không bắt buộc)</label>
     <input id="stuName" type="text" placeholder="Ví dụ: Nguyễn Văn A">
-    <div class="row" style="margin-top:14px"><button id="startBtn" type="button">Bắt đầu làm bài — 60 phút</button></div>
+    <div class="row" style="margin-top:14px">
+      <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
+      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 40 câu</button>
+    </div>
+    <p class="small mut">Bài kiểm tra: 60 phút, đếm ngược, hết giờ tự nộp. Mỗi lần bấm làm kiểm tra, hệ thống chọn ngẫu nhiên một trong 3 đề khác nhau. Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</p>
+  </section>
 
+  <!-- REVIEW -->
+  <section id="reviewScreen" class="card hidden">
+    <div class="row">
+      <button id="rev1Btn" class="secondary" type="button">Bài 1 — Thì hiện tại đơn</button>
+      <button id="rev2Btn" class="secondary" type="button">Bài 2 — Thì hiện tại tiếp diễn</button>
+      <div class="flex"></div>
+      <button id="revBackBtn" class="secondary" type="button">Về trang chủ</button>
+    </div>
+    <h2 id="revTitle"></h2>
+    <div id="revSummary"></div>
+    <div id="revList"></div>
   </section>
 
   <!-- TEST -->
   <section id="testScreen" class="card hidden">
     <div id="qFrame">
-    <div class="row"><div class="flex"><b id="qTitle"></b></div><div id="qPart" class="small mut"></div></div>
+    <div class="row"><div class="flex"><b id="qTitle"></b></div><div id="paperLabel" class="small mut"></div><div id="qPart" class="small mut"></div></div>
     <p id="qText" style="font-size:18px"></p>
     <div id="qPassage" class="passage hidden"></div>
     <div id="qBody"></div>
@@ -92,7 +104,7 @@
     <div id="review"></div>
     <div class="row" style="margin-top:16px">
       <button id="retakeBtn" type="button">Làm lại bài mới</button>
-      <button id="backBtn" class="secondary" type="button">Về trang bắt đầu</button>
+      <button id="backBtn" class="secondary" type="button">Về trang chủ</button>
     </div>
   </section>
 
@@ -127,6 +139,7 @@
   <div class="row"><button id="confirmSubmit" class="danger" type="button">Nộp bài ngay</button><button id="cancelSubmit" class="secondary" type="button">Làm tiếp</button></div>
 </div></div>
 
+<script src="data.js"></script>
 <script>
 "use strict";
 // SHA-256 của "admin123". Đổi mật khẩu: tính SHA-256 của mật khẩu mới và thay chuỗi này.
@@ -134,7 +147,7 @@ var ADMIN_USER = "admin";
 var ADMIN_PASS_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
 var TOTAL_SECONDS = 3600;
 
-var QUESTIONS = [
+var REVIEW1 = [
   {part:"A — Trắc nghiệm", q:"She ___ to school every day.", opts:["go","goes","going","gone"], a:1, why:"Chủ ngữ “she” là số ít nên động từ thêm -s: goes. “go” dùng cho I/you/we/they và danh từ số nhiều."},
   {part:"A — Trắc nghiệm", q:"They ___ football on Sundays.", opts:["plays","play","playing","played"], a:1, why:"Chủ ngữ “they” là số nhiều nên động từ giữ nguyên mẫu: play. “plays” chỉ dùng cho he/she/it và danh từ số ít."},
   {part:"A — Trắc nghiệm", q:"He ___ like coffee.", opts:["don't","doesn't","isn't","not"], a:1, why:"Thể phủ định với he/she/it dùng doesn't + động từ nguyên mẫu. “doesn't likes” là sai vì sau doesn't động từ không thêm -s."},
@@ -168,6 +181,9 @@ var QUESTIONS = [
   {part:"C — Đọc hiểu", passage:"Anna is a teacher. She teaches English every day. She goes to work by car. Her classes start at 8 a.m. She does not work on Sundays. On Sundays, she reads books and visits her parents.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How does Anna go to work?", opts:["By bus","By car","On foot","By bike"], a:1, why:"Đoạn văn viết: “She goes to work by car.”"},
   {part:"C — Đọc hiểu", passage:"Tom and his sister live in a small town. Their school is near their house. Tom and his sister go to school on foot every day. Their father works in a factory and their mother is a doctor. On Saturdays, the family goes to the market.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How do Tom and his sister go to school?", opts:["By bus","On foot","By car","By bike"], a:1, why:"Đoạn văn viết: “Tom and his sister go to school on foot every day.”"}
 ];
+var QUESTIONS = [];
+var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : [])};
+var TEST_PAPERS = (typeof TESTS !== "undefined" ? TESTS : []);
 
 function $(id){ return document.getElementById(id); }
 function isAdmin(){ try{ return sessionStorage.getItem("ntb_admin")==="1"; }catch(e){ return false; } }
@@ -247,7 +263,7 @@ function renderAdminBox(){
   $("qAdmin").classList.toggle("hidden", !show);
 }
 function showScreen(id){
-  ["startScreen","testScreen","resultScreen"].forEach(function(s){ $(s).classList.toggle("hidden", s!==id); });
+  ["homeScreen","reviewScreen","testScreen","resultScreen"].forEach(function(s){ $(s).classList.toggle("hidden", s!==id); });
 }
 function grade(){
   return QUESTIONS.map(function(q,i){
@@ -289,7 +305,37 @@ function resetTest(){
   $("timer").classList.remove("hidden"); renderTimer();
 }
 
-$("startBtn").onclick = function(){ shuffleAll(); resetTest(); showScreen("testScreen"); renderQuestion(); startTimer(); };
+var currentPaper = 0;
+function startTest(){
+  if(!TEST_PAPERS.length){ alert("Chưa có đề kiểm tra."); return; }
+  currentPaper = Math.floor(Math.random()*TEST_PAPERS.length);
+  QUESTIONS = TEST_PAPERS[currentPaper].slice();
+  $("paperLabel").textContent = "Đề số " + (currentPaper+1) + " / " + TEST_PAPERS.length;
+  shuffleAll(); resetTest(); showScreen("testScreen"); renderQuestion(); startTimer();
+}
+$("startBtn").onclick = startTest;
+$("reviewBtn").onclick = function(){ renderReview(1); showScreen("reviewScreen"); };
+$("rev1Btn").onclick = function(){ renderReview(1); };
+$("rev2Btn").onclick = function(){ renderReview(2); };
+$("revBackBtn").onclick = function(){ showScreen("homeScreen"); };
+var REV_SUMMARY = {
+  1: "<p><b>Bài 1 — Thì hiện tại đơn:</b> S + V(s/es) cho khẳng định; do/does + not + V cho phủ định; Do/Does + S + V cho câu hỏi. Dùng cho thói quen, sự thật hiển nhiên và lịch trình. Dấu hiệu: always, usually, often, sometimes, never, every day/week, once/twice a week. Nguồn: video Bài 1 của kênh I LOVE IELTS.</p><p class=\"small mut\">Phần ôn tập này hiện đáp án và lý do ngay dưới mỗi câu, không tính giờ, không tính điểm.</p>",
+  2: "<p><b>Bài 2 — Thì hiện tại tiếp diễn:</b> S + am/is/are + V-ing cho khẳng định; am/is/are + not + V-ing cho phủ định; Am/Is/Are + S + V-ing cho câu hỏi. I đi với am, he/she/it và danh từ số ít đi với is, you/we/they và danh từ số nhiều đi với are; am not không có dạng rút gọn. Dùng cho việc đang xảy ra ngay lúc nói, việc đang diễn ra trong giai đoạn này (these days), việc đã lên kế hoạch trong tương lai gần, và việc lặp lại gây khó chịu với always. Dấu hiệu: now, right now, at the moment, at present, Look!, Listen!, Look out!, Watch out!, Be quiet!. Lưu ý: động từ trạng thái như like, dislike, believe, want không dùng ở dạng V-ing. Nguồn: video Bài 2 của kênh I LOVE IELTS.</p><p class=\"small mut\">Phần ôn tập này hiện đáp án và lý do ngay dưới mỗi câu, không tính giờ, không tính điểm.</p>"
+};
+function renderReview(lesson){
+  var list = REVIEW_SETS[lesson] || [];
+  $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : "Ôn tập — Bài 2: Thì hiện tại tiếp diễn";
+  $("revSummary").innerHTML = REV_SUMMARY[lesson] || "";
+  $("revList").innerHTML = list.map(function(q,i){
+    var ans = q.opts ? String.fromCharCode(65+q.a)+". "+q.opts[q.a] : q.model;
+    return '<div class="review"><div><b>Câu '+(i+1)+'</b> — '+esc(q.q)+'</div>'
+      + (q.passage ? '<div class="small passage">'+esc(q.passage)+'</div>' : '')
+      + (q.opts ? '<div class="small">'+q.opts.map(function(o,j){ return String.fromCharCode(65+j)+". "+esc(o); }).join(" &nbsp; ") + '</div>' : '')
+      + '<div class="small"><b>Đáp án:</b> '+esc(ans)+'</div>'
+      + '<div class="small"><b>Giải thích:</b> '+esc(q.why)+'</div></div>';
+  }).join("") || '<p class="small mut">Chưa có câu ôn tập cho bài này.</p>';
+  window.scrollTo(0,0);
+}
 $("prevBtn").onclick = function(){ if(current>0){ current--; renderQuestion(); } };
 $("nextBtn").onclick = function(){ if(current<QUESTIONS.length-1){ current++; renderQuestion(); } };
 /* Chuyển câu bằng phím mũi tên trái/phải (không áp dụng khi đang gõ trong ô nhập, đang chọn đáp án, hay đang mở hộp thoại) */
@@ -309,8 +355,8 @@ $("submitBtn").onclick = function(){
 };
 $("cancelSubmit").onclick = function(){ $("submitModal").classList.remove("open"); };
 $("confirmSubmit").onclick = function(){ $("submitModal").classList.remove("open"); finish(false); };
-$("retakeBtn").onclick = function(){ shuffleAll(); resetTest(); showScreen("testScreen"); renderQuestion(); startTimer(); };
-$("backBtn").onclick = function(){ clearInterval(timerId); $("timer").classList.add("hidden"); showScreen("startScreen"); };
+$("retakeBtn").onclick = startTest;
+$("backBtn").onclick = function(){ clearInterval(timerId); $("timer").classList.add("hidden"); showScreen("homeScreen"); };
 
 function openLogin(){
   $("loginErr").classList.add("hidden");
