@@ -3,6 +3,10 @@
 Trang web kiểm tra và ôn tập tiếng Anh theo loạt bài “13 thì tiếng Anh” của kênh I LOVE IELTS.
 Trang tĩnh, không cần máy chủ, không cần lệnh build.
 
+**AI Roleplay Simulator** is an interactive text adventure game where Artificial Intelligence acts as your personal "Dungeon Master." The system dynamically generates worlds, characters, and branching storylines based on your unique creative inputs, offering a limitless storytelling experience.
+
+[![Vercel App](https://img.shields.io/badge/LIVE_DEMO-VERCEL_APP-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://ntbenglish.vercel.app)
+
 ## Trang chủ
 
 Trang chủ có hai phần:
@@ -25,7 +29,7 @@ Nguồn học:
 - Bài 1 — Thì hiện tại đơn: https://youtu.be/BmKkDuO_nkk
 - Bài 2 — Thì hiện tại tiếp diễn: https://youtu.be/dIIG9m649-g
 
-Câu hỏi do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng,
+Câu hỏi do tôi soạn mới theo các điểm ngữ pháp của bài giảng,
 không sao chép nguyên văn bài tập trong video.
 
 ## Kiểm tra
@@ -52,13 +56,10 @@ không sao chép nguyên văn bài tập trong video.
   một lần. Admin được miễn cơ chế chống gian lận.
 - Chuyển câu bằng phím mũi tên trái/phải, trừ khi đang gõ trong ô nhập,
   đang chọn đáp án hoặc đang mở hộp thoại.
-- Khung câu hỏi có chiều cao tối thiểu 380px để nút chuyển câu, nút nộp bài
-  và bảng câu hỏi không nhảy lên xuống theo độ dài câu hỏi.
 
 ## Đăng nhập
 
-Nút “Đăng nhập” ở góc phải dùng để đăng nhập tài khoản admin. Khi đã đăng nhập,
-nút đổi thành “Thanh Bình” và trong lúc làm bài sẽ hiện đáp án đúng của từng câu
+Nút “Đăng nhập” ở góc phải dùng để đăng nhập tài khoản admin. Khi đã đăng nhập, trong lúc làm bài sẽ hiện đáp án đúng của từng câu
 để test hệ thống. Trạng thái đăng nhập chỉ lưu theo phiên trình duyệt.
 
 Lưu ý: đây là trang tĩnh, repo công khai, đáp án nằm trong mã nguồn trang,
