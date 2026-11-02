@@ -30,6 +30,7 @@
   .modal.open{display:flex} .modal .card{max-width:480px;width:100%}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center} .flex{flex:1}
   .passage{background:#f9fafb;border-left:4px solid var(--blue);padding:12px 14px;line-height:1.6;margin:0 0 14px}
+  #qFrame{min-height:380px}
   .hidden{display:none!important}
   /* Chống copy khi chưa đăng nhập: vẫn cho gõ và sửa trong ô nhập của chính mình */
   body:not(.admin) .card, body:not(.admin) header{-webkit-user-select:none;user-select:none}
@@ -53,9 +54,9 @@
   <section id="startScreen" class="card">
     <h2>Bắt đầu làm bài</h2>
     <p><b>Nội dung:</b> Thì hiện tại đơn — công thức 3 thể, 3 cách dùng chính, dấu hiệu nhận biết và bài tập chia động từ.</p>
-    <p><b>Cấu trúc:</b> Phần A: 20 câu trắc nghiệm. Phần B: 9 câu viết và sắp xếp câu. Phần C: 3 câu đọc hiểu (trắc nghiệm, có đoạn văn kèm theo).</p>
+    <p><b>Cấu trúc:</b> Phần A: 20 câu trắc nghiệm. Phần B: 9 câu viết và sắp xếp câu. Phần C: 3 câu đọc hiểu (trắc nghiệm, mỗi câu một đoạn văn riêng).</p>
     <p><b>Thời gian:</b> 60 phút, đếm ngược. Hết giờ hệ thống tự nộp bài. Bấm “Nộp bài” và xác nhận thì cũng nộp ngay.</p>
-    <p><b>Chấm điểm:</b> Mỗi câu 1 điểm, tổng 25 điểm. Sau khi nộp, hệ thống hiển thị điểm, đáp án đúng và lý do cho câu làm sai để ôn lại.</p>
+    <p><b>Chấm điểm:</b> Mỗi câu 1 điểm, tổng 32 điểm. Sau khi nộp, hệ thống hiển thị điểm, đáp án đúng và lý do cho câu làm sai để ôn lại.</p>
     <p class="small mut">Nguồn học: video “13 THÌ TIẾNG ANH - BÀI 1: THÌ HIỆN TẠI ĐƠN” của kênh I LOVE IELTS — <a href="https://youtu.be/BmKkDuO_nkk" target="_blank" rel="noopener">https://youtu.be/BmKkDuO_nkk</a>. Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</p>
     <label class="small" for="stuName">Họ tên người làm bài (không bắt buộc)</label>
     <input id="stuName" type="text" placeholder="Ví dụ: Nguyễn Văn A">
@@ -65,11 +66,13 @@
 
   <!-- TEST -->
   <section id="testScreen" class="card hidden">
+    <div id="qFrame">
     <div class="row"><div class="flex"><b id="qTitle"></b></div><div id="qPart" class="small mut"></div></div>
     <p id="qText" style="font-size:18px"></p>
     <div id="qPassage" class="passage hidden"></div>
     <div id="qBody"></div>
     <div id="qAdmin" class="ansbox hidden"></div>
+    </div>
     <div class="row" style="margin-top:16px">
       <button id="prevBtn" class="secondary" type="button">Câu trước</button>
       <button id="nextBtn" class="secondary" type="button">Câu sau</button>
@@ -162,13 +165,13 @@ var QUESTIONS = [
   {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “by bus / always / goes / My father / to work”", accept:["my father always goes to work by bus"], model:"My father always goes to work by bus.", why:"“always” đứng trước động từ thường “goes”; chủ ngữ “my father” số ít nên dùng goes."},
   {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “study / he / every day / Does / English”", accept:["does he study english every day"], model:"Does he study English every day?", why:"Câu hỏi với “he” dùng Does + chủ ngữ + động từ nguyên mẫu: study, không phải studies."},
   {part:"C — Đọc hiểu", passage:"Minh is a student. He gets up at 6 a.m. every day. He does not like coffee. He drinks tea in the morning. He goes to school by bus. His school starts at 7 a.m. In the evening, he does his homework and watches TV. On Sundays, he plays football with his friends. He does not play football on weekdays because he is busy with his lessons.", q:"Đọc đoạn văn trên và chọn đáp án đúng: Minh gets up at…", opts:["6 a.m.","7 a.m.","5 a.m.","8 a.m."], a:0, why:"Đoạn văn viết: “He gets up at 6 a.m. every day.” — 7 a.m. là giờ trường bắt đầu, không phải giờ Minh dậy."},
-  {part:"C — Đọc hiểu", passage:"Minh is a student. He gets up at 6 a.m. every day. He does not like coffee. He drinks tea in the morning. He goes to school by bus. His school starts at 7 a.m. In the evening, he does his homework and watches TV. On Sundays, he plays football with his friends. He does not play football on weekdays because he is busy with his lessons.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How does Minh go to school?", opts:["By car","By bike","By bus","On foot"], a:2, why:"Đoạn văn viết: “He goes to school by bus.”"},
-  {part:"C — Đọc hiểu", passage:"Minh is a student. He gets up at 6 a.m. every day. He does not like coffee. He drinks tea in the morning. He goes to school by bus. His school starts at 7 a.m. In the evening, he does his homework and watches TV. On Sundays, he plays football with his friends. He does not play football on weekdays because he is busy with his lessons.", q:"Đọc đoạn văn trên và chọn đáp án đúng: When does Minh play football?", opts:["Every day","On Saturdays","On Sundays","On weekdays"], a:2, why:"Đoạn văn viết: “On Sundays, he plays football with his friends.” và “He does not play football on weekdays.”"}
+  {part:"C — Đọc hiểu", passage:"Anna is a teacher. She teaches English every day. She goes to work by car. Her classes start at 8 a.m. She does not work on Sundays. On Sundays, she reads books and visits her parents.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How does Anna go to work?", opts:["By bus","By car","On foot","By bike"], a:1, why:"Đoạn văn viết: “She goes to work by car.”"},
+  {part:"C — Đọc hiểu", passage:"Tom and his sister live in a small town. Their school is near their house. Tom and his sister go to school on foot every day. Their father works in a factory and their mother is a doctor. On Saturdays, the family goes to the market.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How do Tom and his sister go to school?", opts:["By bus","On foot","By car","By bike"], a:1, why:"Đoạn văn viết: “Tom and his sister go to school on foot every day.”"}
 ];
 
 function $(id){ return document.getElementById(id); }
 function isAdmin(){ try{ return sessionStorage.getItem("ntb_admin")==="1"; }catch(e){ return false; } }
-function setAdmin(v){ try{ if(v){ sessionStorage.setItem("ntb_admin","1"); } else { sessionStorage.removeItem("ntb_admin"); } }catch(e){} document.body.classList.toggle("admin", isAdmin()); }
+function setAdmin(v){ try{ if(v){ sessionStorage.setItem("ntb_admin","1"); } else { sessionStorage.removeItem("ntb_admin"); } }catch(e){} document.body.classList.toggle("admin", isAdmin()); $("adminBtn").textContent = isAdmin() ? "Thanh Bình" : "Đăng nhập"; }
 function norm(s){
   return String(s||"").toLowerCase().replace(/a\.m\./g,"am").replace(/p\.m\./g,"pm")
     .replace(/doesn['’]t/g,"does not").replace(/don['’]t/g,"do not")
@@ -215,7 +218,7 @@ function renderPalette(){
 function renderQuestion(){
   var q = QUESTIONS[current];
   $("qTitle").textContent = "Câu " + (current+1) + " / " + QUESTIONS.length;
-  $("qPart").textContent = q.part;
+  $("qPart").textContent = q.part.replace(/^[A-Z] — /, "");
   $("qText").textContent = q.q;
   $("qPassage").textContent = q.passage || "";
   $("qPassage").classList.toggle("hidden", !q.passage);
@@ -257,7 +260,7 @@ function grade(){
       correct = q.accept.some(function(a){ return norm(a)===norm(raw||""); });
     }
     var correctText = q.opts ? String.fromCharCode(65+q.a)+". "+q.opts[q.a] : q.model;
-    return {i:i, part:q.part, q:q.q, passage:q.passage||"", userText:userText, correctText:correctText, why:q.why, correct:correct};
+    return {i:i, part:q.part.replace(/^[A-Z] — /, ""), q:q.q, passage:q.passage||"", userText:userText, correctText:correctText, why:q.why, correct:correct};
   });
 }
 function finish(auto){
@@ -268,13 +271,16 @@ function finish(auto){
   var band = pct>=90 ? "Xuất sắc" : pct>=70 ? "Tốt" : pct>=50 ? "Đạt — vẫn nên ôn lại các câu sai" : "Cần ôn lại bài";
   $("scoreLine").innerHTML = "Điểm: <b>"+score+" / "+QUESTIONS.length+"</b> ("+pct+"%) — "+band;
   $("metaLine").textContent = ($("stuName").value.trim() ? "Người làm bài: "+$("stuName").value.trim()+" • " : "") + "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài."));
-  $("review").innerHTML = rows.map(function(r){
+  var unansweredIdx = QUESTIONS.map(function(q,i){ return (answers[i]===undefined || answers[i]==="") ? (i+1) : null; }).filter(function(x){ return x!==null; });
+  var showAnswers = isAdmin() || unansweredIdx.length===0;
+  $("review").innerHTML = showAnswers ? rows.map(function(r){
     return '<div class="review"><div><b>Câu '+(r.i+1)+'</b> — '+esc(r.q)+' <span class="'+(r.correct?"ok":"bad")+'">'+(r.correct?"ĐÚNG":"SAI")+'</span></div>'
       + (r.passage ? '<div class="small passage">'+esc(r.passage)+'</div>' : '')
       + '<div class="small">Bạn trả lời: '+esc(r.userText)+'</div>'
       + '<div class="small">Đáp án đúng: '+esc(r.correctText)+'</div>'
       + (r.correct ? "" : '<div class="small"><b>Lý do sai:</b> '+esc(r.why)+'</div>') + '</div>';
-  }).join("");
+  }).join("")
+  : '<div class="small">Bạn chưa trả lời hết các câu hỏi, nên hệ thống chỉ hiển thị điểm và thời gian đã làm, không hiển thị đáp án và lý do sai. Các câu chưa trả lời: '+unansweredIdx.join(", ")+'. Hãy làm đủ các câu rồi nộp bài để xem đáp án và lý do sai.</div>';
   showScreen("resultScreen"); window.scrollTo(0,0);
 }
 function resetTest(){
@@ -285,6 +291,16 @@ function resetTest(){
 $("startBtn").onclick = function(){ shuffleAll(); resetTest(); showScreen("testScreen"); renderQuestion(); startTimer(); };
 $("prevBtn").onclick = function(){ if(current>0){ current--; renderQuestion(); } };
 $("nextBtn").onclick = function(){ if(current<QUESTIONS.length-1){ current++; renderQuestion(); } };
+/* Chuyển câu bằng phím mũi tên trái/phải (không áp dụng khi đang gõ trong ô nhập, đang chọn đáp án, hay đang mở hộp thoại) */
+document.addEventListener("keydown", function(e){
+  if(submitted || $("testScreen").classList.contains("hidden")) return;
+  if(document.querySelector(".modal.open")) return;
+  var tag = (e.target && e.target.tagName) || "";
+  if(tag==="INPUT" || tag==="TEXTAREA" || tag==="SELECT") return;
+  if(e.key==="ArrowRight" && current<QUESTIONS.length-1){ current++; renderQuestion(); }
+  if(e.key==="ArrowLeft" && current>0){ current--; renderQuestion(); }
+});
+
 $("submitBtn").onclick = function(){
   var un = QUESTIONS.filter(function(q,i){ return answers[i]===undefined || answers[i]===""; }).length;
   $("submitInfo").textContent = un>0 ? "Bạn còn "+un+" câu chưa trả lời. Các câu này sẽ tính là sai nếu nộp ngay." : "Bạn đã trả lời đủ "+QUESTIONS.length+" câu.";
@@ -338,7 +354,7 @@ document.addEventListener("keydown", function(e){
 /* Phát hiện đổi tab: lần 1 cảnh báo, lần 2 nộp bài ngay (đồng hồ vẫn chạy khi hiện cảnh báo) */
 $("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); };
 document.addEventListener("visibilitychange", function(){
-  if(document.hidden && !submitted && !$("testScreen").classList.contains("hidden")){
+  if(document.hidden && !submitted && !isAdmin() && !$("testScreen").classList.contains("hidden")){
     tabViolations++;
     if(tabViolations === 1){ $("tabModal").classList.add("open"); }
     else if(tabViolations >= 2){ submitReason = "Đổi tab lần 2, hệ thống tự nộp bài."; finish(false); }
