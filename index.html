@@ -29,6 +29,7 @@
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px}
   .modal.open{display:flex} .modal .card{max-width:480px;width:100%}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center} .flex{flex:1}
+  .passage{background:#f9fafb;border-left:4px solid var(--blue);padding:12px 14px;line-height:1.6;margin:0 0 14px}
   .hidden{display:none!important}
   /* Chống copy khi chưa đăng nhập: vẫn cho gõ và sửa trong ô nhập của chính mình */
   body:not(.admin) .card, body:not(.admin) header{-webkit-user-select:none;user-select:none}
@@ -38,7 +39,7 @@
 </head>
 <body>
 <header>
-  <div><h1>NTB English Test — Thì hiện tại đơn</h1><p>Bài kiểm tra dựa trên bài giảng thì hiện tại đơn • 60 phút • 25 câu</p></div>
+  <div><h1>NTB English Test — Thì hiện tại đơn</h1><p>Bài kiểm tra dựa trên bài giảng thì hiện tại đơn • 60 phút • 32 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
     <button id="adminBtn" class="secondary" type="button">Đăng nhập</button>
@@ -52,10 +53,10 @@
   <section id="startScreen" class="card">
     <h2>Bắt đầu làm bài</h2>
     <p><b>Nội dung:</b> Thì hiện tại đơn — công thức 3 thể, 3 cách dùng chính, dấu hiệu nhận biết và bài tập chia động từ.</p>
-    <p><b>Cấu trúc:</b> Phần A: 20 câu trắc nghiệm. Phần B: 5 câu viết (viết lại câu / chia động từ đúng dạng).</p>
+    <p><b>Cấu trúc:</b> Phần A: 20 câu trắc nghiệm. Phần B: 9 câu viết và sắp xếp câu. Phần C: 3 câu đọc hiểu (trắc nghiệm, có đoạn văn kèm theo).</p>
     <p><b>Thời gian:</b> 60 phút, đếm ngược. Hết giờ hệ thống tự nộp bài. Bấm “Nộp bài” và xác nhận thì cũng nộp ngay.</p>
     <p><b>Chấm điểm:</b> Mỗi câu 1 điểm, tổng 25 điểm. Sau khi nộp, hệ thống hiển thị điểm, đáp án đúng và lý do cho câu làm sai để ôn lại.</p>
-    <p class="small mut">Nguồn học: video “13 THÌ TIẾNG ANH - BÀI 1: THÌ HIỆN TẠI ĐƠN” của kênh I LOVE IELTS — <a href="https://youtu.be/BmKkDuO_nkk" target="_blank" rel="noopener">https://youtu.be/BmKkDuO_nkk</a>. Câu hỏi trong trang này do NTB soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</p>
+    <p class="small mut">Nguồn học: video “13 THÌ TIẾNG ANH - BÀI 1: THÌ HIỆN TẠI ĐƠN” của kênh I LOVE IELTS — <a href="https://youtu.be/BmKkDuO_nkk" target="_blank" rel="noopener">https://youtu.be/BmKkDuO_nkk</a>. Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</p>
     <label class="small" for="stuName">Họ tên người làm bài (không bắt buộc)</label>
     <input id="stuName" type="text" placeholder="Ví dụ: Nguyễn Văn A">
     <div class="row" style="margin-top:14px"><button id="startBtn" type="button">Bắt đầu làm bài — 60 phút</button></div>
@@ -66,6 +67,7 @@
   <section id="testScreen" class="card hidden">
     <div class="row"><div class="flex"><b id="qTitle"></b></div><div id="qPart" class="small mut"></div></div>
     <p id="qText" style="font-size:18px"></p>
+    <div id="qPassage" class="passage hidden"></div>
     <div id="qBody"></div>
     <div id="qAdmin" class="ansbox hidden"></div>
     <div class="row" style="margin-top:16px">
@@ -154,7 +156,14 @@ var QUESTIONS = [
   {part:"B — Viết", q:"Viết lại thành câu hỏi: “They play tennis on Sundays.”", accept:["do they play tennis on sundays"], model:"Do they play tennis on Sundays?", why:"Câu hỏi với “they” dùng Do + chủ ngữ + động từ nguyên mẫu. Động từ “play” giữ nguyên, không thêm -s."},
   {part:"B — Viết", q:"Chia động từ đúng dạng: “He (watch) TV every night.” — viết cả câu.", accept:["he watches tv every night"], model:"He watches TV every night.", why:"Chủ ngữ “he” số ít, động từ “watch” tận cùng -ch nên thêm -es thành watches."},
   {part:"B — Viết", q:"Chia động từ đúng dạng: “My mother (go) to work by car every day.” — viết cả câu.", accept:["my mother goes to work by car every day"], model:"My mother goes to work by car every day.", why:"Chủ ngữ “my mother” số ít, động từ “go” tận cùng -o nên thêm -es thành goes."},
-  {part:"B — Viết", q:"Sắp xếp thành câu đúng: “I / always / get up / at / 6 a.m.”", accept:["i always get up at 6 am","i always get up at 6 a.m"], model:"I always get up at 6 a.m.", why:"Trạng từ tần suất “always” đứng trước động từ thường “get up”, và mốc giờ dùng giới từ “at”."}
+  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “6 a.m. / get up / I / at / always”", accept:["i always get up at 6 am","i always get up at 6 a.m"], model:"I always get up at 6 a.m.", why:"Trạng từ tần suất “always” đứng trước động từ thường “get up”, và mốc giờ dùng giới từ “at”."},
+  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “coffee / She / not / does / like”", accept:["she does not like coffee","she doesn't like coffee"], model:"She does not like coffee.", why:"Phủ định với “she” dùng does not + động từ nguyên mẫu: like, không phải likes."},
+  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “football / every / They / Sunday / play”", accept:["they play football every sunday"], model:"They play football every Sunday.", why:"Chủ ngữ “they” số nhiều nên động từ giữ nguyên mẫu: play. Cụm “every Sunday” chỉ thói quen lặp lại."},
+  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “by bus / always / goes / My father / to work”", accept:["my father always goes to work by bus"], model:"My father always goes to work by bus.", why:"“always” đứng trước động từ thường “goes”; chủ ngữ “my father” số ít nên dùng goes."},
+  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “study / he / every day / Does / English”", accept:["does he study english every day"], model:"Does he study English every day?", why:"Câu hỏi với “he” dùng Does + chủ ngữ + động từ nguyên mẫu: study, không phải studies."},
+  {part:"C — Đọc hiểu", passage:"Minh is a student. He gets up at 6 a.m. every day. He does not like coffee. He drinks tea in the morning. He goes to school by bus. His school starts at 7 a.m. In the evening, he does his homework and watches TV. On Sundays, he plays football with his friends. He does not play football on weekdays because he is busy with his lessons.", q:"Đọc đoạn văn trên và chọn đáp án đúng: Minh gets up at…", opts:["6 a.m.","7 a.m.","5 a.m.","8 a.m."], a:0, why:"Đoạn văn viết: “He gets up at 6 a.m. every day.” — 7 a.m. là giờ trường bắt đầu, không phải giờ Minh dậy."},
+  {part:"C — Đọc hiểu", passage:"Minh is a student. He gets up at 6 a.m. every day. He does not like coffee. He drinks tea in the morning. He goes to school by bus. His school starts at 7 a.m. In the evening, he does his homework and watches TV. On Sundays, he plays football with his friends. He does not play football on weekdays because he is busy with his lessons.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How does Minh go to school?", opts:["By car","By bike","By bus","On foot"], a:2, why:"Đoạn văn viết: “He goes to school by bus.”"},
+  {part:"C — Đọc hiểu", passage:"Minh is a student. He gets up at 6 a.m. every day. He does not like coffee. He drinks tea in the morning. He goes to school by bus. His school starts at 7 a.m. In the evening, he does his homework and watches TV. On Sundays, he plays football with his friends. He does not play football on weekdays because he is busy with his lessons.", q:"Đọc đoạn văn trên và chọn đáp án đúng: When does Minh play football?", opts:["Every day","On Saturdays","On Sundays","On weekdays"], a:2, why:"Đoạn văn viết: “On Sundays, he plays football with his friends.” và “He does not play football on weekdays.”"}
 ];
 
 function $(id){ return document.getElementById(id); }
@@ -208,6 +217,8 @@ function renderQuestion(){
   $("qTitle").textContent = "Câu " + (current+1) + " / " + QUESTIONS.length;
   $("qPart").textContent = q.part;
   $("qText").textContent = q.q;
+  $("qPassage").textContent = q.passage || "";
+  $("qPassage").classList.toggle("hidden", !q.passage);
   var body = $("qBody"), adminBox = $("qAdmin");
   if(q.opts){
     body.innerHTML = q.opts.map(function(o,i){
@@ -246,7 +257,7 @@ function grade(){
       correct = q.accept.some(function(a){ return norm(a)===norm(raw||""); });
     }
     var correctText = q.opts ? String.fromCharCode(65+q.a)+". "+q.opts[q.a] : q.model;
-    return {i:i, part:q.part, q:q.q, userText:userText, correctText:correctText, why:q.why, correct:correct};
+    return {i:i, part:q.part, q:q.q, passage:q.passage||"", userText:userText, correctText:correctText, why:q.why, correct:correct};
   });
 }
 function finish(auto){
@@ -259,6 +270,7 @@ function finish(auto){
   $("metaLine").textContent = ($("stuName").value.trim() ? "Người làm bài: "+$("stuName").value.trim()+" • " : "") + "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài."));
   $("review").innerHTML = rows.map(function(r){
     return '<div class="review"><div><b>Câu '+(r.i+1)+'</b> — '+esc(r.q)+' <span class="'+(r.correct?"ok":"bad")+'">'+(r.correct?"ĐÚNG":"SAI")+'</span></div>'
+      + (r.passage ? '<div class="small passage">'+esc(r.passage)+'</div>' : '')
       + '<div class="small">Bạn trả lời: '+esc(r.userText)+'</div>'
       + '<div class="small">Đáp án đúng: '+esc(r.correctText)+'</div>'
       + (r.correct ? "" : '<div class="small"><b>Lý do sai:</b> '+esc(r.why)+'</div>') + '</div>';
@@ -307,6 +319,21 @@ function blockCopy(e){ if(!isAdmin()) e.preventDefault(); }
 document.addEventListener("copy", blockCopy);
 document.addEventListener("cut", blockCopy);
 document.addEventListener("contextmenu", function(e){ if(!isAdmin()) e.preventDefault(); });
+
+/* Chặn phím tắt xem mã nguồn trong lúc làm bài (chỉ với người chưa đăng nhập):
+   F12, Ctrl+Shift+I/J/C, Ctrl+U (xem nguồn), Ctrl+S (lưu trang).
+   Đây chỉ là lớp ngăn nhanh: trên trang tĩnh, trình duyệt vẫn phải tải mã về máy
+   người làm bài thì mới hiển thị được, nên không có cách nào chặn tuyệt đối việc
+   xem nguồn qua menu trình duyệt, view-source:, hay tải file về. */
+document.addEventListener("keydown", function(e){
+  if(isAdmin() || submitted || $("testScreen").classList.contains("hidden")) return;
+  var k = (e.key||"").toUpperCase();
+  if(k==="F12"
+    || (e.ctrlKey && e.shiftKey && (k==="I" || k==="J" || k==="C"))
+    || (e.ctrlKey && (k==="U" || k==="S"))){
+    e.preventDefault();
+  }
+});
 
 /* Phát hiện đổi tab: lần 1 cảnh báo, lần 2 nộp bài ngay (đồng hồ vẫn chạy khi hiện cảnh báo) */
 $("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); };
