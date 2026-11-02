@@ -1,84 +1,99 @@
 # NTB English Test
 
-Trang web kiểm tra và ôn tập tiếng Anh theo loạt bài “13 thì tiếng Anh” của kênh I LOVE IELTS.
-Trang tĩnh, không cần máy chủ, không cần lệnh build.
-
-**AI Roleplay Simulator** is an interactive text adventure game where Artificial Intelligence acts as your personal "Dungeon Master." The system dynamically generates worlds, characters, and branching storylines based on your unique creative inputs, offering a limitless storytelling experience.
-
 [![Vercel App](https://img.shields.io/badge/LIVE_DEMO-VERCEL_APP-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://ntbenglish.vercel.app)
 
-## Trang chủ
+A website for reviewing and testing English based on the “13 English tenses”
+series by the I LOVE IELTS channel.
+It is a static site: no server and no build command are needed.
 
-Trang chủ có hai phần:
+## Home
 
-- **Ôn tập**: làm bài tập theo từng bài, không tính giờ, được chuyển tab.
-- **Làm bài kiểm tra**: bài kiểm tra tổng hợp, 60 phút, 40 câu.
+The home page has two sections:
 
-## Ôn tập
+- **Review**: practice by lesson, no timer, tab switching allowed.
+- **Test**: a combined test, 60 minutes, 55 questions.
 
-- **Bài 1 — Thì hiện tại đơn**: 32 câu (20 trắc nghiệm, 9 viết/sắp xếp câu, 3 đọc hiểu).
-- **Bài 2 — Thì hiện tại tiếp diễn**: 20 câu (13 trắc nghiệm, 3 viết, 2 sắp xếp câu, 2 đọc hiểu).
+## Review
 
-Ôn tập dùng cùng giao diện làm bài với kiểm tra: chọn đáp án, viết câu,
-chuyển câu bằng nút hoặc phím mũi tên, nộp bài rồi xem điểm và đáp án.
-Ôn tập không tính giờ và được chuyển tab, nhưng vẫn chặn copy và xem mã nguồn.
-Nộp bài ôn tập luôn hiện đáp án, kể cả khi chưa trả lời hết câu.
+- **Lesson 1 — Present Simple**: 32 questions (20 multiple choice, 9 writing/ordering, 3 reading).
+- **Lesson 2 — Present Continuous**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
+- **Lesson 3 — Present Perfect**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 
-Nguồn học:
+Review uses the same test interface: choose answers, write sentences,
+move between questions with buttons or arrow keys, submit, then see the score
+and the answers. Review has no timer and allows tab switching, but still
+blocks copying and viewing source code. Review submissions always show
+the answers, even when not all questions were answered.
 
-- Bài 1 — Thì hiện tại đơn: https://youtu.be/BmKkDuO_nkk
-- Bài 2 — Thì hiện tại tiếp diễn: https://youtu.be/dIIG9m649-g
+Sources:
 
-Câu hỏi do tôi soạn mới theo các điểm ngữ pháp của bài giảng,
-không sao chép nguyên văn bài tập trong video.
+- Lesson 1 — Present Simple: https://youtu.be/BmKkDuO_nkk
+- Lesson 2 — Present Continuous: https://youtu.be/dIIG9m649-g
+- Lesson 3 — Present Perfect: https://youtu.be/QwrSs0SC5ow
 
-## Kiểm tra
+Questions were newly written by me based on the grammar points of the lessons,
+not copied verbatim from the exercises in the videos.
 
-- 3 đề khác nhau, mỗi đề 40 câu: 20 câu hiện tại đơn + 20 câu hiện tại tiếp diễn.
-- Mỗi bài trong một đề gồm 14 trắc nghiệm, 3 câu viết, 3 câu sắp xếp.
-- Mỗi lần bấm làm kiểm tra, hệ thống chọn ngẫu nhiên một trong 3 đề,
-  rồi xáo trộn thứ tự câu hỏi và thứ tự đáp án.
-- Câu hỏi kiểm tra viết mới hoàn toàn, không trùng câu ôn tập.
-- Thời gian 60 phút, đếm ngược, còn 10 phút chuyển vàng, còn 1 phút chuyển đỏ,
-  hết giờ tự nộp bài.
-- Nộp bài khi chưa trả lời hết câu thì chỉ hiện điểm và thời gian, không hiện
-  đáp án và lý do sai. Ngoại lệ: tài khoản admin vẫn xem đủ đáp án.
+## Test
 
-## Cơ chế trong lúc làm kiểm tra
+- 3 different papers, each with 55 questions: 20 Present Simple +
+  20 Present Continuous + 15 Present Perfect.
+- Every lesson block in a paper contains all three parts: multiple choice,
+  writing, and ordering. Present Simple and Present Continuous blocks have
+  14 multiple choice, 3 writing, and 3 ordering questions each; the
+  Present Perfect block has 9 multiple choice, 3 writing, and 3 ordering
+  questions.
+- Each time the test starts, the system picks one of the 3 papers at random,
+  then shuffles the question order and the answer order.
+- Test questions are newly written and do not repeat the review questions.
+- Time limit: 60 minutes, counting down. The timer turns yellow with
+  10 minutes left and red with 1 minute left; the test is submitted
+  automatically when time runs out.
+- Submitting with unanswered questions shows only the score and the time used,
+  without answers or explanations. Exception: the admin account still sees
+  the full answers.
 
-- Chống copy: chưa đăng nhập thì không chọn, copy, cắt văn bản và không mở
-  menu chuột phải; vẫn gõ và sửa được trong ô trả lời.
-- Chặn phím tắt xem mã nguồn trong lúc làm bài: F12, Ctrl+Shift+I/J/C,
+## Mechanisms during the test
+
+- Anti-copy: without logging in, text cannot be selected, copied, cut,
+  and the right-click menu is blocked; typing and editing in the answer
+  fields still work.
+- Source-view shortcuts are blocked during the test: F12, Ctrl+Shift+I/J/C,
   Ctrl+U, Ctrl+S.
-- Chống gian lận dùng chung một bộ đếm: đổi tab, thu cửa sổ xuống nền,
-  mất tiêu điểm, đổi kích thước cửa sổ (chỉ tính khi chiều rộng đổi trên 200px).
-  Lần 1 cảnh báo, lần 2 nộp bài ngay. Tín hiệu cách nhau dưới 2 giây chỉ tính
-  một lần. Admin được miễn cơ chế chống gian lận.
-- Chuyển câu bằng phím mũi tên trái/phải, trừ khi đang gõ trong ô nhập,
-  đang chọn đáp án hoặc đang mở hộp thoại.
+- Anti-cheat uses one shared counter: switching tabs, minimizing the window,
+  losing focus, and resizing the window (counted only when the width changes
+  by more than 200px). The first violation shows a warning; the second
+  submits the test immediately. Signals less than 2 seconds apart count as
+  one violation. The admin account is exempt from anti-cheat.
+- Arrow keys move to the previous/next question, except while typing in
+  an input field, choosing an answer, or when a dialog is open.
 
-## Đăng nhập
+## Login
 
-Nút “Đăng nhập” ở góc phải dùng để đăng nhập tài khoản admin. Khi đã đăng nhập, trong lúc làm bài sẽ hiện đáp án đúng của từng câu
-để test hệ thống. Trạng thái đăng nhập chỉ lưu theo phiên trình duyệt.
+The “Đăng nhập” button in the top-right corner logs in to the admin account.
+While logged in, the correct answer for each question is shown during the test,
+for testing the system. The login state is kept only for the current browser
+session.
 
-Lưu ý: đây là trang tĩnh, repo công khai, đáp án nằm trong mã nguồn trang,
-nên đăng nhập admin chỉ là lớp hiển thị để test, không phải bảo mật thật.
-Đổi mật khẩu bằng cách thay mã băm SHA-256 trong `index.html` trước khi
-chia sẻ rộng rãi. Chặn xem mã nguồn trên trang tĩnh cũng chỉ là lớp ngăn nhanh,
-không chặn được menu trình duyệt, `view-source:` hay tải file về.
+Note: this is a static site in a public repository and the answers are in
+the page source, so the admin login is only a display gate for testing,
+not real security. Change the password by replacing the SHA-256 hash in
+`index.html` before sharing widely. Blocking source viewing on a static site
+is only a deterrent: it cannot block the browser menu, `view-source:`,
+or downloading the file.
 
-## Tải lại trang và kết quả
+## Reloading and results
 
-Tải lại trang giữa chừng sẽ mất bài và đồng hồ chạy lại từ đầu.
-Kết quả chỉ tính trên trình duyệt đang dùng, không lưu lên máy chủ.
+Reloading the page in the middle of a test loses the answers and restarts
+the timer. Results are only calculated in the browser being used and are
+not saved to a server.
 
-## Cấu trúc file
+## File structure
 
-- `index.html`: giao diện, bộ máy làm bài, câu ôn tập Bài 1.
-- `data.js`: câu ôn tập Bài 2 và 3 đề kiểm tra.
+- `index.html`: interface, test engine, and Lesson 1 review questions.
+- `data.js`: Lesson 2 and Lesson 3 review questions, and the 3 test papers.
 
-## Deploy lên Vercel
+## Deploy to Vercel
 
-Import repo này trên Vercel, chọn dạng trang tĩnh, không cần lệnh build,
-thư mục gốc để mặc định, bấm Deploy.
+Import this repository on Vercel, choose a static site, no build command,
+keep the default root directory, and deploy.
