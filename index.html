@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>NTB English Test</title>
 <style>
   :root{--bg:#f4f6fb;--card:#fff;--ink:#1f2937;--mut:#6b7280;--blue:#2563eb;--green:#15803d;--red:#dc2626;--amber:#b45309}
@@ -32,6 +34,10 @@
   .passage{background:#f9fafb;border-left:4px solid var(--blue);padding:12px 14px;line-height:1.6;margin:0 0 14px}
   #qFrame{min-height:380px}
   .revline{margin:10px 0;line-height:1.6}
+  /* Chặn phóng to khi ấn nhanh 2 lần trên iPhone: touch-action manipulation tắt double-tap zoom
+     nhưng vẫn cho phép cuộn và pinch-zoom bình thường. Không dùng user-scalable=no vì iOS
+     đã bỏ qua nó và nó gây khó cho người cần phóng to chữ để đọc. */
+  html, body, button, label, .opt, .palette button{touch-action:manipulation}
   .hidden{display:none!important}
   /* Chống copy khi chưa đăng nhập: vẫn cho gõ và sửa trong ô nhập của chính mình */
   body:not(.admin) .card, body:not(.admin) header{-webkit-user-select:none;user-select:none}
@@ -379,6 +385,11 @@ function startReview(lesson){
 }
 $("prevBtn").onclick = function(){ if(current>0){ current--; renderQuestion(); } };
 $("nextBtn").onclick = function(){ if(current<QUESTIONS.length-1){ current++; renderQuestion(); } };
+/* Chặn double-click phóng to trên nút bấm (bổ sung cho touch-action ở CSS) */
+document.addEventListener("dblclick", function(e){
+  if(e.target && e.target.closest && e.target.closest("button, .opt, label")) e.preventDefault();
+});
+
 /* Chuyển câu bằng phím mũi tên trái/phải (không áp dụng khi đang gõ trong ô nhập, đang chọn đáp án, hay đang mở hộp thoại) */
 document.addEventListener("keydown", function(e){
   if(submitted || $("testScreen").classList.contains("hidden")) return;
