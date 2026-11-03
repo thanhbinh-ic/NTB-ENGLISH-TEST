@@ -113,7 +113,9 @@ successful registration or login, the home page greets the user by username
 above the buttons
 and shows their current points, and a popup confirms the registration,
 login, or sign-out (sign-out asks for confirmation first).
-A signed-in user can change their username in the account dialog; points,
+A signed-in user can change their username by tapping the small pencil
+next to the username in the account dialog, which reveals an inline input
+(press Enter or “Lưu tên mới” to save, “Hủy” to close); points,
 statistics, and avatar are kept, and the new name must not be taken or
 reserved.
 Avatars are emoji: tapping one in the account dialog changes it

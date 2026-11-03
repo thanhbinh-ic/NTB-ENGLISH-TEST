@@ -219,13 +219,14 @@
 <div id="accountModal" class="modal"><div class="card">
   <h2>Tài khoản của bạn</h2>
   <div id="accountUserSection">
-    <div class="row"><span id="accountAvatar" style="font-size:44px"></span><div><b id="accountName"></b><div id="accountPoints" class="small mut"></div></div></div>
+    <div class="row"><span id="accountAvatar" style="font-size:44px"></span><div><b id="accountName"></b> <button id="editNameBtn" class="secondary" type="button" title="Đổi tên người dùng" style="padding:6px 10px;font-size:14px">✏️</button><div id="accountPoints" class="small mut"></div></div></div>
+    <div id="renameRow" class="hidden" style="margin-top:10px">
+      <input id="newUserName" type="text" autocomplete="username">
+      <p id="renameErr" class="small bad hidden"></p>
+      <div class="row" style="margin-top:10px"><button id="doRename" type="button">Lưu tên mới</button><button id="cancelRename" class="secondary" type="button">Hủy</button></div>
+    </div>
     <p class="small" style="margin-top:14px">Đổi avatar (bấm vào một biểu tượng để đổi ngay):</p>
     <div id="avatarGrid" class="avatar-grid"></div>
-    <p class="small" style="margin-top:14px">Đổi tên người dùng:</p>
-    <input id="newUserName" type="text" autocomplete="username">
-    <p id="renameErr" class="small bad hidden"></p>
-    <div class="row" style="margin-top:10px"><button id="doRename" class="secondary" type="button">Đổi tên người dùng</button></div>
     <div class="row" style="margin-top:14px"><button id="accountStatsBtn" class="secondary" type="button">Thống kê của tôi</button><button id="accountLogoutBtn" class="danger" type="button">Đăng xuất</button></div>
   </div>
   <div id="accountAdminSection" class="hidden">
@@ -936,7 +937,7 @@ function renderAccountModal(){
   var u = currentUsername(), me = loadUsers()[u];
   $("accountUserSection").classList.toggle("hidden", !me);
   $("accountAdminSection").classList.toggle("hidden", !isAdmin());
-  $("renameErr").classList.add("hidden"); $("newUserName").value = "";
+  $("renameErr").classList.add("hidden"); $("newUserName").value = ""; $("renameRow").classList.add("hidden");
   if(me){
     $("accountAvatar").textContent = me.avatar || avatarFor(u);
     $("accountName").textContent = u;
@@ -951,6 +952,14 @@ function renderAccountModal(){
 }
 $("closeAccount").onclick = function(){ $("accountModal").classList.remove("open"); };
 $("accountStatsBtn").onclick = function(){ $("accountModal").classList.remove("open"); renderStats(); showScreen("statsScreen"); };
+$("editNameBtn").onclick = function(){
+  $("newUserName").value = currentUsername();
+  $("renameErr").classList.add("hidden");
+  $("renameRow").classList.remove("hidden");
+  $("newUserName").focus();
+};
+$("cancelRename").onclick = function(){ $("renameRow").classList.add("hidden"); };
+$("newUserName").onkeydown = function(e){ if(e.key==="Enter"){ e.preventDefault(); $("doRename").onclick(); } };
 $("doRename").onclick = function(){
   var oldU = currentUsername(), users = loadUsers(), me = users[oldU];
   var nu = $("newUserName").value.trim(), err = $("renameErr");
