@@ -47,6 +47,19 @@
   .revline{margin:10px 0;line-height:1.6}
   .greet{font-size:18px;margin:0}
   .lbrow{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #e5e7eb} .lbrow .flex{flex:1}
+  .podium{display:flex;gap:10px;align-items:flex-end;justify-content:center;margin-bottom:18px}
+  .pod{flex:1;max-width:180px;text-align:center}
+  .pod-avatar{width:64px;height:64px;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;border:4px solid #9ca3af;background:#fff}
+  .pod-first .pod-avatar{width:84px;height:84px;font-size:44px;border-color:#eab308}
+  .pod-third .pod-avatar{border-color:#b45309}
+  .pod-bar{height:34px;border-radius:8px 8px 0 0;margin-top:8px}
+  .pod-first .pod-bar{height:54px;background:#facc15}
+  .pod-second .pod-bar{background:#d1d5db}
+  .pod-third .pod-bar{background:#d97706}
+  .pod-crown{font-size:22px;min-height:26px}
+  .lb-badge{background:var(--blue);color:#fff;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700}
+  .up{color:var(--green)} .down{color:var(--red)}
+  .lb-pts{color:var(--blue);font-weight:700;white-space:nowrap}
   /* Banner trang chủ: căn giữa, tiêu đề và câu động lực chia dòng, tim đập nhẹ */
   #homeScreen{background:linear-gradient(180deg,#eff6ff 0%,#ffffff 55%)}
   .hero{text-align:center}
@@ -765,13 +778,71 @@ function renderStats(){
     "<p>Số lần đạt: <b>"+me.passes+"</b></p>"+
     "<p>Điểm xếp hạng: <b>"+me.points+"</b></p>";
 }
+/* Bảng xếp hạng: 100 tài khoản ảo + tài khoản thật trên trình duyệt này. Điểm ảo
+   trải từ thấp đến cao (20–317 điểm) và biến động theo ngày: điểm của mỗi tài khoản
+   ảo = điểm gốc + một độ lệch nhỏ suy ra từ tên và ngày xem, nên mỗi ngày mở bảng
+   sẽ thấy điểm và thứ hạng nhích lên xuống như thật. Mũi tên thăng/xuống hạng so
+   hạng hôm nay với hạng hôm qua tính theo cùng cách đó. */
+var VIRTUAL_NAMES = [
+  "Chúa Tể Ngữ Pháp","Thánh Thì Quá Khứ","Trùm 13 Thì","Vua V-ing","Nữ Hoàng Will",
+  "Ông Hoàng Been","Siêu Nhân Have Has","Bé Học Bài","Cày Đêm Không Ngủ","Thần Đồng IELTS",
+  "Cá Mập Cắn Đề","Gà Chiến Ngữ Pháp","Bánh Mì Kẹp Điểm","Trùm Cuối Bài Kiểm Tra","Cậu Vàng Học Giỏi",
+  "Mèo Lười Học Bài","Thánh Soi Lỗi Sai","Siêu Quậy Lớp Học","Bà Tám Tiếng Anh","Anh Hùng Bàn Phím",
+  "Cô Gái Mưa Rào","Chàng Trai Mùa Hạ","Bé Bự Học Bài","Ông Kẹ Điểm 10","Thánh Lười Biếng",
+  "Cô Nàng Mọt Sách","Anh Chàng Cà Khịa","Chị Google Dịch","Em Gái Mưa Điểm","Thánh Ăn Vặt",
+  "Cậu Bé Bút Chì","Cô Bé Hạt Tiêu","Anh Trai Quốc Dân","Chị Đại Học Đường","Thần Bài May Mắn",
+  "Kẻ Cắp Mặt Trời","Người Hùng Thầm Lặng","Bé Na Học Giỏi","Ông Trùm Quán Net","Cô Bé Bánh Bao",
+  "Anh Trai Xóm Trọ","Chị Gái Mưa Ngâu","Thánh Chém Gió","Cô Nàng Bánh Tráng","Anh Chàng Xe Ôm",
+  "Chị Bán Hoa Quả","Bé Gấu Trúc","Mèo Mun Đen","Chó Vàng Cày Rank","Thỏ Trắng Học Bài",
+  "Gấu Bông Biết Nói","Cá Heo Thông Minh","Chim Sẻ Đi Nắng","Ếch Xanh Học Giỏi","Rùa Vàng Chậm Mà Chắc",
+  "Sư Tử Hà Đông","Hổ Vằn Cày Đề","Khỉ Đột Thông Minh","Công Chúa Bong Bóng","Hoàng Tử Bé",
+  "Phù Thủy Học Đường","Tiên Nữ Giáng Trần","Thần Sấm Điểm Cao","Chúa Tể Bóng Đêm","Nữ Hoàng Băng Giá",
+  "Kỵ Sĩ Áo Đen","Chiến Binh Cầu Vồng","Siêu Nhân Áo Đỏ","Người Sắt Học Bài","Thần Gió Tốc Độ",
+  "Lão Đại Giang Hồ","Đại Ca Học Đường","Tiểu Muội Dễ Thương","Sư Huynh Cày Rank","Bé Bi Bô",
+  "Cô Út Miền Tây","Anh Hai Sài Gòn","Chị Ba Hà Nội","Em Tư Đà Nẵng","Cậu Năm Cần Thơ",
+  "Dì Sáu Bánh Xèo","Chú Bảy Xe Ôm","Bác Tám Vé Số","Cô Chín Bán Chè","Anh Mười Cày Game",
+  "Nguyễn Hà My","Trần Đức Anh","Lê Minh Quân","Phạm Thu Hằng","Vũ Hoàng Nam",
+  "Đặng Phương Linh","Bùi Thanh Thảo","Đỗ Quốc Bảo","Hồ Ngọc Ánh","Ngô Gia Huy",
+  "Dương Khánh Vy","Cậu Bé Rồng Lửa","Chú Cuội Cung Trăng","Vịt Con Xấu Xí","Trùm Mền Học Bài"
+];
+var VIRTUAL_EMOJIS = ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🐔","🐧","🐦","🦄","🐝","🦋","🌸","⭐","🎯","🚀","👑","🎮","📚","✏️","🎓","🍜","🧋","🍕","⚽","🎸","🎧","💡","🔥","🌈","🍀","🦸","🧙","👻","🤖","😺","😸","🙈","🙉","🦝","🦔","🦉"];
+function hashStr(s){ var h=0; for(var i=0;i<s.length;i++){ h=((h<<5)-h+s.charCodeAt(i))|0; } return Math.abs(h); }
+function dayKey(d){ return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function virtualPoints(idx, dateStr){ return Math.max(0, 20 + idx*3 + ((hashStr(dateStr+"|"+idx)%17)-8)); }
+function avatarFor(name){ return VIRTUAL_EMOJIS[hashStr(name)%VIRTUAL_EMOJIS.length]; }
+function buildLeaderboard(dateStr){
+  var users = loadUsers();
+  var entries = VIRTUAL_NAMES.map(function(n,i){
+    return {name:n, points:virtualPoints(i, dateStr), isMe:false};
+  }).filter(function(e){ return !users[e.name]; });
+  Object.keys(users).forEach(function(k){
+    entries.push({name:k, points:users[k].points, isMe:k===currentUsername()});
+  });
+  entries.sort(function(a,b){ return b.points-a.points || (a.name<b.name?-1:a.name>b.name?1:0); });
+  return entries;
+}
 function renderLeaderboard(){
-  var users = loadUsers(), me = currentUsername();
-  var rows = Object.keys(users).map(function(k){ return {user:k, points:users[k].points}; }).sort(function(a,b){ return b.points-a.points || (a.user<b.user?-1:a.user>b.user?1:0); });
-  if(!rows.length){ $("leaderboardBody").innerHTML = "<p class=\"mut\">Chưa có tài khoản nào trên bảng xếp hạng.</p>"; return; }
-  $("leaderboardBody").innerHTML = rows.map(function(r,i){
-    return '<div class="lbrow"><b>#'+(i+1)+'</b><span class="flex">'+esc(r.user)+(r.user===me?" (bạn)":"")+'</span><b>'+r.points+' điểm</b></div>';
+  var today = new Date(), y = new Date(today); y.setDate(y.getDate()-1);
+  var list = buildLeaderboard(dayKey(today));
+  var prev = buildLeaderboard(dayKey(y));
+  var prevRank = {}; prev.forEach(function(e,i){ prevRank[e.name]=i+1; });
+  if(!list.length){ $("leaderboardBody").innerHTML = "<p class=\"mut\">Chưa có tài khoản nào trên bảng xếp hạng.</p>"; return; }
+  function podHTML(e, rank, cls){
+    return '<div class="pod '+cls+'"><div class="pod-crown">'+(rank===1?"👑":"")+'</div><div class="pod-avatar">'+avatarFor(e.name)+'</div><div style="margin-top:6px"><b>'+esc(e.name)+'</b></div><div class="small" style="color:var(--blue);font-weight:700">'+e.points+' điểm</div><div class="pod-bar"></div></div>';
+  }
+  var podium = "";
+  if(list.length>=3){
+    podium = '<div class="podium">'+podHTML(list[1],2,"pod-second")+podHTML(list[0],1,"pod-first")+podHTML(list[2],3,"pod-third")+'</div>';
+  }
+  var rows = list.map(function(e,i){
+    var rank = i+1, mv = "";
+    if(!e.isMe && prevRank[e.name]!==undefined){
+      if(prevRank[e.name]>rank) mv = ' <span class="small up">↑ Thăng hạng</span>';
+      else if(prevRank[e.name]<rank) mv = ' <span class="small down">↓ Xuống hạng</span>';
+    }
+    return '<div class="lbrow"><b style="min-width:34px">'+rank+'</b><span style="font-size:22px">'+avatarFor(e.name)+'</span><span class="flex">'+esc(e.name)+(e.isMe?' <span class="lb-badge">BẠN</span>':'')+mv+'</span><span class="lb-pts">'+e.points+' điểm</span></div>';
   }).join("");
+  $("leaderboardBody").innerHTML = podium + rows;
 }
 $("userRegisterBtn").onclick = function(){ $("regErr").classList.add("hidden"); $("registerModal").classList.add("open"); };
 $("closeRegister").onclick = function(){ $("registerModal").classList.remove("open"); };

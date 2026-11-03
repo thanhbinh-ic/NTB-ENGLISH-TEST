@@ -103,11 +103,19 @@ and shows their current points.
 
 - **Statistics** (“Thống kê của tôi”): number of completed reviews, number
   of tests taken, number of passed tests, and ranking points.
-- **Leaderboard** (“Bảng xếp hạng”): all accounts ranked by points.
-  A new account starts with 100 points. After a test, passing
+- **Leaderboard** (“Bảng xếp hạng”): all accounts ranked by points,
+  with the top 3 on a podium (2nd, 1st with a crown, 3rd). A new account
+  starts with 100 points. After a test, passing
   (50% or more) adds 1 point per correct answer; failing subtracts
   10 points, and points never go below 0. Reviews do not change points.
   The points change is shown on the result screen.
+- The leaderboard also shows 100 virtual accounts with Vietnamese
+  nicknames, with points spread from low to high. Each virtual account's
+  points shift slightly from day to day (derived from its name and the
+  current date), so ranks move and the list shows “Thăng hạng” (moved up)
+  or “Xuống hạng” (moved down) arrows compared with the previous day.
+  Real accounts created on the browser appear in the same list, with the
+  signed-in account marked “BẠN”.
 - **Forgot password** is interface only: it asks for the registered email
   and shows a confirmation that a reset email was sent. No email is
   actually sent, because the site has no server.
