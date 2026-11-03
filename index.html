@@ -24,7 +24,13 @@
   textarea{min-height:90px;resize:vertical}
   .opt{display:block;border:1px solid #e5e7eb;border-radius:10px;padding:11px 13px;margin:8px 0;cursor:pointer}
   .opt:hover{border-color:var(--blue)} .opt input{width:auto;margin-right:8px}
-  .palette{display:flex;flex-wrap:wrap;gap:8px} .palette button{padding:8px 0;width:42px;background:#e5e7eb;color:#111827}
+  /* Bảng câu hỏi căn đều 2 bên: trước đây dùng flex-wrap với nút cố định 42px nên tổng
+     chiều rộng mỗi hàng hiếm khi bằng đúng chiều rộng thẻ, mép phải lởm chởm và trông lệch
+     so với các khối full-width phía trên. Dùng grid auto-fill: số cột tự vừa theo chiều rộng
+     màn hình, các cột chia đều khoảng trống nên mép trái và mép phải thẳng đúng với mép nội
+     dung của thẻ, nút nào cũng bằng nhau, hàng cuối thiếu nút thì các ô trống chỉ để trống
+     chứ không làm nút cuối giãn to ra. */
+  .palette{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:8px} .palette button{padding:10px 0;width:auto;background:#e5e7eb;color:#111827}
   .palette button.done{background:#bbf7d0} .palette button.current{background:var(--blue);color:#fff}
   .ansbox{border:1px dashed var(--green);background:#f0fdf4;border-radius:10px;padding:10px 12px;margin-top:12px;color:#14532d}
   .adminbar{display:none;background:#fef9c3;border:1px solid #fde68a;color:#854d0e;border-radius:10px;padding:10px 14px;margin-bottom:14px}
