@@ -104,12 +104,12 @@
     <h2 class="hero-title"><span class="hero-line">NTB English Test</span><span class="hero-line">13 thì tiếng Anh</span></h2>
     <p class="hero-quote"><span class="hero-line hero-en">Small steps every day</span><span class="hero-line">mỗi ngày một chút, tiếng Anh sẽ thành thói quen,</span><span class="hero-line">và bạn sẽ giỏi hơn chính mình của hôm qua.</span></p>
     </div>
+    <p id="greetingLine" class="greet hidden" style="margin-top:14px"></p>
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
       <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 205 câu</button>
       <button id="leaderboardBtn" class="secondary" type="button">Bảng xếp hạng</button>
     </div>
-    <p id="greetingLine" class="greet hidden" style="margin-top:14px"></p>
     <div class="row" style="margin-top:14px">
       <button id="statsBtn" class="secondary hidden" type="button">Thống kê của tôi</button>
     </div>
@@ -222,13 +222,17 @@
     <div class="row"><span id="accountAvatar" style="font-size:44px"></span><div><b id="accountName"></b><div id="accountPoints" class="small mut"></div></div></div>
     <p class="small" style="margin-top:14px">Đổi avatar (bấm vào một biểu tượng để đổi ngay):</p>
     <div id="avatarGrid" class="avatar-grid"></div>
+    <p class="small" style="margin-top:14px">Đổi tên người dùng:</p>
+    <input id="newUserName" type="text" autocomplete="username">
+    <p id="renameErr" class="small bad hidden"></p>
+    <div class="row" style="margin-top:10px"><button id="doRename" class="secondary" type="button">Đổi tên người dùng</button></div>
     <div class="row" style="margin-top:14px"><button id="accountStatsBtn" class="secondary" type="button">Thống kê của tôi</button><button id="accountLogoutBtn" class="danger" type="button">Đăng xuất</button></div>
   </div>
   <div id="accountAdminSection" class="hidden">
     <p><b>Chế độ Admin đang bật.</b> Đáp án đúng hiển thị ngay trong lúc làm bài.</p>
     <div class="row"><button id="adminLogoutBtn" class="danger" type="button">Đăng xuất Admin</button></div>
   </div>
-  <div class="row" style="margin-top:14px"><button id="accountRegisterBtn" class="secondary" type="button">Đăng ký tài khoản mới</button><button id="closeAccount" class="secondary" type="button">Đóng</button></div>
+  <div class="row" style="margin-top:14px"><button id="closeAccount" class="secondary" type="button">Đóng</button></div>
 </div></div>
 
 <!-- NOTIFICATION POPUP -->
@@ -266,6 +270,7 @@
   <label class="small" for="regUser" style="display:block;margin-top:10px">Tên người dùng</label><input id="regUser" type="text" autocomplete="username">
   <label class="small" for="regEmail" style="display:block;margin-top:10px">Email</label><input id="regEmail" type="email" autocomplete="email">
   <label class="small" for="regPass" style="display:block;margin-top:10px">Mật khẩu (ít nhất 6 ký tự)</label><input id="regPass" type="password" autocomplete="new-password">
+  <label class="small" for="regPass2" style="display:block;margin-top:10px">Nhập lại mật khẩu</label><input id="regPass2" type="password" autocomplete="new-password">
   <p id="regErr" class="small bad hidden"></p>
   <div class="row" style="margin-top:14px"><button id="doRegister" type="button">Đăng ký</button><button id="closeRegister" class="secondary" type="button">Đóng</button></div>
   <p class="small"><button id="toUserLogin" class="secondary" type="button">Đã có tài khoản? Đăng nhập</button></p>
@@ -437,9 +442,16 @@ function grade(){
     return {i:i, part:q.part.replace(/^[A-Z] — /, ""), q:q.q, passage:q.passage||"", userText:userText, correctText:correctText, why:q.why, correct:correct};
   });
 }
+/* Khóa trang khi bảng cảnh báo chống gian lận đang mở: chặn cuộn trang (kể cả
+   lăn chuột và vuốt trên điện thoại) để người làm bài phải bấm "Tiếp tục làm bài"
+   mới tương tác tiếp được. Lớp phủ của hộp thoại vốn đã chặn bấm ra ngoài. */
+function lockPage(){ document.body.style.overflow = "hidden"; document.documentElement.style.overflow = "hidden"; }
+function unlockPage(){ document.body.style.overflow = ""; document.documentElement.style.overflow = ""; }
+document.addEventListener("touchmove", function(e){ if($("tabModal").classList.contains("open")) e.preventDefault(); }, {passive:false});
+document.addEventListener("wheel", function(e){ if($("tabModal").classList.contains("open")) e.preventDefault(); }, {passive:false});
 function finish(auto){
   if(submitted) return; submitted = true; clearInterval(timerId);
-  $("tabModal").classList.remove("open"); $("submitModal").classList.remove("open");
+  $("tabModal").classList.remove("open"); $("submitModal").classList.remove("open"); unlockPage();
   var rows = grade(), score = rows.filter(function(r){ return r.correct; }).length;
   var used = TOTAL_SECONDS - Math.max(0, secondsLeft);
   var pct = Math.round(score/QUESTIONS.length*100);
@@ -718,13 +730,13 @@ function recordViolation(kind){
   tabViolations++;
   if(tabViolations === 1){
     $("tabModalText").textContent = msgs[kind] + " Đây là lần cảnh báo thứ nhất. Nếu vi phạm thêm một lần nữa, hệ thống sẽ nộp bài ngay.";
-    $("tabModal").classList.add("open");
+    $("tabModal").classList.add("open"); lockPage();
   } else {
     submitReason = "Vi phạm chống gian lận lần 2 (" + names[kind] + "), hệ thống tự nộp bài.";
     finish(false);
   }
 }
-$("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); };
+$("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); unlockPage(); };
 document.addEventListener("visibilitychange", function(){ if(document.hidden) recordViolation("tab"); });
 window.addEventListener("blur", function(){ recordViolation("blur"); });
 window.addEventListener("resize", function(){
@@ -854,12 +866,13 @@ function renderLeaderboard(){
 $("closeRegister").onclick = function(){ $("registerModal").classList.remove("open"); };
 $("toUserLogin").onclick = function(){ $("registerModal").classList.remove("open"); $("authErr").classList.add("hidden"); $("authModal").classList.add("open"); };
 $("doRegister").onclick = function(){
-  var name = $("regName").value.trim(), user = $("regUser").value.trim(), email = $("regEmail").value.trim(), pass = $("regPass").value;
+  var name = $("regName").value.trim(), user = $("regUser").value.trim(), email = $("regEmail").value.trim(), pass = $("regPass").value, pass2 = $("regPass2").value;
   var err = $("regErr");
   function fail(msg){ err.textContent = msg; err.classList.remove("hidden"); }
   if(!name || !user || !email || !pass){ fail("Vui lòng nhập đủ họ và tên, tên người dùng, email và mật khẩu."); return; }
   if(email.indexOf("@")<1 || email.indexOf(".", email.indexOf("@"))<0){ fail("Email chưa đúng định dạng."); return; }
   if(pass.length<6){ fail("Mật khẩu cần ít nhất 6 ký tự."); return; }
+  if(pass!==pass2){ fail("Mật khẩu nhập lại chưa khớp."); return; }
   if(!window.crypto || !crypto.subtle){ fail("Trình duyệt này không hỗ trợ đăng ký an toàn."); return; }
   var users = loadUsers();
   if(user===ADMIN_USER || users[user]){ fail("Tên người dùng này đã được đăng ký."); return; }
@@ -868,7 +881,7 @@ $("doRegister").onclick = function(){
   sha256Hex(pass).then(function(hash){
     users[user] = {name:name, email:email, passHash:hash, points:START_POINTS, reviews:0, tests:0, passes:0, avatar:""};
     saveUsers(users); setCurrentUsername(user);
-    $("regPass").value = "";
+    $("regPass").value = ""; $("regPass2").value = "";
     $("registerModal").classList.remove("open");
     renderAuth(); showScreen("homeScreen");
     showNotify("Đăng ký thành công", "Xin chào, "+user+"! Tài khoản của bạn bắt đầu với 100 điểm.");
@@ -923,6 +936,7 @@ function renderAccountModal(){
   var u = currentUsername(), me = loadUsers()[u];
   $("accountUserSection").classList.toggle("hidden", !me);
   $("accountAdminSection").classList.toggle("hidden", !isAdmin());
+  $("renameErr").classList.add("hidden"); $("newUserName").value = "";
   if(me){
     $("accountAvatar").textContent = me.avatar || avatarFor(u);
     $("accountName").textContent = u;
@@ -936,8 +950,22 @@ function renderAccountModal(){
   $("accountModal").classList.add("open");
 }
 $("closeAccount").onclick = function(){ $("accountModal").classList.remove("open"); };
-$("accountRegisterBtn").onclick = function(){ $("accountModal").classList.remove("open"); $("regErr").classList.add("hidden"); $("registerModal").classList.add("open"); };
 $("accountStatsBtn").onclick = function(){ $("accountModal").classList.remove("open"); renderStats(); showScreen("statsScreen"); };
+$("doRename").onclick = function(){
+  var oldU = currentUsername(), users = loadUsers(), me = users[oldU];
+  var nu = $("newUserName").value.trim(), err = $("renameErr");
+  function fail(msg){ err.textContent = msg; err.classList.remove("hidden"); }
+  if(!me){ fail("Bạn chưa đăng nhập."); return; }
+  if(!nu){ fail("Vui lòng nhập tên người dùng mới."); return; }
+  if(nu===oldU){ fail("Đây đã là tên người dùng hiện tại của bạn."); return; }
+  if(nu===ADMIN_USER || users[nu]){ fail("Tên người dùng này đã được đăng ký."); return; }
+  users[nu] = me; delete users[oldU];
+  saveUsers(users); setCurrentUsername(nu);
+  $("newUserName").value = ""; err.classList.add("hidden");
+  $("accountModal").classList.remove("open");
+  renderAuth();
+  showNotify("Đổi tên thành công", "Tên người dùng mới của bạn là " + nu + ".");
+};
 var pendingLogout = "";
 function askLogout(which, label){
   pendingLogout = which;

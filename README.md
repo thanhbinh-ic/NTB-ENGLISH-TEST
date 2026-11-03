@@ -89,7 +89,9 @@ not copied verbatim from the exercises in the videos.
   losing focus, and resizing the window (counted only when the width changes
   by more than 200px). The first violation shows a warning; the second
   submits the test immediately. Signals less than 2 seconds apart count as
-  one violation. The admin account is exempt from anti-cheat.
+  one violation. The admin account is exempt from anti-cheat. While the
+  warning is shown, page scrolling (mouse wheel and touch) is blocked, so
+  the user must press “Tiếp tục làm bài” to interact again.
 - Arrow keys move to the previous/next question, except while typing in
   an input field, choosing an answer, or when a dialog is open.
 
@@ -104,11 +106,16 @@ username, or “Thanh Bình” for the admin) opens the account dialog, where
 the user can change their avatar, view statistics, register a new account,
 or sign out.
 Registration needs a full name, a username, an email, and a password
-(at least 6 characters); usernames and emails must be unique, and the
+(at least 6 characters, typed twice for confirmation); usernames and
+emails must be unique, and the
 username “admin” is reserved. After a
 successful registration or login, the home page greets the user by username
+above the buttons
 and shows their current points, and a popup confirms the registration,
 login, or sign-out (sign-out asks for confirmation first).
+A signed-in user can change their username in the account dialog; points,
+statistics, and avatar are kept, and the new name must not be taken or
+reserved.
 Avatars are emoji: tapping one in the account dialog changes it
 immediately, and it appears on the header button, the greeting, and the
 leaderboard.
