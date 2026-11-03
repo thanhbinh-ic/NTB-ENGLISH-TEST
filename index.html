@@ -20,7 +20,7 @@
   .card{background:var(--card);border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:16px}
   h2{margin-top:0} .mut{color:var(--mut)} .small{font-size:13px}
   button{cursor:pointer;border:0;border-radius:10px;padding:11px 18px;font-size:15px;background:var(--blue);color:#fff}
-  button.secondary{background:#e5e7eb;color:#111827} button.danger{background:var(--red)} button:disabled{opacity:.5;cursor:not-allowed}
+  button.secondary{background:#e5e7eb;color:#111827} button.secondary.revActive{background:var(--blue);color:#fff} button.danger{background:var(--red)} button:disabled{opacity:.5;cursor:not-allowed}
   /* Ô nhập phải từ 16px trở lên: iPhone tự phóng to trang khi chạm vào ô nhập có cỡ chữ
      nhỏ hơn 16px, đó là gốc lỗi bàn phím bật lên thì trang bị zoom ra. */
   input,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:10px;font-size:16px}
@@ -463,11 +463,15 @@ var REV_SUMMARY = {
 var currentReviewLesson = 1;
 function renderReview(lesson){
   currentReviewLesson = lesson;
+  /* Nút của bài đang chọn đổi nền xanh, các nút còn lại giữ nền xám mặc định. */
+  for(var i=1;i<=8;i++){ var b = $("rev"+i+"Btn"); if(b) b.classList.toggle("revActive", i===lesson); }
   var list = REVIEW_SETS[lesson] || [];
   $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : lesson===2 ? "Ôn tập — Bài 2: Thì hiện tại tiếp diễn" : lesson===3 ? "Ôn tập — Bài 3: Thì hiện tại hoàn thành" : lesson===4 ? "Ôn tập — Bài 4: Thì hiện tại hoàn thành tiếp diễn" : lesson===5 ? "Ôn tập — Bài 5: Thì quá khứ đơn" : lesson===6 ? "Ôn tập — Bài 6: Thì quá khứ tiếp diễn" : lesson===7 ? "Ôn tập — Bài 7: Thì quá khứ hoàn thành" : "Ôn tập — Bài 8: Thì quá khứ hoàn thành tiếp diễn";
   $("revSummary").innerHTML = REV_SUMMARY[lesson] || "";
   $("revStartBtn").textContent = "Bắt đầu ôn tập — Bài " + lesson + " (" + list.length + " câu)";
-  window.scrollTo(0,0);
+  /* Cố tình KHÔNG cuộn về đầu trang khi đổi bài ôn tập: chỉ đổi nội dung tóm tắt phía
+     dưới, giữ nguyên vị trí cuộn để người dùng không bị nhảy lên đầu mỗi lần bấm nút.
+     Vào màn hình ôn tập từ trang chủ vẫn về đầu trang nhờ showScreen. */
 }
 function startReview(lesson){
   var list = REVIEW_SETS[lesson] || [];
