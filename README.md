@@ -89,9 +89,12 @@ not copied verbatim from the exercises in the videos.
   losing focus, and resizing the window (counted only when the width changes
   by more than 200px). The first violation shows a warning; the second
   submits the test immediately. Signals less than 2 seconds apart count as
-  one violation. The admin account is exempt from anti-cheat. While the
-  warning is shown, page scrolling (mouse wheel and touch) is blocked, so
-  the user must press “Tiếp tục làm bài” to interact again.
+  one violation. The admin account is exempt from anti-cheat.
+- Every dialog hard-locks the page behind it: while any dialog is open,
+  background clicks, background scrolling (mouse wheel, touch, keyboard),
+  and keyboard focus outside the dialog are blocked. Only the dialog's own
+  content scrolls (for example the long account dialog), so the user must
+  use the dialog's own buttons to continue.
 - Arrow keys move to the previous/next question, except while typing in
   an input field, choosing an answer, or when a dialog is open.
 

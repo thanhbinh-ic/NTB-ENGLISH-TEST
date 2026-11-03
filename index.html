@@ -65,9 +65,13 @@
   .lb-badge{background:var(--blue);color:#fff;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700}
   .up{color:var(--green)} .down{color:var(--red)}
   .lb-pts{color:var(--blue);font-weight:700;white-space:nowrap}
-  .avatar-grid{display:flex;flex-wrap:wrap;gap:8px}
-  .avatar-grid button{width:48px;height:48px;font-size:26px;padding:0;background:#f3f4f6;color:#111827;border:2px solid transparent}
-  @media (max-width:480px){ .avatar-grid button{width:44px;height:44px;font-size:24px} }
+  /* Lưới avatar: trước đây dùng flex với nút cố định 48px nên mỗi hàng thừa một
+     khoảng trắng bên phải (chiều rộng thẻ không chia hết cho nút + khe hở). Dùng
+     grid 5 cột đều nhau: nút giãn đúng bằng cột nên hàng nào cũng kín hết chiều
+     rộng thẻ, không còn khoảng trắng bên phải. */
+  .avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .avatar-grid button{width:auto;height:48px;font-size:26px;padding:0;background:#f3f4f6;color:#111827;border:2px solid transparent}
+  @media (max-width:480px){ .avatar-grid button{height:44px;font-size:24px} }
   .avatar-grid button.sel{border-color:var(--blue);background:#dbeafe}
   /* Banner trang chủ: căn giữa, tiêu đề và câu động lực chia dòng, tim đập nhẹ */
   #homeScreen{background:linear-gradient(180deg,#eff6ff 0%,#ffffff 55%)}
@@ -449,16 +453,43 @@ function grade(){
     return {i:i, part:q.part.replace(/^[A-Z] — /, ""), q:q.q, passage:q.passage||"", userText:userText, correctText:correctText, why:q.why, correct:correct};
   });
 }
-/* Khóa trang khi bảng cảnh báo chống gian lận đang mở: chặn cuộn trang (kể cả
-   lăn chuột và vuốt trên điện thoại) để người làm bài phải bấm "Tiếp tục làm bài"
-   mới tương tác tiếp được. Lớp phủ của hộp thoại vốn đã chặn bấm ra ngoài. */
-function lockPage(){ document.body.style.overflow = "hidden"; document.documentElement.style.overflow = "hidden"; }
-function unlockPage(){ document.body.style.overflow = ""; document.documentElement.style.overflow = ""; }
-document.addEventListener("touchmove", function(e){ if($("tabModal").classList.contains("open")) e.preventDefault(); }, {passive:false});
-document.addEventListener("wheel", function(e){ if($("tabModal").classList.contains("open")) e.preventDefault(); }, {passive:false});
+/* Khóa cứng mọi popup: khi bất kỳ hộp thoại nào đang mở thì khóa tương tác với
+   trang nền — lớp phủ chặn bấm ra ngoài, cuộn trang nền bị chặn (lăn chuột, vuốt,
+   phím), tiêu điểm đang ở ngoài hộp thoại cũng bị bỏ để không bấm nhầm nút nền
+   bằng bàn phím. Chỉ nội dung bên trong thẻ popup mới cuộn được (ví dụ bảng tài
+   khoản dài), còn trang nền thì không. Đồng bộ bằng MutationObserver nên mọi
+   popup đều tự khóa/mở khóa theo trạng thái mở/đóng, không cần gọi tay ở từng
+   chỗ mở/đóng hộp thoại. */
+function anyModalOpen(){ return !!document.querySelector(".modal.open"); }
+function inOpenModalCard(target){
+  var el = target;
+  while(el){
+    if(el.classList && el.classList.contains("card")) return true;
+    if(el.classList && el.classList.contains("modal")) return false;
+    el = el.parentNode;
+  }
+  return false;
+}
+function syncPageLock(){
+  if(anyModalOpen()){
+    document.body.style.overflow = "hidden"; document.documentElement.style.overflow = "hidden";
+    var ae = document.activeElement;
+    if(ae && ae.closest && !ae.closest(".modal")) ae.blur();
+  } else {
+    document.body.style.overflow = ""; document.documentElement.style.overflow = "";
+  }
+}
+document.addEventListener("touchmove", function(e){ if(anyModalOpen() && !inOpenModalCard(e.target)) e.preventDefault(); }, {passive:false});
+document.addEventListener("wheel", function(e){ if(anyModalOpen() && !inOpenModalCard(e.target)) e.preventDefault(); }, {passive:false});
+if(window.MutationObserver){
+  var modalObserver = new MutationObserver(syncPageLock);
+  Array.prototype.forEach.call(document.querySelectorAll(".modal"), function(m){
+    modalObserver.observe(m, {attributes:true, attributeFilter:["class"]});
+  });
+}
 function finish(auto){
   if(submitted) return; submitted = true; clearInterval(timerId);
-  $("tabModal").classList.remove("open"); $("submitModal").classList.remove("open"); unlockPage();
+  $("tabModal").classList.remove("open"); $("submitModal").classList.remove("open");
   var rows = grade(), score = rows.filter(function(r){ return r.correct; }).length;
   var used = TOTAL_SECONDS - Math.max(0, secondsLeft);
   var pct = Math.round(score/QUESTIONS.length*100);
@@ -737,13 +768,13 @@ function recordViolation(kind){
   tabViolations++;
   if(tabViolations === 1){
     $("tabModalText").textContent = msgs[kind] + " Đây là lần cảnh báo thứ nhất. Nếu vi phạm thêm một lần nữa, hệ thống sẽ nộp bài ngay.";
-    $("tabModal").classList.add("open"); lockPage();
+    $("tabModal").classList.add("open");
   } else {
     submitReason = "Vi phạm chống gian lận lần 2 (" + names[kind] + "), hệ thống tự nộp bài.";
     finish(false);
   }
 }
-$("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); unlockPage(); };
+$("closeTabModal").onclick = function(){ $("tabModal").classList.remove("open"); };
 document.addEventListener("visibilitychange", function(){ if(document.hidden) recordViolation("tab"); });
 window.addEventListener("blur", function(){ recordViolation("blur"); });
 window.addEventListener("resize", function(){
