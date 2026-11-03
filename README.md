@@ -95,11 +95,23 @@ not copied verbatim from the exercises in the videos.
 
 ## Accounts, statistics, and leaderboard
 
-The home page has “Đăng ký tài khoản” and “Đăng nhập tài khoản” buttons.
+There is a single “Đăng nhập” button in the top-right corner. When nobody
+is signed in, it opens a login dialog; signing in with the admin account
+opens the admin interface, while any other account signs in as a normal
+user. The dialog also links to registration and to forgot password, and
+when someone is signed in, the same button (showing the avatar and the
+username, or “Thanh Bình” for the admin) opens the account dialog, where
+the user can change their avatar, view statistics, register a new account,
+or sign out.
 Registration needs a full name, a username, an email, and a password
-(at least 6 characters); usernames and emails must be unique. After a
+(at least 6 characters); usernames and emails must be unique, and the
+username “admin” is reserved. After a
 successful registration or login, the home page greets the user by username
-and shows their current points.
+and shows their current points, and a popup confirms the registration,
+login, or sign-out (sign-out asks for confirmation first).
+Avatars are emoji: tapping one in the account dialog changes it
+immediately, and it appears on the header button, the greeting, and the
+leaderboard.
 
 - **Statistics** (“Thống kê của tôi”): number of completed reviews, number
   of tests taken, number of passed tests, and ranking points.
@@ -126,7 +138,8 @@ and shows their current points.
 
 ## Login
 
-The “Đăng nhập Admin” button in the top-right corner logs in to the admin account.
+The single “Đăng nhập” button in the top-right corner logs in to the admin account
+when the admin username and password are entered.
 While logged in, the correct answer for each question is shown during the test,
 for testing the system. The login state is kept only for the current browser
 session.

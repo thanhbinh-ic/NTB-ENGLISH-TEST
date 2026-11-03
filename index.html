@@ -60,6 +60,9 @@
   .lb-badge{background:var(--blue);color:#fff;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700}
   .up{color:var(--green)} .down{color:var(--red)}
   .lb-pts{color:var(--blue);font-weight:700;white-space:nowrap}
+  .avatar-grid{display:flex;flex-wrap:wrap;gap:8px}
+  .avatar-grid button{width:48px;height:48px;font-size:26px;padding:0;background:#f3f4f6;color:#111827;border:2px solid transparent}
+  .avatar-grid button.sel{border-color:var(--blue);background:#dbeafe}
   /* Banner trang chủ: căn giữa, tiêu đề và câu động lực chia dòng, tim đập nhẹ */
   #homeScreen{background:linear-gradient(180deg,#eff6ff 0%,#ffffff 55%)}
   .hero{text-align:center}
@@ -87,7 +90,7 @@
   <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 205 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
-    <button id="adminBtn" class="secondary" type="button">Đăng nhập Admin</button>
+    <button id="authBtn" class="secondary" type="button">Đăng nhập</button>
   </div>
 </header>
 
@@ -106,14 +109,9 @@
       <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 205 câu</button>
       <button id="leaderboardBtn" class="secondary" type="button">Bảng xếp hạng</button>
     </div>
-    <div id="authLoggedOut" class="row" style="margin-top:14px">
-      <button id="userLoginBtn" class="secondary" type="button">Đăng nhập tài khoản</button>
-      <button id="userRegisterBtn" type="button">Đăng ký tài khoản</button>
-    </div>
-    <div id="authLoggedIn" class="row hidden" style="margin-top:14px">
-      <p id="greetingLine" class="greet"></p>
-      <button id="statsBtn" class="secondary" type="button">Thống kê của tôi</button>
-      <button id="userLogoutBtn" class="secondary" type="button">Đăng xuất</button>
+    <p id="greetingLine" class="greet hidden" style="margin-top:14px"></p>
+    <div class="row" style="margin-top:14px">
+      <button id="statsBtn" class="secondary hidden" type="button">Thống kê của tôi</button>
     </div>
     <div class="small mut" style="margin-top:14px">
       <div>Nguồn học:</div>
@@ -207,19 +205,44 @@
 
 </div>
 
-<!-- LOGIN MODAL -->
-<div id="loginModal" class="modal"><div class="card">
+<!-- UNIFIED LOGIN MODAL: tài khoản admin đăng nhập ở đây sẽ vào giao diện admin, tài khoản thường vào giao diện người dùng -->
+<div id="authModal" class="modal"><div class="card">
   <h2>Đăng nhập</h2>
-  <div id="loginBody">
-    <label class="small" for="admUser">Tài khoản</label><input id="admUser" type="text" autocomplete="username">
-    <label class="small" for="admPass" style="display:block;margin-top:10px">Mật khẩu</label><input id="admPass" type="password" autocomplete="current-password">
-    <p id="loginErr" class="small bad hidden">Sai tài khoản hoặc mật khẩu.</p>
-    <div class="row" style="margin-top:14px"><button id="doLogin" type="button">Đăng nhập</button><button id="closeLogin" class="secondary" type="button">Đóng</button></div>
+  <label class="small" for="authUser">Tên người dùng</label><input id="authUser" type="text" autocomplete="username">
+  <label class="small" for="authPass" style="display:block;margin-top:10px">Mật khẩu</label><input id="authPass" type="password" autocomplete="current-password">
+  <p id="authErr" class="small bad hidden"></p>
+  <div class="row" style="margin-top:14px"><button id="doAuthLogin" type="button">Đăng nhập</button><button id="closeAuth" class="secondary" type="button">Đóng</button></div>
+  <p class="small"><button id="toForgot" class="secondary" type="button">Quên mật khẩu?</button> <button id="toRegister" class="secondary" type="button">Chưa có tài khoản? Đăng ký</button></p>
+</div></div>
+
+<!-- ACCOUNT MODAL: mở từ nút duy nhất trên header khi đã đăng nhập -->
+<div id="accountModal" class="modal"><div class="card">
+  <h2>Tài khoản của bạn</h2>
+  <div id="accountUserSection">
+    <div class="row"><span id="accountAvatar" style="font-size:44px"></span><div><b id="accountName"></b><div id="accountPoints" class="small mut"></div></div></div>
+    <p class="small" style="margin-top:14px">Đổi avatar (bấm vào một biểu tượng để đổi ngay):</p>
+    <div id="avatarGrid" class="avatar-grid"></div>
+    <div class="row" style="margin-top:14px"><button id="accountStatsBtn" class="secondary" type="button">Thống kê của tôi</button><button id="accountLogoutBtn" class="danger" type="button">Đăng xuất</button></div>
   </div>
-  <div id="logoutBody" class="hidden">
-    <p>Huynh đang ở chế độ Admin.</p>
-    <div class="row"><button id="doLogout" class="danger" type="button">Đăng xuất</button><button id="closeLogin2" class="secondary" type="button">Đóng</button></div>
+  <div id="accountAdminSection" class="hidden">
+    <p><b>Chế độ Admin đang bật.</b> Đáp án đúng hiển thị ngay trong lúc làm bài.</p>
+    <div class="row"><button id="adminLogoutBtn" class="danger" type="button">Đăng xuất Admin</button></div>
   </div>
+  <div class="row" style="margin-top:14px"><button id="accountRegisterBtn" class="secondary" type="button">Đăng ký tài khoản mới</button><button id="closeAccount" class="secondary" type="button">Đóng</button></div>
+</div></div>
+
+<!-- NOTIFICATION POPUP -->
+<div id="notifyModal" class="modal"><div class="card">
+  <h2 id="notifyTitle"></h2>
+  <p id="notifyText"></p>
+  <div class="row"><button id="closeNotify" type="button">Đã hiểu</button></div>
+</div></div>
+
+<!-- LOGOUT CONFIRMATION POPUP -->
+<div id="logoutConfirmModal" class="modal"><div class="card">
+  <h2>Xác nhận đăng xuất</h2>
+  <p id="logoutConfirmText">Bạn có chắc muốn đăng xuất?</p>
+  <div class="row"><button id="confirmLogout" class="danger" type="button">Đăng xuất</button><button id="cancelLogout" class="secondary" type="button">Hủy</button></div>
 </div></div>
 
 <!-- ANTI-CHEAT WARNING MODAL -->
@@ -248,15 +271,7 @@
   <p class="small"><button id="toUserLogin" class="secondary" type="button">Đã có tài khoản? Đăng nhập</button></p>
 </div></div>
 
-<!-- USER LOGIN MODAL -->
-<div id="userLoginModal" class="modal"><div class="card">
-  <h2>Đăng nhập tài khoản</h2>
-  <label class="small" for="loginUser">Tên người dùng</label><input id="loginUser" type="text" autocomplete="username">
-  <label class="small" for="loginPass" style="display:block;margin-top:10px">Mật khẩu</label><input id="loginPass" type="password" autocomplete="current-password">
-  <p id="loginUserErr" class="small bad hidden"></p>
-  <div class="row" style="margin-top:14px"><button id="doUserLogin" type="button">Đăng nhập</button><button id="closeUserLogin" class="secondary" type="button">Đóng</button></div>
-  <p class="small"><button id="toForgot" class="secondary" type="button">Quên mật khẩu?</button> <button id="toRegister" class="secondary" type="button">Chưa có tài khoản? Đăng ký</button></p>
-</div></div>
+
 
 <!-- FORGOT PASSWORD MODAL (chỉ giao diện, không gửi email thật) -->
 <div id="forgotModal" class="modal"><div class="card">
@@ -322,7 +337,7 @@ var TEST_PAPERS = (typeof TESTS !== "undefined" ? TESTS : []);
 
 function $(id){ return document.getElementById(id); }
 function isAdmin(){ try{ return sessionStorage.getItem("ntb_admin")==="1"; }catch(e){ return false; } }
-function setAdmin(v){ try{ if(v){ sessionStorage.setItem("ntb_admin","1"); } else { sessionStorage.removeItem("ntb_admin"); } }catch(e){} document.body.classList.toggle("admin", isAdmin()); $("adminBtn").textContent = isAdmin() ? "Thanh Bình" : "Đăng nhập Admin"; }
+function setAdmin(v){ try{ if(v){ sessionStorage.setItem("ntb_admin","1"); } else { sessionStorage.removeItem("ntb_admin"); } }catch(e){} document.body.classList.toggle("admin", isAdmin()); renderAuthBtn(); }
 function norm(s){
   return String(s||"").toLowerCase().replace(/a\.m\./g,"am").replace(/p\.m\./g,"pm")
     .replace(/doesn['’]t/g,"does not").replace(/don['’]t/g,"do not")
@@ -658,25 +673,6 @@ $("confirmSubmit").onclick = function(){ $("submitModal").classList.remove("open
 $("retakeBtn").onclick = function(){ if(reviewMode) startReview(currentReviewLesson); else startTest(); };
 $("backBtn").onclick = function(){ clearInterval(timerId); $("timer").classList.add("hidden"); showScreen("homeScreen"); };
 
-function openLogin(){
-  $("loginErr").classList.add("hidden");
-  $("loginBody").classList.toggle("hidden", isAdmin());
-  $("logoutBody").classList.toggle("hidden", !isAdmin());
-  $("loginModal").classList.add("open");
-}
-$("adminBtn").onclick = openLogin;
-$("closeLogin").onclick = function(){ $("loginModal").classList.remove("open"); };
-$("closeLogin2").onclick = function(){ $("loginModal").classList.remove("open"); };
-$("doLogout").onclick = function(){ setAdmin(false); renderAdminBox(); $("loginModal").classList.remove("open"); };
-$("doLogin").onclick = function(){
-  var u = $("admUser").value.trim(), p = $("admPass").value;
-  if(!window.crypto || !crypto.subtle){ $("loginErr").textContent = "Trình duyệt này không hỗ trợ kiểm tra mật khẩu an toàn."; $("loginErr").classList.remove("hidden"); return; }
-  crypto.subtle.digest("SHA-256", new TextEncoder().encode(p)).then(function(buf){
-    var hex = Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0"+b.toString(16)).slice(-2); }).join("");
-    if(u===ADMIN_USER && hex===ADMIN_PASS_HASH){ setAdmin(true); renderAdminBox(); $("loginModal").classList.remove("open"); $("admPass").value=""; }
-    else { $("loginErr").textContent = "Sai tài khoản hoặc mật khẩu."; $("loginErr").classList.remove("hidden"); }
-  });
-};
 /* Chống copy khi chưa đăng nhập: đăng nhập rồi thì cho phép select/copy bình thường */
 function blockCopy(e){ if(!isAdmin()) e.preventDefault(); }
 document.addEventListener("copy", blockCopy);
@@ -753,11 +749,22 @@ function saveUsers(u){ try{ localStorage.setItem(USER_STORE_KEY, JSON.stringify(
 function currentUsername(){ try{ return localStorage.getItem(USER_CURRENT_KEY)||""; }catch(e){ return ""; } }
 function setCurrentUsername(u){ try{ if(u){ localStorage.setItem(USER_CURRENT_KEY, u); } else { localStorage.removeItem(USER_CURRENT_KEY); } }catch(e){} }
 function sha256Hex(text){ return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function(buf){ return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0"+b.toString(16)).slice(-2); }).join(""); }); }
+/* Nút duy nhất trên header: chưa đăng nhập thì ghi "Đăng nhập"; đã đăng nhập
+   admin thì ghi "Thanh Bình" (ưu tiên admin); đã đăng nhập tài khoản thường thì
+   ghi avatar + tên người dùng. */
+function renderAuthBtn(){
+  var u = currentUsername(), me = loadUsers()[u];
+  var b = $("authBtn");
+  if(isAdmin()){ b.textContent = "Thanh Bình"; }
+  else if(me){ b.textContent = (me.avatar || avatarFor(u)) + " " + u; }
+  else { b.textContent = "Đăng nhập"; }
+}
 function renderAuth(){
-  var me = loadUsers()[currentUsername()];
-  $("authLoggedOut").classList.toggle("hidden", !!me);
-  $("authLoggedIn").classList.toggle("hidden", !me);
-  if(me){ $("greetingLine").innerHTML = "Xin chào, <b>"+esc(currentUsername())+"</b>! Bạn đang có <b>"+me.points+"</b> điểm."; }
+  var u = currentUsername(), me = loadUsers()[u];
+  $("greetingLine").classList.toggle("hidden", !me);
+  $("statsBtn").classList.toggle("hidden", !me);
+  if(me){ $("greetingLine").innerHTML = (me.avatar || avatarFor(u)) + " Xin chào, <b>"+esc(u)+"</b>! Bạn đang có <b>"+me.points+"</b> điểm."; }
+  renderAuthBtn();
 }
 function applyTestResult(me, pct, score){
   me.tests++;
@@ -816,7 +823,7 @@ function buildLeaderboard(dateStr){
     return {name:n, points:virtualPoints(i, dateStr), isMe:false};
   }).filter(function(e){ return !users[e.name]; });
   Object.keys(users).forEach(function(k){
-    entries.push({name:k, points:users[k].points, isMe:k===currentUsername()});
+    entries.push({name:k, points:users[k].points, avatar:users[k].avatar||"", isMe:k===currentUsername()});
   });
   entries.sort(function(a,b){ return b.points-a.points || (a.name<b.name?-1:a.name>b.name?1:0); });
   return entries;
@@ -828,7 +835,7 @@ function renderLeaderboard(){
   var prevRank = {}; prev.forEach(function(e,i){ prevRank[e.name]=i+1; });
   if(!list.length){ $("leaderboardBody").innerHTML = "<p class=\"mut\">Chưa có tài khoản nào trên bảng xếp hạng.</p>"; return; }
   function podHTML(e, rank, cls){
-    return '<div class="pod '+cls+'"><div class="pod-crown">'+(rank===1?"👑":"")+'</div><div class="pod-avatar">'+avatarFor(e.name)+'</div><div style="margin-top:6px"><b>'+esc(e.name)+'</b></div><div class="small" style="color:var(--blue);font-weight:700">'+e.points+' điểm</div><div class="pod-bar"></div></div>';
+    return '<div class="pod '+cls+'"><div class="pod-crown">'+(rank===1?"👑":"")+'</div><div class="pod-avatar">'+(e.avatar || avatarFor(e.name))+'</div><div style="margin-top:6px"><b>'+esc(e.name)+'</b></div><div class="small" style="color:var(--blue);font-weight:700">'+e.points+' điểm</div><div class="pod-bar"></div></div>';
   }
   var podium = "";
   if(list.length>=3){
@@ -840,13 +847,12 @@ function renderLeaderboard(){
       if(prevRank[e.name]>rank) mv = ' <span class="small up">↑ Thăng hạng</span>';
       else if(prevRank[e.name]<rank) mv = ' <span class="small down">↓ Xuống hạng</span>';
     }
-    return '<div class="lbrow"><b style="min-width:34px">'+rank+'</b><span style="font-size:22px">'+avatarFor(e.name)+'</span><span class="flex">'+esc(e.name)+(e.isMe?' <span class="lb-badge">BẠN</span>':'')+mv+'</span><span class="lb-pts">'+e.points+' điểm</span></div>';
+    return '<div class="lbrow"><b style="min-width:34px">'+rank+'</b><span style="font-size:22px">'+(e.avatar || avatarFor(e.name))+'</span><span class="flex">'+esc(e.name)+(e.isMe?' <span class="lb-badge">BẠN</span>':'')+mv+'</span><span class="lb-pts">'+e.points+' điểm</span></div>';
   }).join("");
   $("leaderboardBody").innerHTML = podium + rows;
 }
-$("userRegisterBtn").onclick = function(){ $("regErr").classList.add("hidden"); $("registerModal").classList.add("open"); };
 $("closeRegister").onclick = function(){ $("registerModal").classList.remove("open"); };
-$("toUserLogin").onclick = function(){ $("registerModal").classList.remove("open"); $("loginUserErr").classList.add("hidden"); $("userLoginModal").classList.add("open"); };
+$("toUserLogin").onclick = function(){ $("registerModal").classList.remove("open"); $("authErr").classList.add("hidden"); $("authModal").classList.add("open"); };
 $("doRegister").onclick = function(){
   var name = $("regName").value.trim(), user = $("regUser").value.trim(), email = $("regEmail").value.trim(), pass = $("regPass").value;
   var err = $("regErr");
@@ -856,39 +862,104 @@ $("doRegister").onclick = function(){
   if(pass.length<6){ fail("Mật khẩu cần ít nhất 6 ký tự."); return; }
   if(!window.crypto || !crypto.subtle){ fail("Trình duyệt này không hỗ trợ đăng ký an toàn."); return; }
   var users = loadUsers();
-  if(users[user]){ fail("Tên người dùng này đã được đăng ký."); return; }
+  if(user===ADMIN_USER || users[user]){ fail("Tên người dùng này đã được đăng ký."); return; }
   var emailTaken = Object.keys(users).some(function(k){ return users[k].email===email; });
   if(emailTaken){ fail("Email này đã được đăng ký."); return; }
   sha256Hex(pass).then(function(hash){
-    users[user] = {name:name, email:email, passHash:hash, points:START_POINTS, reviews:0, tests:0, passes:0};
+    users[user] = {name:name, email:email, passHash:hash, points:START_POINTS, reviews:0, tests:0, passes:0, avatar:""};
     saveUsers(users); setCurrentUsername(user);
     $("regPass").value = "";
     $("registerModal").classList.remove("open");
     renderAuth(); showScreen("homeScreen");
+    showNotify("Đăng ký thành công", "Xin chào, "+user+"! Tài khoản của bạn bắt đầu với 100 điểm.");
   });
 };
-$("userLoginBtn").onclick = function(){ $("loginUserErr").classList.add("hidden"); $("userLoginModal").classList.add("open"); };
-$("closeUserLogin").onclick = function(){ $("userLoginModal").classList.remove("open"); };
-$("toRegister").onclick = function(){ $("userLoginModal").classList.remove("open"); $("regErr").classList.add("hidden"); $("registerModal").classList.add("open"); };
-$("doUserLogin").onclick = function(){
-  var user = $("loginUser").value.trim(), pass = $("loginPass").value, err = $("loginUserErr");
+/* Nút duy nhất trên header: chưa đăng nhập thì mở hộp đăng nhập chung; đã đăng
+   nhập thì mở hộp tài khoản (đổi avatar, thống kê, đăng xuất). */
+$("authBtn").onclick = function(){
+  if(isAdmin() || loadUsers()[currentUsername()]){ renderAccountModal(); }
+  else { $("authErr").classList.add("hidden"); $("authModal").classList.add("open"); }
+};
+$("closeAuth").onclick = function(){ $("authModal").classList.remove("open"); };
+$("toRegister").onclick = function(){ $("authModal").classList.remove("open"); $("regErr").classList.add("hidden"); $("registerModal").classList.add("open"); };
+$("doAuthLogin").onclick = function(){
+  var user = $("authUser").value.trim(), pass = $("authPass").value, err = $("authErr");
   if(!window.crypto || !crypto.subtle){ err.textContent = "Trình duyệt này không hỗ trợ đăng nhập an toàn."; err.classList.remove("hidden"); return; }
-  var users = loadUsers(), me = users[user];
-  if(!me){ err.textContent = "Sai tên người dùng hoặc mật khẩu."; err.classList.remove("hidden"); return; }
   sha256Hex(pass).then(function(hash){
-    if(hash===me.passHash){
-      setCurrentUsername(user); $("loginPass").value = "";
-      $("userLoginModal").classList.remove("open");
+    if(user===ADMIN_USER && hash===ADMIN_PASS_HASH){
+      setAdmin(true); renderAdminBox(); $("authPass").value = "";
+      $("authModal").classList.remove("open");
       renderAuth(); showScreen("homeScreen");
-    } else { err.textContent = "Sai tên người dùng hoặc mật khẩu."; err.classList.remove("hidden"); }
+      showNotify("Đăng nhập Admin thành công", "Chế độ Admin đang bật. Đáp án đúng hiển thị ngay trong lúc làm bài.");
+    } else {
+      var me = loadUsers()[user];
+      if(me && hash===me.passHash){
+        setCurrentUsername(user); $("authPass").value = "";
+        $("authModal").classList.remove("open");
+        renderAuth(); showScreen("homeScreen");
+        showNotify("Đăng nhập thành công", "Xin chào, "+user+"!");
+      } else { err.textContent = "Sai tên người dùng hoặc mật khẩu."; err.classList.remove("hidden"); }
+    }
   });
 };
-$("userLogoutBtn").onclick = function(){ setCurrentUsername(""); renderAuth(); };
+function showNotify(title, text){ $("notifyTitle").textContent = title; $("notifyText").textContent = text; $("notifyModal").classList.add("open"); }
+$("closeNotify").onclick = function(){ $("notifyModal").classList.remove("open"); };
+var avatarGridBuilt = false;
+function buildAvatarGrid(){
+  if(avatarGridBuilt) return; avatarGridBuilt = true;
+  VIRTUAL_EMOJIS.forEach(function(em){
+    var b = document.createElement("button");
+    b.type = "button"; b.textContent = em;
+    b.onclick = function(){
+      var users = loadUsers(), me = users[currentUsername()];
+      if(!me) return;
+      me.avatar = em; saveUsers(users);
+      renderAccountModal(); renderAuth();
+    };
+    $("avatarGrid").appendChild(b);
+  });
+}
+function renderAccountModal(){
+  var u = currentUsername(), me = loadUsers()[u];
+  $("accountUserSection").classList.toggle("hidden", !me);
+  $("accountAdminSection").classList.toggle("hidden", !isAdmin());
+  if(me){
+    $("accountAvatar").textContent = me.avatar || avatarFor(u);
+    $("accountName").textContent = u;
+    $("accountPoints").textContent = me.points + " điểm";
+    buildAvatarGrid();
+    var cur = me.avatar || avatarFor(u);
+    Array.prototype.forEach.call($("avatarGrid").querySelectorAll("button"), function(b){
+      b.classList.toggle("sel", b.textContent === cur);
+    });
+  }
+  $("accountModal").classList.add("open");
+}
+$("closeAccount").onclick = function(){ $("accountModal").classList.remove("open"); };
+$("accountRegisterBtn").onclick = function(){ $("accountModal").classList.remove("open"); $("regErr").classList.add("hidden"); $("registerModal").classList.add("open"); };
+$("accountStatsBtn").onclick = function(){ $("accountModal").classList.remove("open"); renderStats(); showScreen("statsScreen"); };
+var pendingLogout = "";
+function askLogout(which, label){
+  pendingLogout = which;
+  $("logoutConfirmText").textContent = "Bạn có chắc muốn đăng xuất" + (label ? " " + label : "") + "?";
+  $("accountModal").classList.remove("open");
+  $("logoutConfirmModal").classList.add("open");
+}
+$("accountLogoutBtn").onclick = function(){ askLogout("user", "khỏi tài khoản " + currentUsername()); };
+$("adminLogoutBtn").onclick = function(){ askLogout("admin", "khỏi chế độ Admin"); };
+$("cancelLogout").onclick = function(){ $("logoutConfirmModal").classList.remove("open"); };
+$("confirmLogout").onclick = function(){
+  $("logoutConfirmModal").classList.remove("open");
+  if(pendingLogout==="admin"){ setAdmin(false); renderAdminBox(); }
+  else { setCurrentUsername(""); }
+  renderAuth();
+  showNotify("Đã đăng xuất", pendingLogout==="admin" ? "Bạn đã thoát chế độ Admin." : "Hẹn gặp lại bạn!");
+};
 $("statsBtn").onclick = function(){ renderStats(); showScreen("statsScreen"); };
 $("statsBackBtn").onclick = function(){ showScreen("homeScreen"); };
 $("leaderboardBtn").onclick = function(){ renderLeaderboard(); showScreen("leaderboardScreen"); };
 $("lbBackBtn").onclick = function(){ showScreen("homeScreen"); };
-$("toForgot").onclick = function(){ $("userLoginModal").classList.remove("open"); $("forgotErr").classList.add("hidden"); $("forgotModal").classList.add("open"); };
+$("toForgot").onclick = function(){ $("authModal").classList.remove("open"); $("forgotErr").classList.add("hidden"); $("forgotModal").classList.add("open"); };
 $("closeForgot").onclick = function(){ $("forgotModal").classList.remove("open"); };
 $("doForgot").onclick = function(){
   var email = $("forgotEmail").value.trim(), err = $("forgotErr");
