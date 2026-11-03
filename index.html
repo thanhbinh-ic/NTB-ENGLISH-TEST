@@ -69,7 +69,7 @@
 </head>
 <body>
 <header>
-  <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 100 câu</p></div>
+  <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 115 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
     <button id="adminBtn" class="secondary" type="button">Đăng nhập</button>
@@ -88,7 +88,7 @@
     </div>
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
-      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 100 câu</button>
+      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 115 câu</button>
     </div>
     <div class="small mut" style="margin-top:14px">
       <div>Nguồn học:</div>
@@ -98,6 +98,7 @@
       <div>Bài 4 — Thì hiện tại hoàn thành tiếp diễn — <a href="https://youtu.be/A86yKxubFJw" target="_blank" rel="noopener">https://youtu.be/A86yKxubFJw</a></div>
       <div>Bài 5 — Thì quá khứ đơn — <a href="https://youtu.be/w096ct4263w" target="_blank" rel="noopener">https://youtu.be/w096ct4263w</a></div>
       <div>Bài 6 — Thì quá khứ tiếp diễn — <a href="https://youtu.be/DLNAZDJ3apU" target="_blank" rel="noopener">https://youtu.be/DLNAZDJ3apU</a></div>
+      <div>Bài 7 — Thì quá khứ hoàn thành — <a href="https://youtu.be/RaXptr8ZLOs" target="_blank" rel="noopener">https://youtu.be/RaXptr8ZLOs</a></div>
       <div>Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</div>
     </div>
   </section>
@@ -111,6 +112,7 @@
       <button id="rev4Btn" class="secondary" type="button">Bài 4 — Thì hiện tại hoàn thành tiếp diễn</button>
       <button id="rev5Btn" class="secondary" type="button">Bài 5 — Thì quá khứ đơn</button>
       <button id="rev6Btn" class="secondary" type="button">Bài 6 — Thì quá khứ tiếp diễn</button>
+      <button id="rev7Btn" class="secondary" type="button">Bài 7 — Thì quá khứ hoàn thành</button>
       <div class="flex"></div>
       <button id="revBackBtn" class="secondary" type="button">Về trang chủ</button>
     </div>
@@ -225,7 +227,7 @@ var REVIEW1 = [
   {part:"C — Đọc hiểu", passage:"Tom and his sister live in a small town. Their school is near their house. Tom and his sister go to school on foot every day. Their father works in a factory and their mother is a doctor. On Saturdays, the family goes to the market.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How do Tom and his sister go to school?", opts:["By bus","On foot","By car","By bike"], a:1, why:"Đoạn văn viết: “Tom and his sister go to school on foot every day.”"}
 ];
 var QUESTIONS = [];
-var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : []), 3: (typeof REVIEW3 !== "undefined" ? REVIEW3 : []), 4: (typeof REVIEW4 !== "undefined" ? REVIEW4 : []), 5: (typeof REVIEW5 !== "undefined" ? REVIEW5 : []), 6: (typeof REVIEW6 !== "undefined" ? REVIEW6 : [])};
+var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : []), 3: (typeof REVIEW3 !== "undefined" ? REVIEW3 : []), 4: (typeof REVIEW4 !== "undefined" ? REVIEW4 : []), 5: (typeof REVIEW5 !== "undefined" ? REVIEW5 : []), 6: (typeof REVIEW6 !== "undefined" ? REVIEW6 : []), 7: (typeof REVIEW7 !== "undefined" ? REVIEW7 : [])};
 var TEST_PAPERS = (typeof TESTS !== "undefined" ? TESTS : []);
 
 function $(id){ return document.getElementById(id); }
@@ -373,6 +375,7 @@ $("rev3Btn").onclick = function(){ renderReview(3); };
 $("rev4Btn").onclick = function(){ renderReview(4); };
 $("rev5Btn").onclick = function(){ renderReview(5); };
 $("rev6Btn").onclick = function(){ renderReview(6); };
+$("rev7Btn").onclick = function(){ renderReview(7); };
 $("revBackBtn").onclick = function(){ showScreen("homeScreen"); };
 $("revStartBtn").onclick = function(){ startReview(currentReviewLesson); };
 var REV_SUMMARY = {
@@ -433,13 +436,22 @@ var REV_SUMMARY = {
     + "<div class=\"revline\">— Hành động đang xảy ra thì bị một hành động khác xen vào: hành động đang diễn ra dùng quá khứ tiếp diễn, hành động xen vào dùng quá khứ đơn.</div>"
     + "<div class=\"revline\">— Hành động lặp lại trong quá khứ gây phiền, thường với always.</div>"
     + "<div class=\"revline\"><b>Dấu hiệu:</b> at + thời điểm cụ thể trong quá khứ (at 9 a.m. yesterday, at this time yesterday, at this time two days ago), last night, in + năm trong quá khứ, in the past, mệnh đề when/while.</div>"
-    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 6 của kênh I LOVE IELTS.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 6 của kênh I LOVE IELTS.</div>",
+  7: "<div class=\"revline\"><b>Bài 7 — Thì quá khứ hoàn thành</b></div>"
+    + "<div class=\"revline\"><b>Công thức:</b> Khẳng định: S + had + V3 (quá khứ phân từ). Phủ định: S + had + not + V3 (hadn't). Câu hỏi: Had + S + V3? Trả lời ngắn: Yes, S + had. / No, S + hadn't.</div>"
+    + "<div class=\"revline\"><b>Cột động từ:</b> V1 (nguyên mẫu), V2 (quá khứ), V3 (quá khứ phân từ) — cột V3 là cột then chốt của thì này.</div>"
+    + "<div class=\"revline\"><b>Cách dùng:</b></div>"
+    + "<div class=\"revline\">— Hành động xảy ra trước một hành động khác trong quá khứ (hành động trước dùng quá khứ hoàn thành, hành động sau dùng quá khứ đơn).</div>"
+    + "<div class=\"revline\">— Hành động đã hoàn thành trước một thời điểm trong quá khứ.</div>"
+    + "<div class=\"revline\">— Vế có if trong câu điều kiện loại 3, diễn tả việc không có thật trong quá khứ.</div>"
+    + "<div class=\"revline\"><b>Dấu hiệu:</b> by, before, after, by the time, as soon as.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 7 của kênh I LOVE IELTS.</div>"
 };
 var currentReviewLesson = 1;
 function renderReview(lesson){
   currentReviewLesson = lesson;
   var list = REVIEW_SETS[lesson] || [];
-  $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : lesson===2 ? "Ôn tập — Bài 2: Thì hiện tại tiếp diễn" : lesson===3 ? "Ôn tập — Bài 3: Thì hiện tại hoàn thành" : lesson===4 ? "Ôn tập — Bài 4: Thì hiện tại hoàn thành tiếp diễn" : lesson===5 ? "Ôn tập — Bài 5: Thì quá khứ đơn" : "Ôn tập — Bài 6: Thì quá khứ tiếp diễn";
+  $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : lesson===2 ? "Ôn tập — Bài 2: Thì hiện tại tiếp diễn" : lesson===3 ? "Ôn tập — Bài 3: Thì hiện tại hoàn thành" : lesson===4 ? "Ôn tập — Bài 4: Thì hiện tại hoàn thành tiếp diễn" : lesson===5 ? "Ôn tập — Bài 5: Thì quá khứ đơn" : lesson===6 ? "Ôn tập — Bài 6: Thì quá khứ tiếp diễn" : "Ôn tập — Bài 7: Thì quá khứ hoàn thành";
   $("revSummary").innerHTML = REV_SUMMARY[lesson] || "";
   $("revStartBtn").textContent = "Bắt đầu ôn tập — Bài " + lesson + " (" + list.length + " câu)";
   window.scrollTo(0,0);
