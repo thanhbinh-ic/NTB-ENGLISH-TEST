@@ -39,8 +39,13 @@
   .adminbar{display:none;background:#fef9c3;border:1px solid #fde68a;color:#854d0e;border-radius:10px;padding:10px 14px;margin-bottom:14px}
   body.admin .adminbar{display:block}
   .review{border-top:1px solid #e5e7eb;padding:14px 0} .ok{color:var(--green);font-weight:700} .bad{color:var(--red);font-weight:700}
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px}
-  .modal.open{display:flex} .modal .card{max-width:480px;width:100%}
+  /* Popup trên mobile: trước đây thẻ popup không giới hạn chiều cao nên khi nội
+     dung dài hơn màn hình (nhất là bảng tài khoản với lưới avatar) thì thẻ bị cắt
+     đầu cắt đuôi mà không cuộn được, trông như popup chặn cứng việc cuộn trang.
+     Giới hạn thẻ trong màn hình và cho chính thẻ cuộn được, cuộn tới mép thẻ thì
+     không kéo theo trang nền. */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+  .modal.open{display:flex} .modal .card{max-width:480px;width:100%;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center} .flex{flex:1}
   .passage{background:#f9fafb;border-left:4px solid var(--blue);padding:12px 14px;line-height:1.6;margin:0 0 14px}
   #qFrame{min-height:380px}
@@ -62,6 +67,7 @@
   .lb-pts{color:var(--blue);font-weight:700;white-space:nowrap}
   .avatar-grid{display:flex;flex-wrap:wrap;gap:8px}
   .avatar-grid button{width:48px;height:48px;font-size:26px;padding:0;background:#f3f4f6;color:#111827;border:2px solid transparent}
+  @media (max-width:480px){ .avatar-grid button{width:44px;height:44px;font-size:24px} }
   .avatar-grid button.sel{border-color:var(--blue);background:#dbeafe}
   /* Banner trang chủ: căn giữa, tiêu đề và câu động lực chia dòng, tim đập nhẹ */
   #homeScreen{background:linear-gradient(180deg,#eff6ff 0%,#ffffff 55%)}
@@ -212,7 +218,7 @@
   <label class="small" for="authPass" style="display:block;margin-top:10px">Mật khẩu</label><input id="authPass" type="password" autocomplete="current-password">
   <p id="authErr" class="small bad hidden"></p>
   <div class="row" style="margin-top:14px"><button id="doAuthLogin" type="button">Đăng nhập</button><button id="closeAuth" class="secondary" type="button">Đóng</button></div>
-  <p class="small"><button id="toForgot" class="secondary" type="button">Quên mật khẩu?</button> <button id="toRegister" class="secondary" type="button">Chưa có tài khoản? Đăng ký</button></p>
+  <div class="row" style="margin-top:14px"><button id="toForgot" class="secondary" type="button">Quên mật khẩu?</button><button id="toRegister" class="secondary" type="button">Chưa có tài khoản? Đăng ký</button></div>
 </div></div>
 
 <!-- ACCOUNT MODAL: mở từ nút duy nhất trên header khi đã đăng nhập -->
@@ -274,7 +280,7 @@
   <label class="small" for="regPass2" style="display:block;margin-top:10px">Nhập lại mật khẩu</label><input id="regPass2" type="password" autocomplete="new-password">
   <p id="regErr" class="small bad hidden"></p>
   <div class="row" style="margin-top:14px"><button id="doRegister" type="button">Đăng ký</button><button id="closeRegister" class="secondary" type="button">Đóng</button></div>
-  <p class="small"><button id="toUserLogin" class="secondary" type="button">Đã có tài khoản? Đăng nhập</button></p>
+  <div class="row" style="margin-top:14px"><button id="toUserLogin" class="secondary" type="button">Đã có tài khoản? Đăng nhập</button></div>
 </div></div>
 
 
