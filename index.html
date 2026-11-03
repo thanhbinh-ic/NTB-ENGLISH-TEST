@@ -18,7 +18,9 @@
   h2{margin-top:0} .mut{color:var(--mut)} .small{font-size:13px}
   button{cursor:pointer;border:0;border-radius:10px;padding:11px 18px;font-size:15px;background:var(--blue);color:#fff}
   button.secondary{background:#e5e7eb;color:#111827} button.danger{background:var(--red)} button:disabled{opacity:.5;cursor:not-allowed}
-  input,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:10px;font-size:15px}
+  /* Ô nhập phải từ 16px trở lên: iPhone tự phóng to trang khi chạm vào ô nhập có cỡ chữ
+     nhỏ hơn 16px, đó là gốc lỗi bàn phím bật lên thì trang bị zoom ra. */
+  input,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:10px;font-size:16px}
   textarea{min-height:90px;resize:vertical}
   .opt{display:block;border:1px solid #e5e7eb;border-radius:10px;padding:11px 13px;margin:8px 0;cursor:pointer}
   .opt:hover{border-color:var(--blue)} .opt input{width:auto;margin-right:8px}
@@ -60,7 +62,7 @@
   <!-- HOME -->
   <section id="homeScreen" class="card">
     <h2>NTB English Test — 13 thì tiếng Anh</h2>
-    <p>Chọn một trong hai phần dưới đây. Phần kiểm tra tổng hợp tất cả các bài đã có trong phần ôn tập, câu hỏi viết mới hoàn toàn, khác với câu ôn tập.</p>
+    <p>Small steps every day — mỗi ngày một chút, tiếng Anh sẽ thành thói quen, và bạn sẽ giỏi hơn chính mình của hôm qua.</p>
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
       <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 70 câu</button>
@@ -271,6 +273,11 @@ function renderQuestion(){
   $("prevBtn").disabled = current===0;
   $("nextBtn").disabled = current===QUESTIONS.length-1;
   renderPalette();
+  /* Cùng gốc lỗi như showScreen: chuyển câu (nút Câu trước/sau, bảng câu hỏi) mà giữ
+     vị trí cuộn của câu dài trước đó thì câu ngắn sau đó sẽ bị đẩy xuống ngoài khung nhìn.
+     Đưa về đầu trang mỗi khi đổi câu; lúc gõ đáp án không gọi renderQuestion nên không
+     làm phiền người đang gõ. */
+  window.scrollTo(0,0);
 }
 function renderAdminBox(){
   var show = isAdmin();
@@ -278,6 +285,11 @@ function renderAdminBox(){
 }
 function showScreen(id){
   ["homeScreen","reviewScreen","testScreen","resultScreen"].forEach(function(s){ $(s).classList.toggle("hidden", s!==id); });
+  /* Gốc lỗi trang bị đẩy xuống ngoài nội dung: trước đây showScreen chỉ đổi màn hình mà
+     giữ nguyên vị trí cuộn cũ, nên từ màn hình dài (bảng câu hỏi, danh sách đáp án sau khi
+     nộp bài) chuyển sang màn hình ngắn (trang chủ) thì khung nhìn vẫn ở sâu bên dưới nội
+     dung, chỉ thấy khoảng trống. Đưa về đầu trang ở mọi lần chuyển màn hình. */
+  window.scrollTo(0,0);
 }
 function grade(){
   return QUESTIONS.map(function(q,i){
