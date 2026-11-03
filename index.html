@@ -45,6 +45,8 @@
   .passage{background:#f9fafb;border-left:4px solid var(--blue);padding:12px 14px;line-height:1.6;margin:0 0 14px}
   #qFrame{min-height:380px}
   .revline{margin:10px 0;line-height:1.6}
+  .greet{font-size:18px;margin:0}
+  .lbrow{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #e5e7eb} .lbrow .flex{flex:1}
   /* Banner trang chủ: căn giữa, tiêu đề và câu động lực chia dòng, tim đập nhẹ */
   #homeScreen{background:linear-gradient(180deg,#eff6ff 0%,#ffffff 55%)}
   .hero{text-align:center}
@@ -72,7 +74,7 @@
   <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 205 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
-    <button id="adminBtn" class="secondary" type="button">Đăng nhập</button>
+    <button id="adminBtn" class="secondary" type="button">Đăng nhập Admin</button>
   </div>
 </header>
 
@@ -89,6 +91,16 @@
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
       <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 205 câu</button>
+      <button id="leaderboardBtn" class="secondary" type="button">Bảng xếp hạng</button>
+    </div>
+    <div id="authLoggedOut" class="row" style="margin-top:14px">
+      <button id="userLoginBtn" class="secondary" type="button">Đăng nhập tài khoản</button>
+      <button id="userRegisterBtn" type="button">Đăng ký tài khoản</button>
+    </div>
+    <div id="authLoggedIn" class="row hidden" style="margin-top:14px">
+      <p id="greetingLine" class="greet"></p>
+      <button id="statsBtn" class="secondary" type="button">Thống kê của tôi</button>
+      <button id="userLogoutBtn" class="secondary" type="button">Đăng xuất</button>
     </div>
     <div class="small mut" style="margin-top:14px">
       <div>Nguồn học:</div>
@@ -158,11 +170,26 @@
     <h2>Kết quả</h2>
     <p id="scoreLine" style="font-size:20px"></p>
     <p id="metaLine" class="mut"></p>
+    <p id="pointsLine" class="mut"></p>
     <div id="review"></div>
     <div class="row" style="margin-top:16px">
       <button id="retakeBtn" type="button">Làm lại bài mới</button>
       <button id="backBtn" class="secondary" type="button">Về trang chủ</button>
     </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="statsScreen" class="card hidden">
+    <h2>Thống kê của tôi</h2>
+    <div id="statsBody"></div>
+    <div class="row" style="margin-top:16px"><button id="statsBackBtn" class="secondary" type="button">Về trang chủ</button></div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section id="leaderboardScreen" class="card hidden">
+    <h2>Bảng xếp hạng</h2>
+    <div id="leaderboardBody"></div>
+    <div class="row" style="margin-top:16px"><button id="lbBackBtn" class="secondary" type="button">Về trang chủ</button></div>
   </section>
 
 </div>
@@ -194,6 +221,44 @@
   <h2>Xác nhận nộp bài</h2>
   <p id="submitInfo"></p>
   <div class="row"><button id="confirmSubmit" class="danger" type="button">Nộp bài ngay</button><button id="cancelSubmit" class="secondary" type="button">Làm tiếp</button></div>
+</div></div>
+
+<!-- REGISTER MODAL -->
+<div id="registerModal" class="modal"><div class="card">
+  <h2>Đăng ký tài khoản</h2>
+  <label class="small" for="regName">Họ và tên</label><input id="regName" type="text" autocomplete="name">
+  <label class="small" for="regUser" style="display:block;margin-top:10px">Tên người dùng</label><input id="regUser" type="text" autocomplete="username">
+  <label class="small" for="regEmail" style="display:block;margin-top:10px">Email</label><input id="regEmail" type="email" autocomplete="email">
+  <label class="small" for="regPass" style="display:block;margin-top:10px">Mật khẩu (ít nhất 6 ký tự)</label><input id="regPass" type="password" autocomplete="new-password">
+  <p id="regErr" class="small bad hidden"></p>
+  <div class="row" style="margin-top:14px"><button id="doRegister" type="button">Đăng ký</button><button id="closeRegister" class="secondary" type="button">Đóng</button></div>
+  <p class="small"><button id="toUserLogin" class="secondary" type="button">Đã có tài khoản? Đăng nhập</button></p>
+</div></div>
+
+<!-- USER LOGIN MODAL -->
+<div id="userLoginModal" class="modal"><div class="card">
+  <h2>Đăng nhập tài khoản</h2>
+  <label class="small" for="loginUser">Tên người dùng</label><input id="loginUser" type="text" autocomplete="username">
+  <label class="small" for="loginPass" style="display:block;margin-top:10px">Mật khẩu</label><input id="loginPass" type="password" autocomplete="current-password">
+  <p id="loginUserErr" class="small bad hidden"></p>
+  <div class="row" style="margin-top:14px"><button id="doUserLogin" type="button">Đăng nhập</button><button id="closeUserLogin" class="secondary" type="button">Đóng</button></div>
+  <p class="small"><button id="toForgot" class="secondary" type="button">Quên mật khẩu?</button> <button id="toRegister" class="secondary" type="button">Chưa có tài khoản? Đăng ký</button></p>
+</div></div>
+
+<!-- FORGOT PASSWORD MODAL (chỉ giao diện, không gửi email thật) -->
+<div id="forgotModal" class="modal"><div class="card">
+  <h2>Quên mật khẩu</h2>
+  <p class="small">Nhập email đã đăng ký tài khoản của bạn.</p>
+  <label class="small" for="forgotEmail">Email</label><input id="forgotEmail" type="email" autocomplete="email">
+  <p id="forgotErr" class="small bad hidden"></p>
+  <div class="row" style="margin-top:14px"><button id="doForgot" type="button">Gửi email lấy lại mật khẩu</button><button id="closeForgot" class="secondary" type="button">Đóng</button></div>
+</div></div>
+
+<!-- FORGOT PASSWORD CONFIRMATION -->
+<div id="forgotConfirmModal" class="modal"><div class="card">
+  <h2>Đã gửi email lấy lại mật khẩu</h2>
+  <p>Vui lòng kiểm tra hòm thư của bạn và làm theo hướng dẫn trong email để đặt lại mật khẩu.</p>
+  <div class="row"><button id="closeForgotConfirm" type="button">Đã hiểu</button></div>
 </div></div>
 
 <script src="data.js"></script>
@@ -244,7 +309,7 @@ var TEST_PAPERS = (typeof TESTS !== "undefined" ? TESTS : []);
 
 function $(id){ return document.getElementById(id); }
 function isAdmin(){ try{ return sessionStorage.getItem("ntb_admin")==="1"; }catch(e){ return false; } }
-function setAdmin(v){ try{ if(v){ sessionStorage.setItem("ntb_admin","1"); } else { sessionStorage.removeItem("ntb_admin"); } }catch(e){} document.body.classList.toggle("admin", isAdmin()); $("adminBtn").textContent = isAdmin() ? "Thanh Bình" : "Đăng nhập"; }
+function setAdmin(v){ try{ if(v){ sessionStorage.setItem("ntb_admin","1"); } else { sessionStorage.removeItem("ntb_admin"); } }catch(e){} document.body.classList.toggle("admin", isAdmin()); $("adminBtn").textContent = isAdmin() ? "Thanh Bình" : "Đăng nhập Admin"; }
 function norm(s){
   return String(s||"").toLowerCase().replace(/a\.m\./g,"am").replace(/p\.m\./g,"pm")
     .replace(/doesn['’]t/g,"does not").replace(/don['’]t/g,"do not")
@@ -323,7 +388,7 @@ function renderAdminBox(){
   $("qAdmin").classList.toggle("hidden", !show);
 }
 function showScreen(id){
-  ["homeScreen","reviewScreen","testScreen","resultScreen"].forEach(function(s){ $(s).classList.toggle("hidden", s!==id); });
+  ["homeScreen","reviewScreen","testScreen","resultScreen","statsScreen","leaderboardScreen"].forEach(function(s){ $(s).classList.toggle("hidden", s!==id); });
   /* Gốc lỗi trang bị đẩy xuống ngoài nội dung: trước đây showScreen chỉ đổi màn hình mà
      giữ nguyên vị trí cuộn cũ, nên từ màn hình dài (bảng câu hỏi, danh sách đáp án sau khi
      nộp bài) chuyển sang màn hình ngắn (trang chủ) thì khung nhìn vẫn ở sâu bên dưới nội
@@ -353,6 +418,19 @@ function finish(auto){
   var band = pct>=90 ? "Xuất sắc" : pct>=70 ? "Tốt" : pct>=50 ? "Đạt — vẫn nên ôn lại các câu sai" : "Cần ôn lại bài";
   $("scoreLine").innerHTML = "Điểm: <b>"+score+" / "+QUESTIONS.length+"</b> ("+pct+"%) — "+band;
   $("metaLine").textContent = reviewMode ? "Ôn tập — Bài " + currentReviewLesson + " • Đã nộp bài (không tính giờ)." : "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài."));
+  /* Thống kê và điểm xếp hạng: chỉ ghi nhận cho tài khoản đang đăng nhập. Ôn tập chỉ
+     tăng số lần ôn, không cộng điểm. Kiểm tra: đạt (từ 50% trở lên) thì cộng 1 điểm
+     cho mỗi câu đúng; không đạt thì trừ 10 điểm, điểm không xuống dưới 0. */
+  var pointsLine = "";
+  var users = loadUsers(), me = users[currentUsername()];
+  if(me){
+    if(reviewMode){ me.reviews++; }
+    else { pointsLine = applyTestResult(me, pct, score); }
+    saveUsers(users); renderAuth();
+  } else if(!reviewMode){
+    pointsLine = "Đăng nhập tài khoản để tích điểm và tham gia bảng xếp hạng.";
+  }
+  $("pointsLine").textContent = pointsLine;
   var unansweredIdx = QUESTIONS.map(function(q,i){ return (answers[i]===undefined || answers[i]==="") ? (i+1) : null; }).filter(function(x){ return x!==null; });
   var showAnswers = isAdmin() || reviewMode || unansweredIdx.length===0;
   $("review").innerHTML = showAnswers ? rows.map(function(r){
@@ -649,7 +727,111 @@ window.addEventListener("resize", function(){
   }, 600);
 });
 
+/* Tài khoản, thống kê và bảng xếp hạng — lưu trên trình duyệt này (localStorage),
+   không có máy chủ: tài khoản chỉ dùng được trên trình duyệt đã đăng ký, và bảng
+   xếp hạng chỉ gồm các tài khoản tạo trên trình duyệt đó. Mật khẩu chỉ lưu dạng
+   băm SHA-256, không lưu dạng chữ thường. Quên mật khẩu chỉ là giao diện: không
+   có email nào được gửi thật. */
+var USER_STORE_KEY = "ntb_users";
+var USER_CURRENT_KEY = "ntb_current";
+var START_POINTS = 100, FAIL_PENALTY = 10, PASS_MIN_PCT = 50;
+function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USER_STORE_KEY)||"{}"); }catch(e){ return {}; } }
+function saveUsers(u){ try{ localStorage.setItem(USER_STORE_KEY, JSON.stringify(u)); }catch(e){} }
+function currentUsername(){ try{ return localStorage.getItem(USER_CURRENT_KEY)||""; }catch(e){ return ""; } }
+function setCurrentUsername(u){ try{ if(u){ localStorage.setItem(USER_CURRENT_KEY, u); } else { localStorage.removeItem(USER_CURRENT_KEY); } }catch(e){} }
+function sha256Hex(text){ return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function(buf){ return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0"+b.toString(16)).slice(-2); }).join(""); }); }
+function renderAuth(){
+  var me = loadUsers()[currentUsername()];
+  $("authLoggedOut").classList.toggle("hidden", !!me);
+  $("authLoggedIn").classList.toggle("hidden", !me);
+  if(me){ $("greetingLine").innerHTML = "Xin chào, <b>"+esc(currentUsername())+"</b>! Bạn đang có <b>"+me.points+"</b> điểm."; }
+}
+function applyTestResult(me, pct, score){
+  me.tests++;
+  if(pct>=PASS_MIN_PCT){
+    me.passes++;
+    me.points += score;
+    return "Bạn được cộng "+score+" điểm (mỗi câu đúng +1 điểm). Tổng điểm hiện tại: "+me.points+".";
+  }
+  me.points = Math.max(0, me.points - FAIL_PENALTY);
+  return "Bài này chưa đạt nên bạn bị trừ "+FAIL_PENALTY+" điểm. Tổng điểm hiện tại: "+me.points+".";
+}
+function renderStats(){
+  var me = loadUsers()[currentUsername()];
+  if(!me){ $("statsBody").innerHTML = "<p class=\"mut\">Bạn chưa đăng nhập.</p>"; return; }
+  $("statsBody").innerHTML =
+    "<p>Số lần ôn tập: <b>"+me.reviews+"</b></p>"+
+    "<p>Số lần làm bài kiểm tra: <b>"+me.tests+"</b></p>"+
+    "<p>Số lần đạt: <b>"+me.passes+"</b></p>"+
+    "<p>Điểm xếp hạng: <b>"+me.points+"</b></p>";
+}
+function renderLeaderboard(){
+  var users = loadUsers(), me = currentUsername();
+  var rows = Object.keys(users).map(function(k){ return {user:k, points:users[k].points}; }).sort(function(a,b){ return b.points-a.points || (a.user<b.user?-1:a.user>b.user?1:0); });
+  if(!rows.length){ $("leaderboardBody").innerHTML = "<p class=\"mut\">Chưa có tài khoản nào trên bảng xếp hạng.</p>"; return; }
+  $("leaderboardBody").innerHTML = rows.map(function(r,i){
+    return '<div class="lbrow"><b>#'+(i+1)+'</b><span class="flex">'+esc(r.user)+(r.user===me?" (bạn)":"")+'</span><b>'+r.points+' điểm</b></div>';
+  }).join("");
+}
+$("userRegisterBtn").onclick = function(){ $("regErr").classList.add("hidden"); $("registerModal").classList.add("open"); };
+$("closeRegister").onclick = function(){ $("registerModal").classList.remove("open"); };
+$("toUserLogin").onclick = function(){ $("registerModal").classList.remove("open"); $("loginUserErr").classList.add("hidden"); $("userLoginModal").classList.add("open"); };
+$("doRegister").onclick = function(){
+  var name = $("regName").value.trim(), user = $("regUser").value.trim(), email = $("regEmail").value.trim(), pass = $("regPass").value;
+  var err = $("regErr");
+  function fail(msg){ err.textContent = msg; err.classList.remove("hidden"); }
+  if(!name || !user || !email || !pass){ fail("Vui lòng nhập đủ họ và tên, tên người dùng, email và mật khẩu."); return; }
+  if(email.indexOf("@")<1 || email.indexOf(".", email.indexOf("@"))<0){ fail("Email chưa đúng định dạng."); return; }
+  if(pass.length<6){ fail("Mật khẩu cần ít nhất 6 ký tự."); return; }
+  if(!window.crypto || !crypto.subtle){ fail("Trình duyệt này không hỗ trợ đăng ký an toàn."); return; }
+  var users = loadUsers();
+  if(users[user]){ fail("Tên người dùng này đã được đăng ký."); return; }
+  var emailTaken = Object.keys(users).some(function(k){ return users[k].email===email; });
+  if(emailTaken){ fail("Email này đã được đăng ký."); return; }
+  sha256Hex(pass).then(function(hash){
+    users[user] = {name:name, email:email, passHash:hash, points:START_POINTS, reviews:0, tests:0, passes:0};
+    saveUsers(users); setCurrentUsername(user);
+    $("regPass").value = "";
+    $("registerModal").classList.remove("open");
+    renderAuth(); showScreen("homeScreen");
+  });
+};
+$("userLoginBtn").onclick = function(){ $("loginUserErr").classList.add("hidden"); $("userLoginModal").classList.add("open"); };
+$("closeUserLogin").onclick = function(){ $("userLoginModal").classList.remove("open"); };
+$("toRegister").onclick = function(){ $("userLoginModal").classList.remove("open"); $("regErr").classList.add("hidden"); $("registerModal").classList.add("open"); };
+$("doUserLogin").onclick = function(){
+  var user = $("loginUser").value.trim(), pass = $("loginPass").value, err = $("loginUserErr");
+  if(!window.crypto || !crypto.subtle){ err.textContent = "Trình duyệt này không hỗ trợ đăng nhập an toàn."; err.classList.remove("hidden"); return; }
+  var users = loadUsers(), me = users[user];
+  if(!me){ err.textContent = "Sai tên người dùng hoặc mật khẩu."; err.classList.remove("hidden"); return; }
+  sha256Hex(pass).then(function(hash){
+    if(hash===me.passHash){
+      setCurrentUsername(user); $("loginPass").value = "";
+      $("userLoginModal").classList.remove("open");
+      renderAuth(); showScreen("homeScreen");
+    } else { err.textContent = "Sai tên người dùng hoặc mật khẩu."; err.classList.remove("hidden"); }
+  });
+};
+$("userLogoutBtn").onclick = function(){ setCurrentUsername(""); renderAuth(); };
+$("statsBtn").onclick = function(){ renderStats(); showScreen("statsScreen"); };
+$("statsBackBtn").onclick = function(){ showScreen("homeScreen"); };
+$("leaderboardBtn").onclick = function(){ renderLeaderboard(); showScreen("leaderboardScreen"); };
+$("lbBackBtn").onclick = function(){ showScreen("homeScreen"); };
+$("toForgot").onclick = function(){ $("userLoginModal").classList.remove("open"); $("forgotErr").classList.add("hidden"); $("forgotModal").classList.add("open"); };
+$("closeForgot").onclick = function(){ $("forgotModal").classList.remove("open"); };
+$("doForgot").onclick = function(){
+  var email = $("forgotEmail").value.trim(), err = $("forgotErr");
+  if(!email){ err.textContent = "Vui lòng nhập email."; err.classList.remove("hidden"); return; }
+  var users = loadUsers();
+  var found = Object.keys(users).some(function(k){ return users[k].email===email; });
+  if(!found){ err.textContent = "Email này chưa được đăng ký tài khoản nào."; err.classList.remove("hidden"); return; }
+  $("forgotModal").classList.remove("open");
+  $("forgotConfirmModal").classList.add("open");
+};
+$("closeForgotConfirm").onclick = function(){ $("forgotConfirmModal").classList.remove("open"); };
+
 setAdmin(isAdmin());
+renderAuth();
 </script>
 </body>
 </html>

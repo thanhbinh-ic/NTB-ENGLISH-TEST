@@ -93,9 +93,32 @@ not copied verbatim from the exercises in the videos.
 - Arrow keys move to the previous/next question, except while typing in
   an input field, choosing an answer, or when a dialog is open.
 
+## Accounts, statistics, and leaderboard
+
+The home page has “Đăng ký tài khoản” and “Đăng nhập tài khoản” buttons.
+Registration needs a full name, a username, an email, and a password
+(at least 6 characters); usernames and emails must be unique. After a
+successful registration or login, the home page greets the user by username
+and shows their current points.
+
+- **Statistics** (“Thống kê của tôi”): number of completed reviews, number
+  of tests taken, number of passed tests, and ranking points.
+- **Leaderboard** (“Bảng xếp hạng”): all accounts ranked by points.
+  A new account starts with 100 points. After a test, passing
+  (50% or more) adds 1 point per correct answer; failing subtracts
+  10 points, and points never go below 0. Reviews do not change points.
+  The points change is shown on the result screen.
+- **Forgot password** is interface only: it asks for the registered email
+  and shows a confirmation that a reset email was sent. No email is
+  actually sent, because the site has no server.
+- Accounts, statistics, and the leaderboard are stored in the browser's
+  localStorage, so they only exist on the browser where the account was
+  created, and the leaderboard only lists accounts created on that browser.
+  Passwords are stored only as SHA-256 hashes.
+
 ## Login
 
-The “Đăng nhập” button in the top-right corner logs in to the admin account.
+The “Đăng nhập Admin” button in the top-right corner logs in to the admin account.
 While logged in, the correct answer for each question is shown during the test,
 for testing the system. The login state is kept only for the current browser
 session.
