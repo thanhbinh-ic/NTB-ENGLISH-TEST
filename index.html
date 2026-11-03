@@ -36,6 +36,17 @@
   .passage{background:#f9fafb;border-left:4px solid var(--blue);padding:12px 14px;line-height:1.6;margin:0 0 14px}
   #qFrame{min-height:380px}
   .revline{margin:10px 0;line-height:1.6}
+  /* Banner trang chủ: căn giữa, tiêu đề và câu động lực chia dòng, tim đập nhẹ */
+  #homeScreen{background:linear-gradient(180deg,#eff6ff 0%,#ffffff 55%)}
+  .hero{text-align:center}
+  .hero-heart{font-size:34px;line-height:1;animation:heartbeat 1.8s ease-in-out infinite;filter:drop-shadow(0 2px 6px rgba(220,38,38,.35))}
+  @keyframes heartbeat{0%,100%{transform:scale(1)}20%{transform:scale(1.18)}40%{transform:scale(.94)}60%{transform:scale(1.1)}}
+  @media (prefers-reduced-motion:reduce){.hero-heart{animation:none}}
+  .hero-title{font-size:30px;line-height:1.25;margin:10px 0 14px}
+  .hero-title .hero-line{display:block}
+  .hero-quote{font-size:17px;line-height:1.8;color:#374151;margin:0}
+  .hero-quote .hero-line{display:block}
+  .hero-quote .hero-en{font-weight:700;color:var(--blue)}
   /* Chặn phóng to khi ấn nhanh 2 lần trên iPhone: touch-action manipulation tắt double-tap zoom
      nhưng vẫn cho phép cuộn và pinch-zoom bình thường. Không dùng user-scalable=no vì iOS
      đã bỏ qua nó và nó gây khó cho người cần phóng to chữ để đọc. */
@@ -61,8 +72,11 @@
 
   <!-- HOME -->
   <section id="homeScreen" class="card">
-    <h2>NTB English Test — 13 thì tiếng Anh</h2>
-    <p>Small steps every day — mỗi ngày một chút, tiếng Anh sẽ thành thói quen, và bạn sẽ giỏi hơn chính mình của hôm qua.</p>
+    <div class="hero">
+    <div class="hero-heart" aria-hidden="true">❤️</div>
+    <h2 class="hero-title"><span class="hero-line">NTB English Test</span><span class="hero-line">13 thì tiếng Anh</span></h2>
+    <p class="hero-quote"><span class="hero-line hero-en">Small steps every day</span><span class="hero-line">mỗi ngày một chút, tiếng Anh sẽ thành thói quen,</span><span class="hero-line">và bạn sẽ giỏi hơn chính mình của hôm qua.</span></p>
+    </div>
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
       <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 70 câu</button>
@@ -273,11 +287,9 @@ function renderQuestion(){
   $("prevBtn").disabled = current===0;
   $("nextBtn").disabled = current===QUESTIONS.length-1;
   renderPalette();
-  /* Cùng gốc lỗi như showScreen: chuyển câu (nút Câu trước/sau, bảng câu hỏi) mà giữ
-     vị trí cuộn của câu dài trước đó thì câu ngắn sau đó sẽ bị đẩy xuống ngoài khung nhìn.
-     Đưa về đầu trang mỗi khi đổi câu; lúc gõ đáp án không gọi renderQuestion nên không
-     làm phiền người đang gõ. */
-  window.scrollTo(0,0);
+  /* Cố tình KHÔNG cuộn về đầu trang khi đổi câu: nút Câu trước/sau và bảng câu hỏi giữ
+     nguyên vị trí cuộn để không bị nhảy tưng tưng khi chuyển câu hay xem lại. Đưa về đầu
+     trang chỉ làm ở showScreen khi chuyển màn hình (vào bài, nộp bài, về trang chủ). */
 }
 function renderAdminBox(){
   var show = isAdmin();
