@@ -11,7 +11,7 @@ It is a static site: no server and no build command are needed.
 The home page has two sections:
 
 - **Review**: practice by lesson, no timer, tab switching allowed.
-- **Test**: a combined test, 60 minutes, 145 questions.
+- **Test**: a combined test, 60 minutes, 160 questions.
 
 ## Review
 
@@ -24,6 +24,7 @@ The home page has two sections:
 - **Lesson 7 — Past Perfect**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 - **Lesson 8 — Past Perfect Continuous**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 - **Lesson 9 — Simple Future**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
+- **Lesson 10 — Near Future**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 
 Review uses the same test interface: choose answers, write sentences,
 move between questions with buttons or arrow keys, submit, then see the score
@@ -42,22 +43,24 @@ Sources:
 - Lesson 7 — Past Perfect: https://youtu.be/RaXptr8ZLOs
 - Lesson 8 — Past Perfect Continuous: https://youtu.be/p22NpP_wUVM
 - Lesson 9 — Simple Future: https://youtu.be/OnbMCBX-sQs
+- Lesson 10 — Near Future: https://youtu.be/ZgUlJSCXixE
 
 Questions were newly written by me based on the grammar points of the lessons,
 not copied verbatim from the exercises in the videos.
 
 ## Test
 
-- 3 different papers, each with 145 questions: 20 Present Simple +
+- 3 different papers, each with 160 questions: 20 Present Simple +
   20 Present Continuous + 15 Present Perfect + 15 Present Perfect Continuous
   + 15 Past Simple + 15 Past Continuous + 15 Past Perfect + 15 Past Perfect
-  Continuous + 15 Simple Future.
+  Continuous + 15 Simple Future + 15 Near Future.
 - Every lesson block in a paper contains all three parts: multiple choice,
   writing, and ordering. Present Simple and Present Continuous blocks have
   14 multiple choice, 3 writing, and 3 ordering questions each; the
   Present Perfect, Present Perfect Continuous, Past Simple, Past
-  Continuous, Past Perfect, Past Perfect Continuous, and Simple Future
-  blocks have 9 multiple choice, 3 writing, and 3 ordering questions each.
+  Continuous, Past Perfect, Past Perfect Continuous, Simple Future, and
+  Near Future blocks have 9 multiple choice, 3 writing, and 3 ordering
+  questions each.
 - Each time the test starts, the system picks one of the 3 papers at random,
   then shuffles the question order and the answer order.
 - Test questions are newly written and do not repeat the review questions.
@@ -106,7 +109,7 @@ not saved to a server.
 ## File structure
 
 - `index.html`: interface, test engine, and Lesson 1 review questions.
-- `data.js`: Lesson 2, Lesson 3, Lesson 4, Lesson 5, Lesson 6, Lesson 7, Lesson 8, and Lesson 9 review questions, and the 3 test papers.
+- `data.js`: Lesson 2, Lesson 3, Lesson 4, Lesson 5, Lesson 6, Lesson 7, Lesson 8, Lesson 9, and Lesson 10 review questions, and the 3 test papers.
 
 ## Deploy to Vercel
 
