@@ -69,7 +69,7 @@
 </head>
 <body>
 <header>
-  <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 160 câu</p></div>
+  <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 175 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
     <button id="adminBtn" class="secondary" type="button">Đăng nhập</button>
@@ -88,7 +88,7 @@
     </div>
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
-      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 160 câu</button>
+      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 175 câu</button>
     </div>
     <div class="small mut" style="margin-top:14px">
       <div>Nguồn học:</div>
@@ -102,6 +102,7 @@
       <div>Bài 8 — Thì quá khứ hoàn thành tiếp diễn — <a href="https://youtu.be/p22NpP_wUVM" target="_blank" rel="noopener">https://youtu.be/p22NpP_wUVM</a></div>
       <div>Bài 9 — Thì tương lai đơn — <a href="https://youtu.be/OnbMCBX-sQs" target="_blank" rel="noopener">https://youtu.be/OnbMCBX-sQs</a></div>
       <div>Bài 10 — Thì tương lai gần — <a href="https://youtu.be/ZgUlJSCXixE" target="_blank" rel="noopener">https://youtu.be/ZgUlJSCXixE</a></div>
+      <div>Bài 11 — Thì tương lai tiếp diễn — <a href="https://youtu.be/sQY2PHTrmyQ" target="_blank" rel="noopener">https://youtu.be/sQY2PHTrmyQ</a></div>
       <div>Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</div>
     </div>
   </section>
@@ -119,6 +120,7 @@
       <button id="rev8Btn" class="secondary" type="button">Bài 8 — Thì quá khứ hoàn thành tiếp diễn</button>
       <button id="rev9Btn" class="secondary" type="button">Bài 9 — Thì tương lai đơn</button>
       <button id="rev10Btn" class="secondary" type="button">Bài 10 — Thì tương lai gần</button>
+      <button id="rev11Btn" class="secondary" type="button">Bài 11 — Thì tương lai tiếp diễn</button>
       <div class="flex"></div>
       <button id="revBackBtn" class="secondary" type="button">Về trang chủ</button>
     </div>
@@ -233,7 +235,7 @@ var REVIEW1 = [
   {part:"C — Đọc hiểu", passage:"Tom and his sister live in a small town. Their school is near their house. Tom and his sister go to school on foot every day. Their father works in a factory and their mother is a doctor. On Saturdays, the family goes to the market.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How do Tom and his sister go to school?", opts:["By bus","On foot","By car","By bike"], a:1, why:"Đoạn văn viết: “Tom and his sister go to school on foot every day.”"}
 ];
 var QUESTIONS = [];
-var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : []), 3: (typeof REVIEW3 !== "undefined" ? REVIEW3 : []), 4: (typeof REVIEW4 !== "undefined" ? REVIEW4 : []), 5: (typeof REVIEW5 !== "undefined" ? REVIEW5 : []), 6: (typeof REVIEW6 !== "undefined" ? REVIEW6 : []), 7: (typeof REVIEW7 !== "undefined" ? REVIEW7 : []), 8: (typeof REVIEW8 !== "undefined" ? REVIEW8 : []), 9: (typeof REVIEW9 !== "undefined" ? REVIEW9 : []), 10: (typeof REVIEW10 !== "undefined" ? REVIEW10 : [])};
+var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : []), 3: (typeof REVIEW3 !== "undefined" ? REVIEW3 : []), 4: (typeof REVIEW4 !== "undefined" ? REVIEW4 : []), 5: (typeof REVIEW5 !== "undefined" ? REVIEW5 : []), 6: (typeof REVIEW6 !== "undefined" ? REVIEW6 : []), 7: (typeof REVIEW7 !== "undefined" ? REVIEW7 : []), 8: (typeof REVIEW8 !== "undefined" ? REVIEW8 : []), 9: (typeof REVIEW9 !== "undefined" ? REVIEW9 : []), 10: (typeof REVIEW10 !== "undefined" ? REVIEW10 : []), 11: (typeof REVIEW11 !== "undefined" ? REVIEW11 : [])};
 var TEST_PAPERS = (typeof TESTS !== "undefined" ? TESTS : []);
 
 function $(id){ return document.getElementById(id); }
@@ -385,6 +387,7 @@ $("rev7Btn").onclick = function(){ renderReview(7); };
 $("rev8Btn").onclick = function(){ renderReview(8); };
 $("rev9Btn").onclick = function(){ renderReview(9); };
 $("rev10Btn").onclick = function(){ renderReview(10); };
+$("rev11Btn").onclick = function(){ renderReview(11); };
 $("revBackBtn").onclick = function(){ showScreen("homeScreen"); };
 $("revStartBtn").onclick = function(){ startReview(currentReviewLesson); };
 var REV_SUMMARY = {
@@ -482,15 +485,26 @@ var REV_SUMMARY = {
     + "<div class=\"revline\">— Kế hoạch, ý định hoặc hành động đã sắp xếp, quyết định từ trước.</div>"
     + "<div class=\"revline\">— Dự đoán dựa vào dấu hiệu thấy được ở hiện tại.</div>"
     + "<div class=\"revline\"><b>Dấu hiệu:</b> trạng từ chỉ thời gian trong tương lai: tomorrow, next + khoảng thời gian (next week, next month, next year, next summer, next Sunday), tonight.</div>"
-    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 10 của kênh I LOVE IELTS.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 10 của kênh I LOVE IELTS.</div>",
+  11: "<div class=\"revline\"><b>Bài 11 — Thì tương lai tiếp diễn</b></div>"
+    + "<div class=\"revline\"><b>Công thức:</b> Khẳng định: S + will + be + V-ing. Phủ định: S + will + not + be + V-ing (won't). Câu hỏi: Will + S + be + V-ing? Trả lời ngắn: Yes, S + will. / No, S + won't. Rút gọn: will → 'll.</div>"
+    + "<div class=\"revline\"><b>Cách dùng:</b></div>"
+    + "<div class=\"revline\">— Hành động sẽ đang diễn ra tại một thời điểm cụ thể trong tương lai.</div>"
+    + "<div class=\"revline\">— Hành động đang diễn ra trong tương lai bị một hành động khác xen vào.</div>"
+    + "<div class=\"revline\">— Hành động kéo dài suốt một khoảng thời gian trong tương lai.</div>"
+    + "<div class=\"revline\">— Hành động diễn ra theo thời gian biểu, lịch trình hoặc kế hoạch trong tương lai.</div>"
+    + "<div class=\"revline\">— Hành động đang diễn ra ở hiện tại và dự đoán còn tiếp tục trong tương lai, thường đi với still.</div>"
+    + "<div class=\"revline\"><b>Dấu hiệu:</b> at this time / at this moment + thời gian tương lai, at + giờ cụ thể + thời gian tương lai, in the future, next + thời gian, soon. Lưu ý: at this time / at this moment / at + giờ chỉ báo hiệu thì này khi đi kèm thời gian tương lai.</div>"
+    + "<div class=\"revline\"><b>Chú ý:</b> động từ trạng thái (like, understand, want, hate, believe) không bao giờ dùng dạng -ing tiếp diễn.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 11 của kênh I LOVE IELTS.</div>"
 };
 var currentReviewLesson = 1;
 function renderReview(lesson){
   currentReviewLesson = lesson;
   /* Nút của bài đang chọn đổi nền xanh, các nút còn lại giữ nền xám mặc định. */
-  for(var i=1;i<=10;i++){ var b = $("rev"+i+"Btn"); if(b) b.classList.toggle("revActive", i===lesson); }
+  for(var i=1;i<=11;i++){ var b = $("rev"+i+"Btn"); if(b) b.classList.toggle("revActive", i===lesson); }
   var list = REVIEW_SETS[lesson] || [];
-  $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : lesson===2 ? "Ôn tập — Bài 2: Thì hiện tại tiếp diễn" : lesson===3 ? "Ôn tập — Bài 3: Thì hiện tại hoàn thành" : lesson===4 ? "Ôn tập — Bài 4: Thì hiện tại hoàn thành tiếp diễn" : lesson===5 ? "Ôn tập — Bài 5: Thì quá khứ đơn" : lesson===6 ? "Ôn tập — Bài 6: Thì quá khứ tiếp diễn" : lesson===7 ? "Ôn tập — Bài 7: Thì quá khứ hoàn thành" : lesson===8 ? "Ôn tập — Bài 8: Thì quá khứ hoàn thành tiếp diễn" : lesson===9 ? "Ôn tập — Bài 9: Thì tương lai đơn" : "Ôn tập — Bài 10: Thì tương lai gần";
+  $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : lesson===2 ? "Ôn tập — Bài 2: Thì hiện tại tiếp diễn" : lesson===3 ? "Ôn tập — Bài 3: Thì hiện tại hoàn thành" : lesson===4 ? "Ôn tập — Bài 4: Thì hiện tại hoàn thành tiếp diễn" : lesson===5 ? "Ôn tập — Bài 5: Thì quá khứ đơn" : lesson===6 ? "Ôn tập — Bài 6: Thì quá khứ tiếp diễn" : lesson===7 ? "Ôn tập — Bài 7: Thì quá khứ hoàn thành" : lesson===8 ? "Ôn tập — Bài 8: Thì quá khứ hoàn thành tiếp diễn" : lesson===9 ? "Ôn tập — Bài 9: Thì tương lai đơn" : lesson===10 ? "Ôn tập — Bài 10: Thì tương lai gần" : "Ôn tập — Bài 11: Thì tương lai tiếp diễn";
   $("revSummary").innerHTML = REV_SUMMARY[lesson] || "";
   $("revStartBtn").textContent = "Bắt đầu ôn tập — Bài " + lesson + " (" + list.length + " câu)";
   /* Cố tình KHÔNG cuộn về đầu trang khi đổi bài ôn tập: chỉ đổi nội dung tóm tắt phía
