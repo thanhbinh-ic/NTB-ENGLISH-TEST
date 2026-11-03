@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="favicon.svg">
 <title>NTB English Test</title>
 <style>
   :root{--bg:#f4f6fb;--card:#fff;--ink:#1f2937;--mut:#6b7280;--blue:#2563eb;--green:#15803d;--red:#dc2626;--amber:#b45309}
@@ -47,7 +47,7 @@
 </head>
 <body>
 <header>
-  <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 55 câu</p></div>
+  <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 70 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
     <button id="adminBtn" class="secondary" type="button">Đăng nhập</button>
@@ -63,13 +63,14 @@
     <p>Chọn một trong hai phần dưới đây. Phần kiểm tra tổng hợp tất cả các bài đã có trong phần ôn tập, câu hỏi viết mới hoàn toàn, khác với câu ôn tập.</p>
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
-      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 55 câu</button>
+      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 70 câu</button>
     </div>
     <div class="small mut" style="margin-top:14px">
       <div>Nguồn học:</div>
       <div>Bài 1 — Thì hiện tại đơn — <a href="https://youtu.be/BmKkDuO_nkk" target="_blank" rel="noopener">https://youtu.be/BmKkDuO_nkk</a></div>
       <div>Bài 2 — Thì hiện tại tiếp diễn — <a href="https://youtu.be/dIIG9m649-g" target="_blank" rel="noopener">https://youtu.be/dIIG9m649-g</a></div>
       <div>Bài 3 — Thì hiện tại hoàn thành — <a href="https://youtu.be/QwrSs0SC5ow" target="_blank" rel="noopener">https://youtu.be/QwrSs0SC5ow</a></div>
+      <div>Bài 4 — Thì hiện tại hoàn thành tiếp diễn — <a href="https://youtu.be/A86yKxubFJw" target="_blank" rel="noopener">https://youtu.be/A86yKxubFJw</a></div>
       <div>Câu hỏi trong trang này do Thanh Bình soạn mới theo các điểm ngữ pháp của bài giảng, không sao chép nguyên văn bài tập trong video.</div>
     </div>
   </section>
@@ -80,6 +81,7 @@
       <button id="rev1Btn" class="secondary" type="button">Bài 1 — Thì hiện tại đơn</button>
       <button id="rev2Btn" class="secondary" type="button">Bài 2 — Thì hiện tại tiếp diễn</button>
       <button id="rev3Btn" class="secondary" type="button">Bài 3 — Thì hiện tại hoàn thành</button>
+      <button id="rev4Btn" class="secondary" type="button">Bài 4 — Thì hiện tại hoàn thành tiếp diễn</button>
       <div class="flex"></div>
       <button id="revBackBtn" class="secondary" type="button">Về trang chủ</button>
     </div>
@@ -194,7 +196,7 @@ var REVIEW1 = [
   {part:"C — Đọc hiểu", passage:"Tom and his sister live in a small town. Their school is near their house. Tom and his sister go to school on foot every day. Their father works in a factory and their mother is a doctor. On Saturdays, the family goes to the market.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How do Tom and his sister go to school?", opts:["By bus","On foot","By car","By bike"], a:1, why:"Đoạn văn viết: “Tom and his sister go to school on foot every day.”"}
 ];
 var QUESTIONS = [];
-var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : []), 3: (typeof REVIEW3 !== "undefined" ? REVIEW3 : [])};
+var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : []), 3: (typeof REVIEW3 !== "undefined" ? REVIEW3 : []), 4: (typeof REVIEW4 !== "undefined" ? REVIEW4 : [])};
 var TEST_PAPERS = (typeof TESTS !== "undefined" ? TESTS : []);
 
 function $(id){ return document.getElementById(id); }
@@ -331,6 +333,7 @@ $("reviewBtn").onclick = function(){ renderReview(1); showScreen("reviewScreen")
 $("rev1Btn").onclick = function(){ renderReview(1); };
 $("rev2Btn").onclick = function(){ renderReview(2); };
 $("rev3Btn").onclick = function(){ renderReview(3); };
+$("rev4Btn").onclick = function(){ renderReview(4); };
 $("revBackBtn").onclick = function(){ showScreen("homeScreen"); };
 $("revStartBtn").onclick = function(){ startReview(currentReviewLesson); };
 var REV_SUMMARY = {
@@ -363,13 +366,21 @@ var REV_SUMMARY = {
     + "<div class=\"revline\">— Kinh nghiệm đến hiện tại, thường với ever.</div>"
     + "<div class=\"revline\">— Việc quá khứ có kết quả quan trọng ở hiện tại.</div>"
     + "<div class=\"revline\"><b>Dấu hiệu:</b> lately, recently, just, already, before, ever, never, for + khoảng thời gian, since + mốc thời gian, yet (chỉ dùng trong câu phủ định và câu hỏi), so far, until now, up to now.</div>"
-    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 3 của kênh I LOVE IELTS.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 3 của kênh I LOVE IELTS.</div>",
+  4: "<div class=\"revline\"><b>Bài 4 — Thì hiện tại hoàn thành tiếp diễn</b></div>"
+    + "<div class=\"revline\"><b>Công thức:</b> Khẳng định: S + have/has + been + V-ing. Phủ định: S + have/has + not + been + V-ing (haven't/hasn't). Câu hỏi: Have/Has + S + been + V-ing? Trả lời ngắn: Yes, S + have/has. / No, S + have/has + not.</div>"
+    + "<div class=\"revline\"><b>Chủ ngữ và dạng rút gọn:</b> I/you/we/they và danh từ số nhiều — have; he/she/it và danh từ số ít — has. I've been, he's been, haven't, hasn't. Sau he's là been thì he's là he has, không phải he is.</div>"
+    + "<div class=\"revline\"><b>Cách dùng:</b></div>"
+    + "<div class=\"revline\">— Hành động bắt đầu trong quá khứ và kéo dài liên tục đến hiện tại, nhấn mạnh tính liên tục và kéo dài của hành động.</div>"
+    + "<div class=\"revline\">— Thường đi với động từ mang tính kéo dài, lâu dài như work, live, study.</div>"
+    + "<div class=\"revline\"><b>Dấu hiệu:</b> since + mốc thời gian, for + khoảng thời gian, all day, all night, all week, recently, lately, so far.</div>"
+    + "<div class=\"revline\"><b>Nguồn:</b> video Bài 4 của kênh I LOVE IELTS.</div>"
 };
 var currentReviewLesson = 1;
 function renderReview(lesson){
   currentReviewLesson = lesson;
   var list = REVIEW_SETS[lesson] || [];
-  $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : lesson===2 ? "Ôn tập — Bài 2: Thì hiện tại tiếp diễn" : "Ôn tập — Bài 3: Thì hiện tại hoàn thành";
+  $("revTitle").textContent = lesson===1 ? "Ôn tập — Bài 1: Thì hiện tại đơn" : lesson===2 ? "Ôn tập — Bài 2: Thì hiện tại tiếp diễn" : lesson===3 ? "Ôn tập — Bài 3: Thì hiện tại hoàn thành" : "Ôn tập — Bài 4: Thì hiện tại hoàn thành tiếp diễn";
   $("revSummary").innerHTML = REV_SUMMARY[lesson] || "";
   $("revStartBtn").textContent = "Bắt đầu ôn tập — Bài " + lesson + " (" + list.length + " câu)";
   window.scrollTo(0,0);

@@ -11,13 +11,14 @@ It is a static site: no server and no build command are needed.
 The home page has two sections:
 
 - **Review**: practice by lesson, no timer, tab switching allowed.
-- **Test**: a combined test, 60 minutes, 55 questions.
+- **Test**: a combined test, 60 minutes, 70 questions.
 
 ## Review
 
 - **Lesson 1 — Present Simple**: 32 questions (20 multiple choice, 9 writing/ordering, 3 reading).
 - **Lesson 2 — Present Continuous**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 - **Lesson 3 — Present Perfect**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
+- **Lesson 4 — Present Perfect Continuous**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 
 Review uses the same test interface: choose answers, write sentences,
 move between questions with buttons or arrow keys, submit, then see the score
@@ -30,19 +31,20 @@ Sources:
 - Lesson 1 — Present Simple: https://youtu.be/BmKkDuO_nkk
 - Lesson 2 — Present Continuous: https://youtu.be/dIIG9m649-g
 - Lesson 3 — Present Perfect: https://youtu.be/QwrSs0SC5ow
+- Lesson 4 — Present Perfect Continuous: https://youtu.be/A86yKxubFJw
 
 Questions were newly written by me based on the grammar points of the lessons,
 not copied verbatim from the exercises in the videos.
 
 ## Test
 
-- 3 different papers, each with 55 questions: 20 Present Simple +
-  20 Present Continuous + 15 Present Perfect.
+- 3 different papers, each with 70 questions: 20 Present Simple +
+  20 Present Continuous + 15 Present Perfect + 15 Present Perfect Continuous.
 - Every lesson block in a paper contains all three parts: multiple choice,
   writing, and ordering. Present Simple and Present Continuous blocks have
   14 multiple choice, 3 writing, and 3 ordering questions each; the
-  Present Perfect block has 9 multiple choice, 3 writing, and 3 ordering
-  questions.
+  Present Perfect and Present Perfect Continuous blocks have 9 multiple
+  choice, 3 writing, and 3 ordering questions each.
 - Each time the test starts, the system picks one of the 3 papers at random,
   then shuffles the question order and the answer order.
 - Test questions are newly written and do not repeat the review questions.
@@ -91,7 +93,7 @@ not saved to a server.
 ## File structure
 
 - `index.html`: interface, test engine, and Lesson 1 review questions.
-- `data.js`: Lesson 2 and Lesson 3 review questions, and the 3 test papers.
+- `data.js`: Lesson 2, Lesson 3, and Lesson 4 review questions, and the 3 test papers.
 
 ## Deploy to Vercel
 
