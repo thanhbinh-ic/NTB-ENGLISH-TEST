@@ -169,9 +169,21 @@ Reloading the page in the middle of a test loses the answers and restarts
 the timer. Results are only calculated in the browser being used and are
 not saved to a server.
 
+## Add to home screen (iPhone / Android)
+
+- iPhone: `apple-touch-icon.png` (180×180) is used as the home screen icon,
+  and the page declares itself capable of running as a standalone web app
+  with the title “NTB English Test” and the default status bar style.
+- Android / Chrome: `icon-192.png` (192×192) is the app icon, with
+  `mobile-web-app-capable` set.
+- The tab favicon is still `favicon.svg` (same artwork).
+
 ## File structure
 
 - `index.html`: interface, test engine, and Lesson 1 review questions.
+- `favicon.svg`: tab favicon (blue “NTB” badge artwork).
+- `apple-touch-icon.png`: 180×180 home screen icon for iPhone.
+- `icon-192.png`: 192×192 app icon for Android/Chrome.
 - `data.js`: Lesson 2, Lesson 3, Lesson 4, Lesson 5, Lesson 6, Lesson 7, Lesson 8, Lesson 9, Lesson 10, Lesson 11, Lesson 12, and Lesson 13 review questions, and the 3 test papers.
 
 ## Deploy to Vercel
