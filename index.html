@@ -481,6 +481,19 @@ function syncPageLock(){
 }
 document.addEventListener("touchmove", function(e){ if(anyModalOpen() && !inOpenModalCard(e.target)) e.preventDefault(); }, {passive:false});
 document.addEventListener("wheel", function(e){ if(anyModalOpen() && !inOpenModalCard(e.target)) e.preventDefault(); }, {passive:false});
+/* Phím cuộn trang (Space, PageUp/PageDown, Home/End, mũi tên lên/xuống) và phím
+   kích hoạt (Enter) cũng bị chặn khi tiêu điểm đang ở ngoài popup, để không lách
+   qua khóa bằng bàn phím. Phím bấm bên trong popup và gõ trong ô nhập vẫn hoạt
+   động bình thường. */
+document.addEventListener("keydown", function(e){
+  if(!anyModalOpen()) return;
+  var t = e.target;
+  if(t && t.closest && t.closest(".modal.open")) return;
+  var tag = (t && t.tagName) || "";
+  if(tag==="INPUT" || tag==="TEXTAREA" || tag==="SELECT") return;
+  var k = e.key || "";
+  if(k===" " || k==="Enter" || k==="PageUp" || k==="PageDown" || k==="Home" || k==="End" || k==="ArrowUp" || k==="ArrowDown") e.preventDefault();
+});
 if(window.MutationObserver){
   var modalObserver = new MutationObserver(syncPageLock);
   Array.prototype.forEach.call(document.querySelectorAll(".modal"), function(m){
