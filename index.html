@@ -98,6 +98,12 @@
   body:not(.admin) .card, body:not(.admin) header{-webkit-user-select:none;user-select:none}
   body:not(.admin) input, body:not(.admin) textarea{-webkit-user-select:text;user-select:text}
   body.admin{-webkit-user-select:text;user-select:text}
+.stream{display:block;width:100%;text-align:left;margin:8px 0}
+.stream.playing{background:var(--blue);color:#fff}
+.stream.playing .mut{color:#dbeafe}
+.music-wrap{position:relative;border-radius:10px;overflow:hidden;margin-top:10px}
+.music-wrap iframe{display:block;width:100%;height:190px;border:0}
+.music-cover{position:absolute;inset:0}
 </style>
 </head>
 <body>
@@ -105,6 +111,7 @@
   <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 40 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
+    <button id="musicBtn" class="secondary" type="button" title="Nhạc lofi chill">🎵</button>
     <button id="authBtn" class="secondary" type="button">Đăng nhập</button>
   </div>
 </header>
@@ -312,6 +319,19 @@
   <h2>Đã gửi email lấy lại mật khẩu</h2>
   <p>Vui lòng kiểm tra hòm thư của bạn và làm theo hướng dẫn trong email để đặt lại mật khẩu.</p>
   <div class="row"><button id="closeForgotConfirm" type="button">Đã hiểu</button></div>
+</div></div>
+
+<!-- MUSIC PICKER MODAL -->
+<div id="musicModal" class="modal"><div class="card">
+  <h2>🎵 Nhạc lofi chill</h2>
+  <p class="small mut">Chọn một kênh phát trực tiếp 24/7 để vừa học vừa nghe. Đóng bảng này nhạc vẫn phát tiếp; bấm nút 🎵 trên header để đổi kênh hoặc dừng.</p>
+  <div class="music-wrap">
+    <iframe id="musicFrame" class="hidden" src="" title="Nhạc lofi" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+    <div id="musicCover" class="music-cover hidden"></div>
+  </div>
+  <p id="musicNow" class="small">Chưa phát kênh nào.</p>
+  <div id="musicList"></div>
+  <div class="row" style="margin-top:14px"><button id="stopMusicBtn" class="secondary" type="button">Dừng nhạc</button><button id="closeMusic" class="secondary" type="button">Đóng</button></div>
 </div></div>
 
 <script src="data.js"></script>
@@ -1188,6 +1208,47 @@ $("doForgot").onclick = function(){
   $("forgotConfirmModal").classList.add("open");
 };
 $("closeForgotConfirm").onclick = function(){ $("forgotConfirmModal").classList.remove("open"); };
+
+/* Nhạc nền lofi: nút 🎵 trên header mở bảng chọn kênh YouTube phát trực tiếp
+   24/7. Iframe nằm trong bảng chọn nhưng không bị xóa khi đóng bảng nên nhạc
+   vẫn phát tiếp khi chuyển màn hình hay làm bài. Lớp phủ trong suốt chặn bấm
+   vào khung video để cú nhấp chuột không làm mất tiêu điểm cửa sổ (tránh tính
+   nhầm là vi phạm chống gian lận khi đang làm bài). */
+var MUSIC_STREAMS = [
+  {id:"jfKfPfyJRdk", name:"Lofi Girl — Học tập / Thư giãn", desc:"beats to relax/study to"},
+  {id:"28KRPhVzCus", name:"Lofi Girl — Ngủ / Chill", desc:"beats to sleep/chill to"},
+  {id:"MVPTGNGiI-4", name:"Synthwave Boy — Chill / Game", desc:"synthwave radio, beats to chill/game to"}
+];
+var currentStream = null;
+function renderMusicList(){
+  $("musicList").innerHTML = MUSIC_STREAMS.map(function(s, i){
+    return '<button type="button" class="stream secondary'+(currentStream===s.id ? ' playing' : '')+'" data-i="'+i+'">'+(currentStream===s.id ? '▶ ' : '')+esc(s.name)+'<span class="small mut" style="display:block">'+esc(s.desc)+'</span></button>';
+  }).join("");
+  Array.prototype.forEach.call($("musicList").querySelectorAll("button"), function(b){
+    b.onclick = function(){ playStream(MUSIC_STREAMS[parseInt(b.getAttribute("data-i"), 10)]); };
+  });
+  var cur = MUSIC_STREAMS.filter(function(s){ return s.id===currentStream; })[0];
+  $("musicNow").textContent = cur ? "Đang phát: " + cur.name : "Chưa phát kênh nào.";
+  $("musicBtn").textContent = currentStream ? "🎶" : "🎵";
+  $("musicBtn").title = currentStream ? "Đang phát nhạc lofi — bấm để đổi kênh hoặc dừng" : "Nhạc lofi chill";
+}
+function playStream(s){
+  currentStream = s.id;
+  $("musicFrame").src = "https://www.youtube.com/embed/" + s.id + "?autoplay=1&rel=0";
+  $("musicFrame").classList.remove("hidden");
+  $("musicCover").classList.remove("hidden");
+  renderMusicList();
+}
+function stopMusic(){
+  currentStream = null;
+  $("musicFrame").src = "";
+  $("musicFrame").classList.add("hidden");
+  $("musicCover").classList.add("hidden");
+  renderMusicList();
+}
+$("musicBtn").onclick = function(){ renderMusicList(); $("musicModal").classList.add("open"); };
+$("closeMusic").onclick = function(){ $("musicModal").classList.remove("open"); };
+$("stopMusicBtn").onclick = function(){ stopMusic(); };
 
 settleAbandonedTest();
 setAdmin(isAdmin());

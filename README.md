@@ -173,6 +173,16 @@ scoring either: the result is recorded against the account that started
 the test. Results are only calculated in the browser being used and are
 not saved to a server.
 
+## Background lofi music
+
+The 🎵 button in the header opens a picker with three 24/7 Lofi Girl
+livestreams (study/relax, sleep/chill, and synthwave). Picking one starts
+playback in the picker's video frame; closing the picker keeps the music
+playing while studying or testing, and the header button turns into 🎶
+while music plays. The picker also has a stop button. The video frame is
+display-only: clicks on it are blocked so the player controls cannot
+steal window focus during a test.
+
 ## Add to home screen (iPhone / Android)
 
 - iPhone: `apple-touch-icon.png` (180×180) is used as the home screen icon,
