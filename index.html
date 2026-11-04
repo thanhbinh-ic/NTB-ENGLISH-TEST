@@ -324,14 +324,14 @@
 <!-- MUSIC PICKER MODAL -->
 <div id="musicModal" class="modal"><div class="card">
   <h2>🎵 Nhạc lofi chill</h2>
-  <p class="small mut">Chọn một kênh phát trực tiếp 24/7 để vừa học vừa nghe. Đóng bảng này nhạc vẫn phát tiếp; bấm nút 🎵 trên header để đổi kênh hoặc dừng.</p>
+  <p class="small mut">Chọn một kênh phát trực tiếp 24/7 để vừa học vừa nghe.</p>
   <div class="music-wrap">
-    <iframe id="musicFrame" class="hidden" src="" title="Nhạc lofi" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+    <iframe id="musicFrame" class="hidden" src="" title="Nhạc lofi" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     <div id="musicCover" class="music-cover hidden"></div>
   </div>
   <p id="musicNow" class="small">Chưa phát kênh nào.</p>
   <div id="musicList"></div>
-  <div class="row" style="margin-top:14px"><button id="stopMusicBtn" class="secondary" type="button">Dừng nhạc</button><button id="closeMusic" class="secondary" type="button">Đóng</button></div>
+  <div class="row" style="margin-top:14px"><button id="stopMusicBtn" class="danger" type="button">Dừng nhạc</button><button id="closeMusic" class="secondary" type="button">Đóng</button></div>
 </div></div>
 
 <script src="data.js"></script>
@@ -1213,11 +1213,14 @@ $("closeForgotConfirm").onclick = function(){ $("forgotConfirmModal").classList.
    24/7. Iframe nằm trong bảng chọn nhưng không bị xóa khi đóng bảng nên nhạc
    vẫn phát tiếp khi chuyển màn hình hay làm bài. Lớp phủ trong suốt chặn bấm
    vào khung video để cú nhấp chuột không làm mất tiêu điểm cửa sổ (tránh tính
-   nhầm là vi phạm chống gian lận khi đang làm bài). */
+   nhầm là vi phạm chống gian lận khi đang làm bài). Lưu ý: ID của Lofi Girl
+   thay đổi mỗi khi kênh khởi động lại stream (ID học tập cũ jfKfPfyJRdk và
+   ID synthwave cũ MVPTGNGiI-4 đều đã chết), nên khi có báo "Video không có
+   sẵn" thì kiểm tra lại ID hiện tại trước. */
 var MUSIC_STREAMS = [
-  {id:"jfKfPfyJRdk", name:"Lofi Girl — Học tập / Thư giãn", desc:"beats to relax/study to"},
+  {id:"rFZHOHl-L8A", name:"Lofi Girl — Học tập / Thư giãn", desc:"beats to relax/study to"},
   {id:"28KRPhVzCus", name:"Lofi Girl — Ngủ / Chill", desc:"beats to sleep/chill to"},
-  {id:"MVPTGNGiI-4", name:"Synthwave Boy — Chill / Game", desc:"synthwave radio, beats to chill/game to"}
+  {id:"3PFJ9SETS4M", name:"Lofi House — Lounge / Chill", desc:"lofi house radio, lounge music to vibe/chill to"}
 ];
 var currentStream = null;
 function renderMusicList(){
@@ -1234,7 +1237,7 @@ function renderMusicList(){
 }
 function playStream(s){
   currentStream = s.id;
-  $("musicFrame").src = "https://www.youtube.com/embed/" + s.id + "?autoplay=1&rel=0";
+  $("musicFrame").src = "https://www.youtube.com/embed/" + s.id + "?autoplay=1&rel=0&controls=0&playsinline=1";
   $("musicFrame").classList.remove("hidden");
   $("musicCover").classList.remove("hidden");
   renderMusicList();
