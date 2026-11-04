@@ -175,8 +175,9 @@ not saved to a server.
 
 ## Background lofi music
 
-The 🎵 button in the header opens a picker with three 24/7 Lofi Girl
-livestreams (study/relax, sleep/chill, and lofi house). Picking one starts
+The 🎵 button in the header opens a picker with twenty 24/7 Lofi Girl
+livestreams (study, sleep, house, jazz, piano, classical, ambient sounds,
+and more). Picking one starts
 playback in the picker's video frame; closing the picker keeps the music
 playing while studying or testing, and the header button turns into 🎶
 while music plays. The picker also has a stop button. The video frame is
