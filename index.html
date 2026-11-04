@@ -102,7 +102,7 @@
 </head>
 <body>
 <header>
-  <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 205 câu</p></div>
+  <div><h1>NTB English Test</h1><p>Bài kiểm tra dựa trên bài giảng I LOVE IELTS • 60 phút • 40 câu</p></div>
   <div class="row">
     <div id="timer" class="timer hidden">60:00</div>
     <button id="authBtn" class="secondary" type="button">Đăng nhập</button>
@@ -122,7 +122,7 @@
     <p id="greetingLine" class="greet hidden" style="margin-top:14px"></p>
     <div class="row" style="margin-top:14px">
       <button id="reviewBtn" class="secondary" type="button">Ôn tập</button>
-      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 205 câu</button>
+      <button id="startBtn" type="button">Làm bài kiểm tra — 60 phút, 40 câu</button>
       <button id="leaderboardBtn" class="secondary" type="button">Bảng xếp hạng</button>
     </div>
     <div class="row" style="margin-top:14px">
@@ -354,7 +354,6 @@ var REVIEW1 = [
 ];
 var QUESTIONS = [];
 var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : []), 3: (typeof REVIEW3 !== "undefined" ? REVIEW3 : []), 4: (typeof REVIEW4 !== "undefined" ? REVIEW4 : []), 5: (typeof REVIEW5 !== "undefined" ? REVIEW5 : []), 6: (typeof REVIEW6 !== "undefined" ? REVIEW6 : []), 7: (typeof REVIEW7 !== "undefined" ? REVIEW7 : []), 8: (typeof REVIEW8 !== "undefined" ? REVIEW8 : []), 9: (typeof REVIEW9 !== "undefined" ? REVIEW9 : []), 10: (typeof REVIEW10 !== "undefined" ? REVIEW10 : []), 11: (typeof REVIEW11 !== "undefined" ? REVIEW11 : []), 12: (typeof REVIEW12 !== "undefined" ? REVIEW12 : []), 13: (typeof REVIEW13 !== "undefined" ? REVIEW13 : [])};
-var TEST_PAPERS = (typeof TESTS !== "undefined" ? TESTS : []);
 
 function $(id){ return document.getElementById(id); }
 function isAdmin(){ try{ return sessionStorage.getItem("ntb_admin")==="1"; }catch(e){ return false; } }
@@ -511,7 +510,7 @@ function finish(auto){
   var rows = grade(), score = rows.filter(function(r){ return r.correct; }).length;
   var used = TOTAL_SECONDS - Math.max(0, secondsLeft);
   var pct = Math.round(score/QUESTIONS.length*100);
-  var band = pct>=90 ? "Xuất sắc" : pct>=70 ? "Tốt" : pct>=50 ? "Đạt — vẫn nên ôn lại các câu sai" : "Cần ôn lại bài";
+  var band = bandOf(pct);
   $("scoreLine").innerHTML = "Điểm: <b>"+score+" / "+QUESTIONS.length+"</b> ("+pct+"%) — "+band;
   $("metaLine").textContent = reviewMode ? "Ôn tập — Bài " + currentReviewLesson + " • Đã nộp bài (không tính giờ)." : "Thời gian đã dùng: " + Math.floor(used/60) + " phút " + (used%60) + " giây" + (submitReason ? " • " + submitReason : (auto ? " • Hết giờ, hệ thống tự nộp bài." : " • Đã nộp bài."));
   /* Thống kê và điểm xếp hạng: chỉ ghi nhận cho tài khoản đang đăng nhập. Ôn tập chỉ
@@ -544,12 +543,99 @@ function resetTest(){
   $("timer").classList.remove("hidden"); renderTimer();
 }
 
-var currentPaper = 0, reviewMode = false;
+/* Thang đánh giá sau khi nộp bài kiểm tra: mốc 50% vẫn là mốc đạt (đồng nhất
+   với cách tính điểm xếp hạng: từ 50% trở lên được cộng điểm, dưới 50% bị trừ). */
+function bandOf(pct){ return pct>=90 ? "Giỏi" : pct>=70 ? "Khá" : pct>=50 ? "Đạt" : "Chưa đạt"; }
+
+/* Bốc đề kiểm tra: 40 câu từ 10 bộ đề trong TEST_SETS, đúng tỷ lệ 20 trắc
+   nghiệm / 10 viết / 10 sắp xếp câu, mỗi bài học có ít nhất 1 câu. Bài kiểm
+   tra sau không trùng câu với bài kiểm tra trước: id các câu của lần bốc trước
+   được lưu trong localStorage và loại khỏi kho bốc lần này (lưu ngay lúc bốc,
+   nên bỏ dở giữa chừng rồi làm lại cũng được câu mới). Nếu kho sau khi loại
+   còn dưới 40 câu thì bốc lại từ toàn bộ kho để vẫn đủ 40 câu. Câu bốc ra là
+   bản sao, nên shuffleAll xáo đáp án không làm thay đổi kho gốc. */
+var LAST_TEST_KEY = "ntb_last_test_ids";
+function partKind(q){ return q.part==="Trắc nghiệm" ? "mcq" : q.part==="Viết" ? "writing" : "ordering"; }
+function copyQuestion(q){
+  var c = {};
+  for(var k in q){ if(Object.prototype.hasOwnProperty.call(q, k)){ c[k] = q[k]; } }
+  if(q.opts) c.opts = q.opts.slice();
+  if(q.accept) c.accept = q.accept.slice();
+  return c;
+}
+function loadLastTestIds(){
+  try{ var v = localStorage.getItem(LAST_TEST_KEY); if(v){ var a = JSON.parse(v); if(a && a.length) return a; } }catch(e){}
+  return [];
+}
+function saveLastTestIds(ids){ try{ localStorage.setItem(LAST_TEST_KEY, JSON.stringify(ids)); }catch(e){} }
+function drawTest(){
+  var pool = [];
+  if(typeof TEST_SETS !== "undefined"){
+    for(var s=0; s<TEST_SETS.length; s++){
+      for(var i=0; i<TEST_SETS[s].length; i++){ pool.push(TEST_SETS[s][i]); }
+    }
+  }
+  var lastSet = {}, lastIds = loadLastTestIds();
+  for(var li=0; li<lastIds.length; li++){ lastSet[lastIds[li]] = true; }
+  var fresh = pool.filter(function(q){ return !lastSet[q.id]; });
+  if(fresh.length < 40){ fresh = pool.slice(); }
+  var quotas = {mcq:20, writing:10, ordering:10};
+  var byLesson = {};
+  fresh.forEach(function(q){
+    if(!byLesson[q.lesson]) byLesson[q.lesson] = {mcq:[], writing:[], ordering:[]};
+    byLesson[q.lesson][partKind(q)].push(q);
+  });
+  var lessons = [];
+  for(var L in byLesson){ if(Object.prototype.hasOwnProperty.call(byLesson, L)) lessons.push(parseInt(L, 10)); }
+  var drawn = [], drawnCount = {};
+  function kindWithQuota(lesson){
+    var kinds = ["mcq", "writing", "ordering"], best = null;
+    for(var i=0; i<kinds.length; i++){
+      var k = kinds[i];
+      if(quotas[k] > 0 && byLesson[lesson] && byLesson[lesson][k].length){
+        if(!best || quotas[k] > quotas[best]) best = k;
+      }
+    }
+    return best;
+  }
+  function takeFrom(lesson, kind){
+    var arr = byLesson[lesson][kind];
+    var idx = Math.floor(Math.random()*arr.length);
+    var q = arr.splice(idx, 1)[0];
+    drawn.push(copyQuestion(q));
+    drawnCount[lesson] = (drawnCount[lesson]||0) + 1;
+    quotas[kind]--;
+  }
+  shuffleArr(lessons);
+  for(var a=0; a<lessons.length; a++){
+    var k = kindWithQuota(lessons[a]);
+    if(k) takeFrom(lessons[a], k);
+  }
+  var guard = 0;
+  while((quotas.mcq>0 || quotas.writing>0 || quotas.ordering>0) && guard++ < 1000){
+    var cands = lessons.slice().sort(function(x, y){ return (drawnCount[x]||0) - (drawnCount[y]||0); });
+    var placed = false;
+    for(var ci=0; ci<cands.length && !placed; ci++){
+      var kk = kindWithQuota(cands[ci]);
+      if(kk){ takeFrom(cands[ci], kk); placed = true; }
+    }
+    if(!placed) break;
+  }
+  if(drawn.length < 40){
+    var rest = fresh.filter(function(q){ return drawn.every(function(d){ return d.id !== q.id; }); });
+    shuffleArr(rest);
+    while(drawn.length < 40 && rest.length){ drawn.push(copyQuestion(rest.pop())); }
+  }
+  shuffleArr(drawn);
+  saveLastTestIds(drawn.map(function(q){ return q.id; }));
+  return drawn;
+}
+
+var reviewMode = false;
 function startTest(){
   reviewMode = false;
-  if(!TEST_PAPERS.length){ alert("Chưa có đề kiểm tra."); return; }
-  currentPaper = Math.floor(Math.random()*TEST_PAPERS.length);
-  QUESTIONS = TEST_PAPERS[currentPaper].slice();
+  if(typeof TEST_SETS === "undefined" || !TEST_SETS.length){ alert("Chưa có đề kiểm tra."); return; }
+  QUESTIONS = drawTest();
   $("paperLabel").textContent = "";
   shuffleAll(); resetTest(); showScreen("testScreen"); renderQuestion(); startTimer();
 }

@@ -11,7 +11,7 @@ It is a static site: no server and no build command are needed.
 The home page has two sections:
 
 - **Review**: practice by lesson, no timer, tab switching allowed.
-- **Test**: a combined test, 60 minutes, 205 questions.
+- **Test**: a combined test, 60 minutes, 40 questions.
 
 ## Review
 
@@ -56,21 +56,18 @@ not copied verbatim from the exercises in the videos.
 
 ## Test
 
-- 3 different papers, each with 205 questions: 20 Present Simple +
-  20 Present Continuous + 15 Present Perfect + 15 Present Perfect Continuous
-  + 15 Past Simple + 15 Past Continuous + 15 Past Perfect + 15 Past Perfect
-  Continuous + 15 Simple Future + 15 Near Future + 15 Future Continuous
-  + 15 Future Perfect + 15 Future Perfect Continuous.
-- Every lesson block in a paper contains all three parts: multiple choice,
-  writing, and ordering. Present Simple and Present Continuous blocks have
-  14 multiple choice, 3 writing, and 3 ordering questions each; the
-  Present Perfect, Present Perfect Continuous, Past Simple, Past
-  Continuous, Past Perfect, Past Perfect Continuous, Simple Future, Near
-  Future, Future Continuous, Future Perfect, and Future Perfect Continuous
-  blocks have 9 multiple choice, 3 writing, and 3 ordering questions each.
-- Each time the test starts, the system picks one of the 3 papers at random,
-  then shuffles the question order and the answer order.
+- 10 test sets covering all 13 lessons. Each time a test starts, the system
+  draws 40 questions at random from the 10 sets: 20 multiple choice,
+  10 writing, and 10 ordering, with at least one question from every lesson.
+  The question order and the answer order are shuffled.
+- A new test never repeats the previous test's questions: the previous
+  test's question IDs are stored in the browser and excluded from the draw
+  (the IDs are saved when the test is drawn, so quitting mid-test and
+  starting again also gives fresh questions; if the remaining pool ever
+  runs short, the draw falls back to the full pool).
 - Test questions are newly written and do not repeat the review questions.
+- After submitting, the result is graded as Giỏi (90% or more),
+  Khá (70–89%), Đạt (50–69%), or Chưa đạt (below 50%).
 - Time limit: 60 minutes, counting down. The timer turns yellow with
   10 minutes left and red with 1 minute left; the test is submitted
   automatically when time runs out.
@@ -184,7 +181,7 @@ not saved to a server.
 - `favicon.svg`: tab favicon (blue “NTB” badge artwork).
 - `apple-touch-icon.png`: 180×180 home screen icon for iPhone.
 - `icon-192.png`: 192×192 app icon for Android/Chrome.
-- `data.js`: Lesson 2, Lesson 3, Lesson 4, Lesson 5, Lesson 6, Lesson 7, Lesson 8, Lesson 9, Lesson 10, Lesson 11, Lesson 12, and Lesson 13 review questions, and the 3 test papers.
+- `data.js`: Lesson 2, Lesson 3, Lesson 4, Lesson 5, Lesson 6, Lesson 7, Lesson 8, Lesson 9, Lesson 10, Lesson 11, Lesson 12, and Lesson 13 review questions, and the 10 test sets.
 
 ## Deploy to Vercel
 
