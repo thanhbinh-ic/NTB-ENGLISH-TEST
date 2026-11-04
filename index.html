@@ -1218,31 +1218,31 @@ $("closeForgotConfirm").onclick = function(){ $("forgotConfirmModal").classList.
    khi kênh khởi động lại stream nên khi có báo "Video không có sẵn" thì xin
    lại danh sách ID mới thay vì đoán. */
 var MUSIC_STREAMS = [
-  {id:"rFZHOHl-L8A", name:"lofi hip hop radio 📚 beats to relax/study to"},
-  {id:"qGohtGC5Rtk", name:"Study With Me 📚 Pomodoro"},
-  {id:"3PFJ9SETS4M", name:"lofi house radio 🌅 lounge music to vibe/chill to"},
-  {id:"0muHFBSiybw", name:"summer lofi radio ☀️ music to put you in a better mood"},
-  {id:"VAlMDl00mYY", name:"sleep lofi radio 🌌 relaxing music to sleep/dream to"},
-  {id:"GSfT7H87zq4", name:"synth ambient radio 🌌 deep space music to sleep to"},
-  {id:"CwPCy1GLS38", name:"sad lofi radio ☔ beats for rainy days"},
-  {id:"1Tl2FtV06qo", name:"asian lofi radio ⛩️ beats to relax/study to"},
-  {id:"E2vONfzoyRI", name:"jazz lofi radio 🎷 beats to chill/study to"},
-  {id:"JD-kMIpDfnY", name:"lofi hip hop radio 💤 beats to sleep/chill to"},
-  {id:"N0snMcR6aaA", name:"relaxing piano radio 🎹 calm music to focus to"},
-  {id:"jXAEIWcGXwE", name:"classical music radio 🎻 relaxing songs to read/study to"},
-  {id:"A8jDx9TLMQc", name:"relaxing jazz music 🌹 cozy radio to study/chill to"},
-  {id:"q_4KI-ChIIs", name:"fireplace ambience 🔥 cozy sound to chill to"},
-  {id:"E_XmwjgRLz8", name:"chill guitar radio 🎸 music to study/relax to"},
-  {id:"xORCbIptqcc", name:"sleep ambient music 💤 relaxing radio to fall asleep to"},
-  {id:"IxPANmjPaek", name:"medieval lofi radio 🏰 - beats to scribe manuscripts to"},
-  {id:"-OekvEFm1lo", name:"gentle rain ambience 🌧 cozy sound to chill to"},
-  {id:"S_MOd40zlYU", name:"dark ambient radio 🌃 music to escape/dream to"},
-  {id:"4xDzrJKXOOY", name:"synthwave radio 🌌 beats to chill/game to"}
+  {id:"rFZHOHl-L8A", name:"lofi hip hop radio - Thư giãn / Học tập", desc:"beats to relax/study to"},
+  {id:"qGohtGC5Rtk", name:"Học cùng nhau - Pomodoro", desc:"Study With Me Pomodoro"},
+  {id:"3PFJ9SETS4M", name:"lofi house radio - Lounge / Chill", desc:"lounge music to vibe/chill to"},
+  {id:"0muHFBSiybw", name:"summer lofi radio - Nhạc mùa hè cho tâm trạng tốt hơn", desc:"music to put you in a better mood"},
+  {id:"VAlMDl00mYY", name:"sleep lofi radio - Nhạc thư giãn để ngủ / mơ", desc:"relaxing music to sleep/dream to"},
+  {id:"GSfT7H87zq4", name:"synth ambient radio - Nhạc không gian sâu để ngủ", desc:"deep space music to sleep to"},
+  {id:"CwPCy1GLS38", name:"sad lofi radio - Nhạc cho ngày mưa", desc:"beats for rainy days"},
+  {id:"1Tl2FtV06qo", name:"asian lofi radio - Thư giãn / Học tập", desc:"beats to relax/study to"},
+  {id:"E2vONfzoyRI", name:"jazz lofi radio - Chill / Học tập", desc:"beats to chill/study to"},
+  {id:"JD-kMIpDfnY", name:"lofi hip hop radio - Ngủ / Chill", desc:"beats to sleep/chill to"},
+  {id:"N0snMcR6aaA", name:"relaxing piano radio - Nhạc piano êm dịu để tập trung", desc:"calm music to focus to"},
+  {id:"jXAEIWcGXwE", name:"classical music radio - Nhạc cổ điển để đọc / học", desc:"relaxing songs to read/study to"},
+  {id:"A8jDx9TLMQc", name:"relaxing jazz music - Jazz ấm áp để học / chill", desc:"cozy radio to study/chill to"},
+  {id:"q_4KI-ChIIs", name:"fireplace ambience - Âm thanh lò sưởi để chill", desc:"cozy sound to chill to"},
+  {id:"E_XmwjgRLz8", name:"chill guitar radio - Nhạc guitar để học / thư giãn", desc:"music to study/relax to"},
+  {id:"xORCbIptqcc", name:"sleep ambient music - Nhạc thư giãn để dễ ngủ", desc:"relaxing radio to fall asleep to"},
+  {id:"IxPANmjPaek", name:"medieval lofi radio - Nhạc trung cổ để chép bản thảo", desc:"beats to scribe manuscripts to"},
+  {id:"-OekvEFm1lo", name:"gentle rain ambience - Tiếng mưa nhẹ để chill", desc:"cozy sound to chill to"},
+  {id:"S_MOd40zlYU", name:"dark ambient radio - Nhạc để mơ mộng", desc:"music to escape/dream to"},
+  {id:"4xDzrJKXOOY", name:"synthwave radio - Chill / Game", desc:"beats to chill/game to"}
 ];
 var currentStream = null;
 function renderMusicList(){
   $("musicList").innerHTML = MUSIC_STREAMS.map(function(s, i){
-    return '<button type="button" class="stream secondary'+(currentStream===s.id ? ' playing' : '')+'" data-i="'+i+'">'+(currentStream===s.id ? '▶ ' : '')+esc(s.name)+'</button>';
+    return '<button type="button" class="stream secondary'+(currentStream===s.id ? ' playing' : '')+'" data-i="'+i+'">'+(currentStream===s.id ? '▶ ' : '')+esc(s.name)+'<span class="small mut" style="display:block">'+esc(s.desc)+'</span></button>';
   }).join("");
   Array.prototype.forEach.call($("musicList").querySelectorAll("button"), function(b){
     b.onclick = function(){ playStream(MUSIC_STREAMS[parseInt(b.getAttribute("data-i"), 10)]); };
