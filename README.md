@@ -178,11 +178,15 @@ not saved to a server.
 The 🎵 button in the header opens a picker with twenty 24/7 Lofi Girl
 livestreams (study, sleep, house, jazz, piano, classical, ambient sounds,
 and more). Picking one starts
-playback in the picker's video frame; closing the picker keeps the music
-playing while studying or testing, and the header button turns into 🎶
-while music plays. The picker also has a stop button. The video frame is
-display-only: clicks on it are blocked so the player controls cannot
-steal window focus during a test.
+playback through the YouTube player API: a plain autoplay embed is
+blocked on iPhones, so the player is created when the picker opens and
+the tap on a station calls the API to play with sound. Closing the picker
+keeps the music playing while studying or testing, and the header button
+turns into 🎶 while music plays. The picker also has a stop button. The
+video area is covered by a transparent layer: taps on it only re-issue
+play and never steal window focus during a test. If the player API
+cannot load, the picker falls back to a plain embed and the cover is
+hidden so YouTube's own play button stays tappable.
 
 ## Add to home screen (iPhone / Android)
 

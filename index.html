@@ -103,7 +103,7 @@
 .stream.playing .mut{color:#dbeafe}
 .music-wrap{position:relative;border-radius:10px;overflow:hidden;margin-top:10px}
 .music-wrap iframe{display:block;width:100%;height:190px;border:0}
-.music-cover{position:absolute;inset:0}
+.music-cover{position:absolute;inset:0;cursor:pointer}
 </style>
 </head>
 <body>
@@ -325,8 +325,8 @@
 <div id="musicModal" class="modal"><div class="card">
   <h2>🎵 Nhạc lofi chill</h2>
   <p class="small mut">Chọn một kênh phát trực tiếp 24/7 để vừa học vừa nghe.</p>
-  <div class="music-wrap">
-    <iframe id="musicFrame" class="hidden" src="" title="Nhạc lofi" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <div id="musicWrap" class="music-wrap">
+    <div id="musicPlayer"></div>
     <div id="musicCover" class="music-cover hidden"></div>
   </div>
   <p id="musicNow" class="small">Chưa phát kênh nào.</p>
@@ -334,6 +334,7 @@
   <div class="row" style="margin-top:14px"><button id="stopMusicBtn" class="danger" type="button">Dừng nhạc</button><button id="closeMusic" class="secondary" type="button">Đóng</button></div>
 </div></div>
 
+<script src="https://www.youtube.com/iframe_api"></script>
 <script src="data.js"></script>
 <script>
 "use strict";
@@ -1210,13 +1211,19 @@ $("doForgot").onclick = function(){
 $("closeForgotConfirm").onclick = function(){ $("forgotConfirmModal").classList.remove("open"); };
 
 /* Nhạc nền lofi: nút 🎵 trên header mở bảng chọn kênh YouTube phát trực tiếp
-   24/7. Iframe nằm trong bảng chọn nhưng không bị xóa khi đóng bảng nên nhạc
-   vẫn phát tiếp khi chuyển màn hình hay làm bài. Lớp phủ trong suốt chặn bấm
-   vào khung video để cú nhấp chuột không làm mất tiêu điểm cửa sổ (tránh tính
-   nhầm là vi phạm chống gian lận khi đang làm bài). Danh sách dưới đây là toàn
-   bộ kênh radio của Lofi Girl do sư huynh gửi ngày 04/11/2026; ID thay đổi mỗi
-   khi kênh khởi động lại stream nên khi có báo "Video không có sẵn" thì xin
-   lại danh sách ID mới thay vì đoán. */
+   24/7. Khung phát nằm trong bảng chọn nhưng không bị xóa khi đóng bảng nên
+   nhạc vẫn phát tiếp khi chuyển màn hình hay làm bài. Lớp phủ trong suốt trên
+   khung video chặn bấm vào nút của chính YouTube để cú nhấp không làm mất tiêu
+   điểm cửa sổ (tránh tính nhầm là vi phạm chống gian lận khi đang làm bài);
+   bấm vào lớp phủ chỉ gọi lại lệnh phát. iOS Safari chặn autoplay khi chỉ đổi
+   src của iframe (cú bấm chọn kênh không được tính là lệnh phát cho video
+   khác tên miền), nên dùng YouTube IFrame API: trình phát tạo sẵn khi mở bảng
+   lần đầu, cú bấm chọn kênh gọi loadVideoById ngay trong handler thì iOS cho
+   phát có tiếng; nếu API không tải được thì dùng lại iframe src cũ và ẩn lớp
+   phủ để bấm được nút Play của YouTube. Danh sách dưới đây là toàn bộ kênh
+   radio của Lofi Girl do sư huynh gửi ngày 04/11/2026; ID thay đổi mỗi khi
+   kênh khởi động lại stream nên khi có báo "Video không có sẵn" thì xin lại
+   danh sách ID mới thay vì đoán. */
 var MUSIC_STREAMS = [
   {id:"rFZHOHl-L8A", name:"lofi hip hop radio - Thư giãn / Học tập", desc:"beats to relax/study to"},
   {id:"qGohtGC5Rtk", name:"Học cùng nhau - Pomodoro", desc:"Study With Me Pomodoro"},
@@ -1252,21 +1259,51 @@ function renderMusicList(){
   $("musicBtn").textContent = currentStream ? "🎶" : "🎵";
   $("musicBtn").title = currentStream ? "Đang phát nhạc lofi — bấm để đổi kênh hoặc dừng" : "Nhạc lofi chill";
 }
+var musicPlayer = null, musicPlayerReady = false, musicFallbackFrame = null, pendingStreamId = null;
+function ensureMusicPlayer(){
+  if(musicPlayer) return true;
+  try{
+    if(!window.YT || !window.YT.Player) return false;
+    musicPlayer = new window.YT.Player("musicPlayer", {width:"100%", height:"190", playerVars:{autoplay:0, controls:0, playsinline:1, rel:0}, events:{onReady:function(){ musicPlayerReady = true; if(pendingStreamId){ musicPlayer.loadVideoById(pendingStreamId); pendingStreamId = null; } }}});
+    return true;
+  }catch(e){ musicPlayer = null; return false; }
+}
+function fallbackPlay(id){
+  if(musicFallbackFrame){ musicFallbackFrame.remove(); musicFallbackFrame = null; }
+  var f = document.createElement("iframe");
+  f.src = "https://www.youtube.com/embed/" + id + "?autoplay=1&rel=0&controls=0&playsinline=1";
+  f.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+  f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+  f.setAttribute("allowfullscreen", "");
+  f.title = "Nhạc lofi";
+  $("musicWrap").insertBefore(f, $("musicCover"));
+  musicFallbackFrame = f;
+  $("musicCover").classList.add("hidden");
+}
 function playStream(s){
   currentStream = s.id;
-  $("musicFrame").src = "https://www.youtube.com/embed/" + s.id + "?autoplay=1&rel=0&controls=0&playsinline=1";
-  $("musicFrame").classList.remove("hidden");
-  $("musicCover").classList.remove("hidden");
+  if(musicPlayer){
+    if(musicFallbackFrame){ musicFallbackFrame.remove(); musicFallbackFrame = null; }
+    if(musicPlayerReady) musicPlayer.loadVideoById(s.id);
+    else pendingStreamId = s.id;
+    $("musicPlayer").classList.remove("hidden");
+    $("musicCover").classList.remove("hidden");
+  } else {
+    fallbackPlay(s.id);
+  }
   renderMusicList();
 }
 function stopMusic(){
   currentStream = null;
-  $("musicFrame").src = "";
-  $("musicFrame").classList.add("hidden");
+  pendingStreamId = null;
+  if(musicPlayer && musicPlayerReady) musicPlayer.stopVideo();
+  if(musicFallbackFrame){ musicFallbackFrame.remove(); musicFallbackFrame = null; }
+  $("musicPlayer").classList.add("hidden");
   $("musicCover").classList.add("hidden");
   renderMusicList();
 }
-$("musicBtn").onclick = function(){ renderMusicList(); $("musicModal").classList.add("open"); };
+$("musicBtn").onclick = function(){ ensureMusicPlayer(); renderMusicList(); $("musicModal").classList.add("open"); };
+$("musicCover").onclick = function(){ if(musicPlayer && musicPlayerReady) musicPlayer.playVideo(); };
 $("closeMusic").onclick = function(){ $("musicModal").classList.remove("open"); };
 $("stopMusicBtn").onclick = function(){ stopMusic(); };
 
