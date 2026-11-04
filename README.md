@@ -103,8 +103,10 @@ opens the admin interface, while any other account signs in as a normal
 user. The dialog also links to registration and to forgot password, and
 when someone is signed in, the same button (showing the avatar and the
 username, or “Thanh Bình” for the admin) opens the account dialog, where
-the user can change their avatar, view statistics, register a new account,
-or sign out.
+the user can change their avatar, change their username, or sign out.
+Statistics are only on the home screen button, not in the account dialog,
+so a test in progress cannot be abandoned through the account dialog
+without being scored.
 Registration needs a full name, a username, an email, and a password
 (at least 6 characters, typed twice for confirmation); usernames and
 emails must be unique, and the

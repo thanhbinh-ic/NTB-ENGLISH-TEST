@@ -242,7 +242,11 @@
     </div>
     <p class="small" style="margin-top:14px">Đổi avatar (bấm vào một biểu tượng để đổi ngay):</p>
     <div id="avatarGrid" class="avatar-grid"></div>
-    <div class="row" style="margin-top:14px"><button id="accountStatsBtn" class="secondary" type="button">Thống kê của tôi</button><button id="accountLogoutBtn" class="danger" type="button">Đăng xuất</button></div>
+    <!-- Không có nút "Thống kê của tôi" ở đây nữa: đang làm bài mà bấm sang màn
+         hình thống kê rồi về trang chủ làm bài mới sẽ làm mất bài đang dở mà
+         không bị trừ điểm, thành lỗ hổng lách luật. Xem thống kê chỉ còn ở nút
+         trên trang chủ (không bấm được khi đang làm bài). -->
+    <div class="row" style="margin-top:14px"><button id="accountLogoutBtn" class="danger" type="button">Đăng xuất</button></div>
   </div>
   <div id="accountAdminSection" class="hidden">
     <p><b>Chế độ Admin đang bật.</b> Đáp án đúng hiển thị ngay trong lúc làm bài.</p>
@@ -1092,7 +1096,6 @@ function renderAccountModal(){
   $("accountModal").classList.add("open");
 }
 $("closeAccount").onclick = function(){ $("accountModal").classList.remove("open"); };
-$("accountStatsBtn").onclick = function(){ $("accountModal").classList.remove("open"); renderStats(); showScreen("statsScreen"); };
 $("editNameBtn").onclick = function(){
   $("newUserName").value = currentUsername();
   $("renameErr").classList.add("hidden");
