@@ -164,9 +164,12 @@ or downloading the file.
 
 ## Reloading and results
 
-Reloading the page in the middle of a test loses the answers and restarts
-the timer. Results are only calculated in the browser being used and are
-not saved to a server.
+Reloading the page in the middle of a test abandons it: the answers and
+the timer are lost, the test is counted as taken and failed (−10 points,
+no pass), and a notice is shown on the next load. Logging out or renaming
+during a test does not dodge scoring either: the result is recorded
+against the account that started the test. Results are only calculated in
+the browser being used and are not saved to a server.
 
 ## Add to home screen (iPhone / Android)
 
