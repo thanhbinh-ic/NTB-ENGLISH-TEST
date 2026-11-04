@@ -15,7 +15,7 @@ The home page has two sections:
 
 ## Review
 
-- **Lesson 1 — Present Simple**: 32 questions (20 multiple choice, 9 writing/ordering, 3 reading).
+- **Lesson 1 — Present Simple**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 - **Lesson 2 — Present Continuous**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 - **Lesson 3 — Present Perfect**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
 - **Lesson 4 — Present Perfect Continuous**: 20 questions (13 multiple choice, 3 writing, 2 ordering, 2 reading).
@@ -166,10 +166,12 @@ or downloading the file.
 
 Reloading the page in the middle of a test abandons it: the answers and
 the timer are lost, the test is counted as taken and failed (−10 points,
-no pass), and a notice is shown on the next load. Logging out or renaming
-during a test does not dodge scoring either: the result is recorded
-against the account that started the test. Results are only calculated in
-the browser being used and are not saved to a server.
+no pass), and a notice is shown on the next load. Logging out during a
+test also abandons it the same way and returns to the home screen, instead
+of staying on the test screen. Renaming during a test does not dodge
+scoring either: the result is recorded against the account that started
+the test. Results are only calculated in the browser being used and are
+not saved to a server.
 
 ## Add to home screen (iPhone / Android)
 

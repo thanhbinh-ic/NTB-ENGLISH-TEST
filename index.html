@@ -242,17 +242,17 @@
     </div>
     <p class="small" style="margin-top:14px">Đổi avatar (bấm vào một biểu tượng để đổi ngay):</p>
     <div id="avatarGrid" class="avatar-grid"></div>
-    <!-- Không có nút "Thống kê của tôi" ở đây nữa: đang làm bài mà bấm sang màn
-         hình thống kê rồi về trang chủ làm bài mới sẽ làm mất bài đang dở mà
-         không bị trừ điểm, thành lỗ hổng lách luật. Xem thống kê chỉ còn ở nút
-         trên trang chủ (không bấm được khi đang làm bài). -->
-    <div class="row" style="margin-top:14px"><button id="accountLogoutBtn" class="danger" type="button">Đăng xuất</button></div>
   </div>
   <div id="accountAdminSection" class="hidden">
     <p><b>Chế độ Admin đang bật.</b> Đáp án đúng hiển thị ngay trong lúc làm bài.</p>
     <div class="row"><button id="adminLogoutBtn" class="danger" type="button">Đăng xuất Admin</button></div>
   </div>
-  <div class="row" style="margin-top:14px"><button id="closeAccount" class="secondary" type="button">Đóng</button></div>
+  <!-- Nút Đăng xuất và nút Đóng chung một hàng. Không có nút "Thống kê của tôi"
+       ở đây nữa: đang làm bài mà bấm sang màn hình thống kê rồi về trang chủ làm
+       bài mới sẽ làm mất bài đang dở mà không bị trừ điểm, thành lỗ hổng lách
+       luật. Xem thống kê chỉ còn ở nút trên trang chủ (không bấm được khi đang
+       làm bài). -->
+  <div class="row" style="margin-top:14px"><button id="accountLogoutBtn" class="danger" type="button">Đăng xuất</button><button id="closeAccount" class="secondary" type="button">Đóng</button></div>
 </div></div>
 
 <!-- NOTIFICATION POPUP -->
@@ -323,38 +323,26 @@ var ADMIN_PASS_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f7
 var TOTAL_SECONDS = 3600;
 
 var REVIEW1 = [
-  {part:"A — Trắc nghiệm", q:"She ___ to school every day.", opts:["go","goes","going","gone"], a:1, why:"Chủ ngữ “she” là số ít nên động từ thêm -s: goes. “go” dùng cho I/you/we/they và danh từ số nhiều."},
-  {part:"A — Trắc nghiệm", q:"They ___ football on Sundays.", opts:["plays","play","playing","played"], a:1, why:"Chủ ngữ “they” là số nhiều nên động từ giữ nguyên mẫu: play. “plays” chỉ dùng cho he/she/it và danh từ số ít."},
-  {part:"A — Trắc nghiệm", q:"He ___ like coffee.", opts:["don't","doesn't","isn't","not"], a:1, why:"Thể phủ định với he/she/it dùng doesn't + động từ nguyên mẫu. “doesn't likes” là sai vì sau doesn't động từ không thêm -s."},
-  {part:"A — Trắc nghiệm", q:"___ she speak English?", opts:["Do","Does","Is","Are"], a:1, why:"Câu hỏi với she dùng Does + chủ ngữ + động từ nguyên mẫu: Does she speak…? “Do” dùng cho I/you/we/they."},
-  {part:"A — Trắc nghiệm", q:"My parents ___ in Hanoi.", opts:["lives","live","living","is living"], a:1, why:"“My parents” là danh từ số nhiều nên động từ giữ nguyên mẫu: live."},
-  {part:"A — Trắc nghiệm", q:"The sun ___ in the east.", opts:["rise","rises","rising","rose"], a:1, why:"Đây là sự thật hiển nhiên nên dùng thì hiện tại đơn, chủ ngữ “the sun” số ít nên động từ thêm -s: rises."},
-  {part:"A — Trắc nghiệm", q:"Tom ___ his homework every evening.", opts:["do","does","doing","done"], a:1, why:"“Tom” là danh từ số ít, thói quen lặp lại nên dùng does. “do” dùng cho chủ ngữ số nhiều."},
-  {part:"A — Trắc nghiệm", q:"We ___ breakfast at 7 every day.", opts:["has","have","having","had"], a:1, why:"Chủ ngữ “we” là số nhiều nên dùng have. “has” chỉ dùng cho he/she/it và danh từ số ít."},
-  {part:"A — Trắc nghiệm", q:"She ___ TV in the evening.", opts:["watch","watchs","watches","watching"], a:2, why:"Động từ tận cùng bằng -ch thì thêm -es: watches, không phải watchs."},
-  {part:"A — Trắc nghiệm", q:"He ___ to work by bus.", opts:["go","goes","going","gone"], a:1, why:"Động từ tận cùng bằng -o thì thêm -es: goes. Chủ ngữ “he” số ít cũng đòi hỏi dạng có -s/-es."},
-  {part:"A — Trắc nghiệm", q:"My sister ___ her room every Saturday.", opts:["tidy","tidies","tidying","tidys"], a:1, why:"Động từ tận cùng bằng phụ âm + y thì đổi y thành i rồi thêm -es: tidies, không phải tidys."},
-  {part:"A — Trắc nghiệm", q:"Babies ___ a lot.", opts:["cries","cry","crying","cried"], a:1, why:"“Babies” là danh từ số nhiều nên động từ giữ nguyên mẫu: cry."},
-  {part:"A — Trắc nghiệm", q:"___ they live here?", opts:["Do","Does","Is","Are"], a:0, why:"Câu hỏi với “they” dùng Do + chủ ngữ + động từ nguyên mẫu: Do they live…?"},
-  {part:"A — Trắc nghiệm", q:"She ___ never late.", opts:["are","is","am","be"], a:1, why:"Động từ to be với “she” là is. Trạng từ tần suất “never” đứng sau to be: She is never late."},
-  {part:"A — Trắc nghiệm", q:"I ___ not understand this lesson.", opts:["do","does","am","is"], a:0, why:"Thể phủ định với “I” dùng do not + động từ nguyên mẫu. “does” chỉ dùng cho he/she/it."},
-  {part:"A — Trắc nghiệm", q:"The train ___ at 9 o'clock.", opts:["leave","leaves","leaving","left"], a:1, why:"Hành động theo lịch trình, thời khóa biểu dùng thì hiện tại đơn; chủ ngữ “the train” số ít nên dùng leaves."},
-  {part:"A — Trắc nghiệm", q:"Does he ___ his keys?", opts:["lose","loses","lost","losing"], a:0, why:"Sau Does, động từ luôn giữ nguyên mẫu: lose. “loses” là lỗi kép vì đã có Does mang dấu số ít rồi."},
-  {part:"A — Trắc nghiệm", q:"Mary and John ___ to the gym twice a week.", opts:["goes","go","going","gone"], a:1, why:"Hai chủ ngữ nối bằng “and” thành số nhiều nên dùng go. “twice a week” là dấu hiệu của thói quen lặp lại."},
-  {part:"A — Trắc nghiệm", q:"It often ___ in winter here.", opts:["rain","rains","raining","rained"], a:1, why:"Chủ ngữ “it” số ít nên dùng rains. “often” là trạng từ tần suất, dấu hiệu của thì hiện tại đơn."},
-  {part:"A — Trắc nghiệm", q:"She ___ goes to school on foot.", opts:["always","yesterday","now","tomorrow"], a:0, why:"Trạng từ tần suất “always” đứng trước động từ thường: She always goes… “yesterday”, “now”, “tomorrow” không phải dấu hiệu của thì hiện tại đơn."},
-  {part:"B — Viết", q:"Viết lại câu phủ định: “She likes tea.”", accept:["she does not like tea","she doesn't like tea"], model:"She doesn't like tea.", why:"Phủ định với “she” dùng doesn't + động từ nguyên mẫu. “likes” phải bỏ -s thành “like” vì doesn't đã mang dấu số ít."},
-  {part:"B — Viết", q:"Viết lại thành câu hỏi: “They play tennis on Sundays.”", accept:["do they play tennis on sundays"], model:"Do they play tennis on Sundays?", why:"Câu hỏi với “they” dùng Do + chủ ngữ + động từ nguyên mẫu. Động từ “play” giữ nguyên, không thêm -s."},
-  {part:"B — Viết", q:"Chia động từ đúng dạng: “He (watch) TV every night.” — viết cả câu.", accept:["he watches tv every night"], model:"He watches TV every night.", why:"Chủ ngữ “he” số ít, động từ “watch” tận cùng -ch nên thêm -es thành watches."},
-  {part:"B — Viết", q:"Chia động từ đúng dạng: “My mother (go) to work by car every day.” — viết cả câu.", accept:["my mother goes to work by car every day"], model:"My mother goes to work by car every day.", why:"Chủ ngữ “my mother” số ít, động từ “go” tận cùng -o nên thêm -es thành goes."},
-  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “6 a.m. / get up / I / at / always”", accept:["i always get up at 6 am","i always get up at 6 a.m"], model:"I always get up at 6 a.m.", why:"Trạng từ tần suất “always” đứng trước động từ thường “get up”, và mốc giờ dùng giới từ “at”."},
-  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “coffee / She / not / does / like”", accept:["she does not like coffee","she doesn't like coffee"], model:"She does not like coffee.", why:"Phủ định với “she” dùng does not + động từ nguyên mẫu: like, không phải likes."},
-  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “football / every / They / Sunday / play”", accept:["they play football every sunday"], model:"They play football every Sunday.", why:"Chủ ngữ “they” số nhiều nên động từ giữ nguyên mẫu: play. Cụm “every Sunday” chỉ thói quen lặp lại."},
-  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “by bus / always / goes / My father / to work”", accept:["my father always goes to work by bus"], model:"My father always goes to work by bus.", why:"“always” đứng trước động từ thường “goes”; chủ ngữ “my father” số ít nên dùng goes."},
-  {part:"B — Sắp xếp câu", q:"Sắp xếp thành câu đúng: “study / he / every day / Does / English”", accept:["does he study english every day"], model:"Does he study English every day?", why:"Câu hỏi với “he” dùng Does + chủ ngữ + động từ nguyên mẫu: study, không phải studies."},
-  {part:"C — Đọc hiểu", passage:"Minh is a student. He gets up at 6 a.m. every day. He does not like coffee. He drinks tea in the morning. He goes to school by bus. His school starts at 7 a.m. In the evening, he does his homework and watches TV. On Sundays, he plays football with his friends. He does not play football on weekdays because he is busy with his lessons.", q:"Đọc đoạn văn trên và chọn đáp án đúng: Minh gets up at…", opts:["6 a.m.","7 a.m.","5 a.m.","8 a.m."], a:0, why:"Đoạn văn viết: “He gets up at 6 a.m. every day.” — 7 a.m. là giờ trường bắt đầu, không phải giờ Minh dậy."},
-  {part:"C — Đọc hiểu", passage:"Anna is a teacher. She teaches English every day. She goes to work by car. Her classes start at 8 a.m. She does not work on Sundays. On Sundays, she reads books and visits her parents.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How does Anna go to work?", opts:["By bus","By car","On foot","By bike"], a:1, why:"Đoạn văn viết: “She goes to work by car.”"},
-  {part:"C — Đọc hiểu", passage:"Tom and his sister live in a small town. Their school is near their house. Tom and his sister go to school on foot every day. Their father works in a factory and their mother is a doctor. On Saturdays, the family goes to the market.", q:"Đọc đoạn văn trên và chọn đáp án đúng: How do Tom and his sister go to school?", opts:["By bus","On foot","By car","By bike"], a:1, why:"Đoạn văn viết: “Tom and his sister go to school on foot every day.”"}
+  {"part":"A — Trắc nghiệm","q":"She ___ to school every day.","opts":["go","goes","going","gone"],"a":1,"why":"Chủ ngữ “she” là số ít nên động từ thêm -s: goes. “go” dùng cho I/you/we/they và danh từ số nhiều."},
+  {"part":"A — Trắc nghiệm","q":"They ___ football on Sundays.","opts":["plays","play","playing","played"],"a":1,"why":"Chủ ngữ “they” là số nhiều nên động từ giữ nguyên mẫu: play. “plays” chỉ dùng cho he/she/it và danh từ số ít."},
+  {"part":"A — Trắc nghiệm","q":"He ___ like coffee.","opts":["don't","doesn't","isn't","not"],"a":1,"why":"Thể phủ định với he/she/it dùng doesn't + động từ nguyên mẫu. “doesn't likes” là sai vì sau doesn't động từ không thêm -s."},
+  {"part":"A — Trắc nghiệm","q":"___ she speak English?","opts":["Do","Does","Is","Are"],"a":1,"why":"Câu hỏi với she dùng Does + chủ ngữ + động từ nguyên mẫu: Does she speak…? “Do” dùng cho I/you/we/they."},
+  {"part":"A — Trắc nghiệm","q":"The sun ___ in the east.","opts":["rise","rises","rising","rose"],"a":1,"why":"Đây là sự thật hiển nhiên nên dùng thì hiện tại đơn, chủ ngữ “the sun” số ít nên động từ thêm -s: rises."},
+  {"part":"A — Trắc nghiệm","q":"Tom ___ his homework every evening.","opts":["do","does","doing","done"],"a":1,"why":"“Tom” là danh từ số ít, thói quen lặp lại nên dùng does. “do” dùng cho chủ ngữ số nhiều."},
+  {"part":"A — Trắc nghiệm","q":"___ they live here?","opts":["Do","Does","Is","Are"],"a":0,"why":"Câu hỏi với “they” dùng Do + chủ ngữ + động từ nguyên mẫu: Do they live…?"},
+  {"part":"A — Trắc nghiệm","q":"She ___ never late.","opts":["are","is","am","be"],"a":1,"why":"Động từ to be với “she” là is. Trạng từ tần suất “never” đứng sau to be: She is never late."},
+  {"part":"A — Trắc nghiệm","q":"I ___ not understand this lesson.","opts":["do","does","am","is"],"a":0,"why":"Thể phủ định với “I” dùng do not + động từ nguyên mẫu. “does” chỉ dùng cho he/she/it."},
+  {"part":"A — Trắc nghiệm","q":"The train ___ at 9 o'clock.","opts":["leave","leaves","leaving","left"],"a":1,"why":"Hành động theo lịch trình, thời khóa biểu dùng thì hiện tại đơn; chủ ngữ “the train” số ít nên dùng leaves."},
+  {"part":"A — Trắc nghiệm","q":"Does he ___ his keys?","opts":["lose","loses","lost","losing"],"a":0,"why":"Sau Does, động từ luôn giữ nguyên mẫu: lose. “loses” là lỗi kép vì đã có Does mang dấu số ít rồi."},
+  {"part":"A — Trắc nghiệm","q":"Mary and John ___ to the gym twice a week.","opts":["goes","go","going","gone"],"a":1,"why":"Hai chủ ngữ nối bằng “and” thành số nhiều nên dùng go. “twice a week” là dấu hiệu của thói quen lặp lại."},
+  {"part":"A — Trắc nghiệm","q":"It often ___ in winter here.","opts":["rain","rains","raining","rained"],"a":1,"why":"Chủ ngữ “it” số ít nên dùng rains. “often” là trạng từ tần suất, dấu hiệu của thì hiện tại đơn."},
+  {"part":"B — Viết","q":"Viết lại câu phủ định: “She likes tea.”","accept":["she does not like tea","she doesn't like tea"],"model":"She doesn't like tea.","why":"Phủ định với “she” dùng doesn't + động từ nguyên mẫu. “likes” phải bỏ -s thành “like” vì doesn't đã mang dấu số ít."},
+  {"part":"B — Viết","q":"Viết lại thành câu hỏi: “They play tennis on Sundays.”","accept":["do they play tennis on sundays"],"model":"Do they play tennis on Sundays?","why":"Câu hỏi với “they” dùng Do + chủ ngữ + động từ nguyên mẫu. Động từ “play” giữ nguyên, không thêm -s."},
+  {"part":"B — Viết","q":"Chia động từ đúng dạng: “He (watch) TV every night.” — viết cả câu.","accept":["he watches tv every night"],"model":"He watches TV every night.","why":"Chủ ngữ “he” số ít, động từ “watch” tận cùng -ch nên thêm -es thành watches."},
+  {"part":"B — Sắp xếp câu","q":"Sắp xếp thành câu đúng: “6 a.m. / get up / I / at / always”","accept":["i always get up at 6 am","i always get up at 6 a.m"],"model":"I always get up at 6 a.m.","why":"Trạng từ tần suất “always” đứng trước động từ thường “get up”, và mốc giờ dùng giới từ “at”."},
+  {"part":"B — Sắp xếp câu","q":"Sắp xếp thành câu đúng: “study / he / every day / Does / English”","accept":["does he study english every day"],"model":"Does he study English every day?","why":"Câu hỏi với “he” dùng Does + chủ ngữ + động từ nguyên mẫu: study, không phải studies."},
+  {"part":"C — Đọc hiểu","passage":"Minh is a student. He gets up at 6 a.m. every day. He does not like coffee. He drinks tea in the morning. He goes to school by bus. His school starts at 7 a.m. In the evening, he does his homework and watches TV. On Sundays, he plays football with his friends. He does not play football on weekdays because he is busy with his lessons.","q":"Đọc đoạn văn trên và chọn đáp án đúng: Minh gets up at…","opts":["6 a.m.","7 a.m.","5 a.m.","8 a.m."],"a":0,"why":"Đoạn văn viết: “He gets up at 6 a.m. every day.” — 7 a.m. là giờ trường bắt đầu, không phải giờ Minh dậy."},
+  {"part":"C — Đọc hiểu","passage":"Tom and his sister live in a small town. Their school is near their house. Tom and his sister go to school on foot every day. Their father works in a factory and their mother is a doctor. On Saturdays, the family goes to the market.","q":"Đọc đoạn văn trên và chọn đáp án đúng: How do Tom and his sister go to school?","opts":["By bus","On foot","By car","By bike"],"a":1,"why":"Đoạn văn viết: “Tom and his sister go to school on foot every day.”"}
 ];
 var QUESTIONS = [];
 var REVIEW_SETS = {1: REVIEW1, 2: (typeof REVIEW2 !== "undefined" ? REVIEW2 : []), 3: (typeof REVIEW3 !== "undefined" ? REVIEW3 : []), 4: (typeof REVIEW4 !== "undefined" ? REVIEW4 : []), 5: (typeof REVIEW5 !== "undefined" ? REVIEW5 : []), 6: (typeof REVIEW6 !== "undefined" ? REVIEW6 : []), 7: (typeof REVIEW7 !== "undefined" ? REVIEW7 : []), 8: (typeof REVIEW8 !== "undefined" ? REVIEW8 : []), 9: (typeof REVIEW9 !== "undefined" ? REVIEW9 : []), 10: (typeof REVIEW10 !== "undefined" ? REVIEW10 : []), 11: (typeof REVIEW11 !== "undefined" ? REVIEW11 : []), 12: (typeof REVIEW12 !== "undefined" ? REVIEW12 : []), 13: (typeof REVIEW13 !== "undefined" ? REVIEW13 : [])};
@@ -1111,6 +1099,7 @@ function renderAccountModal(){
   var u = currentUsername(), me = loadUsers()[u];
   $("accountUserSection").classList.toggle("hidden", !me);
   $("accountAdminSection").classList.toggle("hidden", !isAdmin());
+  $("accountLogoutBtn").classList.toggle("hidden", !me);
   $("renameErr").classList.add("hidden"); $("newUserName").value = ""; $("renameRow").classList.add("hidden");
   if(me){
     $("accountAvatar").textContent = me.avatar || avatarFor(u);
@@ -1162,10 +1151,26 @@ $("adminLogoutBtn").onclick = function(){ askLogout("admin", "khỏi chế độ
 $("cancelLogout").onclick = function(){ $("logoutConfirmModal").classList.remove("open"); };
 $("confirmLogout").onclick = function(){
   $("logoutConfirmModal").classList.remove("open");
+  var abandoning = false, abandonLine = "";
   if(pendingLogout==="admin"){ setAdmin(false); renderAdminBox(); }
-  else { setCurrentUsername(""); }
+  else {
+    /* Đăng xuất giữa bài kiểm tra thì về trang chủ, không ở lại trang làm bài,
+       và bài đang dở tính là bỏ bài (như tải lại trang): trừ điểm không đạt,
+       dừng đồng hồ, không cho nộp tiếp. Dấu bài dở chỉ có khi đang làm bài
+       kiểm tra nên đăng xuất lúc khác không bị ảnh hưởng. */
+    try{ abandoning = !!localStorage.getItem(TEST_ACTIVE_KEY); }catch(e){}
+    setCurrentUsername("");
+    if(abandoning){
+      var users = loadUsers(), me = testUsername ? users[testUsername] : null;
+      if(me){ abandonLine = applyTestResult(me, 0, 0); saveUsers(users); }
+      try{ localStorage.removeItem(TEST_ACTIVE_KEY); }catch(e){}
+      clearInterval(timerId); submitted = true; testUsername = "";
+      $("timer").classList.add("hidden");
+      showScreen("homeScreen");
+    }
+  }
   renderAuth();
-  showNotify("Đã đăng xuất", pendingLogout==="admin" ? "Bạn đã thoát chế độ Admin." : "Hẹn gặp lại bạn!");
+  showNotify("Đã đăng xuất", pendingLogout==="admin" ? "Bạn đã thoát chế độ Admin." : (abandoning ? "Bài kiểm tra dở dang tính là không đạt. " + (abandonLine ? abandonLine + " " : "") + "Hẹn gặp lại bạn!" : "Hẹn gặp lại bạn!"));
 };
 $("statsBtn").onclick = function(){ renderStats(); showScreen("statsScreen"); };
 $("statsBackBtn").onclick = function(){ showScreen("homeScreen"); };
